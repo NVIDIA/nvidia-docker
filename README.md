@@ -1,6 +1,7 @@
 # NVIDIA Docker
 This repository includes utilities to build and run NVIDIA Docker images.  
-See ```samples/``` for a list of Dockerfile examples.
+See ```samples/``` for a list of Dockerfile examples.  
+Please be aware that this project is currently **experimental**.  
 
 ![docker](https://cloud.githubusercontent.com/assets/3028125/10951709/c9b9dd6e-82f3-11e5-9e55-4d7ffd4f1246.png)
 
