@@ -3,13 +3,14 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 889BEE522DA690103C4B085ED88C3D385C37D3BE
 
-RUN echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
-    apt-get update
+RUN echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
 ENV CUDA_VERSION 7.0
 LABEL com.nvidia.cuda.version="7.0"
 
-RUN apt-get install -y --no-install-recommends --force-yes "cuda-toolkit-7.0"
+RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+    cuda-toolkit-7.0 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
     echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
