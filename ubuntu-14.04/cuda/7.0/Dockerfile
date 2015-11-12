@@ -1,10 +1,9 @@
 FROM ubuntu:14.04
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
-RUN apt-get update && apt-get install -y wget
+RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 889BEE522DA690103C4B085ED88C3D385C37D3BE
 
-RUN wget -q -O - http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY | apt-key add - && \
-    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
+RUN echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
     apt-get update
 
 ENV CUDA_VERSION 7.0
