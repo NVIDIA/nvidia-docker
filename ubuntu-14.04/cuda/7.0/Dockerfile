@@ -3,7 +3,11 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 RUN apt-get update && apt-get install -y wget
 
-RUN wget -q -O - http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY | apt-key add - && \
+ENV NVIDIA_GPGKEY_SUM 4e181b4141cf3daca6f68e34d5387499fd093b9632b522329b10ed4d1929d417
+
+RUN wget -q http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY && \
+    echo "$NVIDIA_GPGKEY_SUM GPGKEY" | sha256sum -c - && \
+    apt-key add GPGKEY && rm GPGKEY && \
     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
 ENV CUDA_VERSION 7.0
