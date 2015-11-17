@@ -1,6 +1,8 @@
 #! /bin/sh
 # Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
 
+DOCKER=${DOCKER:-"docker"}
+
 NV_DEVICE="/dev/nvidia"
 UVM_DEVICE="${NV_DEVICE}-uvm"
 CTL_DEVICE="${NV_DEVICE}ctl"
@@ -36,7 +38,7 @@ __image_label()
     local image="$1"
     local label="$2"
 
-    echo $( docker inspect --format="{{index .Config.Labels \"$label\"}}" $image )
+    echo $( $DOCKER inspect --format="{{index .Config.Labels \"$label\"}}" $image )
 }
 
 __nvsmi_query()
@@ -78,7 +80,7 @@ __filter_duplicate_paths()
 
 check_prerequisites()
 {
-    local cmds="docker nvidia-smi nvidia-modprobe"
+    local cmds="nvidia-smi nvidia-modprobe"
 
     for cmd in $cmds; do
         command -v $cmd >/dev/null && continue
@@ -94,7 +96,7 @@ parse_docker_args()
 
     local shift=1
     local skip=0
-    local non_bool_args="$( docker help $help | \
+    local non_bool_args="$( $DOCKER help $help | \
                             sed '/^\s*\(-[^=]\+\)=[^{true}{false}].*/!d;s//\1/;s/, /\n/' )"
 
     for arg in $args; do
@@ -218,4 +220,4 @@ case $CMD in
     ;;
 esac
 
-docker $DOCKER_ARGS $NV_DOCKER_ARGS $@
+$DOCKER $DOCKER_ARGS $NV_DOCKER_ARGS $@
