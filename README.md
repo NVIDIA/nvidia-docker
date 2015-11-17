@@ -2,7 +2,7 @@
 This repository includes utilities to build and run NVIDIA Docker images.  
 Please be aware that this project is currently **experimental**.  
 
-![docker](https://cloud.githubusercontent.com/assets/3028125/10951709/c9b9dd6e-82f3-11e5-9e55-4d7ffd4f1246.png)  
+![docker](https://cloud.githubusercontent.com/assets/3028125/11199468/c0e09f50-8c82-11e5-846d-1f5e6a410598.png)
 *Example of how CUDA integrates with Docker*  
 
 ### Benefits of GPU containerization
