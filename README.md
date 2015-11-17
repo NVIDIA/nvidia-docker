@@ -1,9 +1,17 @@
 # NVIDIA Docker
 This repository includes utilities to build and run NVIDIA Docker images.  
-See ```samples/``` for a list of Dockerfile examples.  
 Please be aware that this project is currently **experimental**.  
 
-![docker](https://cloud.githubusercontent.com/assets/3028125/10951709/c9b9dd6e-82f3-11e5-9e55-4d7ffd4f1246.png)
+![docker](https://cloud.githubusercontent.com/assets/3028125/10951709/c9b9dd6e-82f3-11e5-9e55-4d7ffd4f1246.png)  
+*Example of how CUDA integrates with Docker*  
+
+### Benefits of GPU containerization
+
+* Reproducible builds
+* Ease of deployment
+* Isolation of individual devices
+* Run across heterogeneous driver/toolkit environments *(e.g. CUDA 7.0 and 7.5 on a single host machine)*
+* Requires only the NVIDIA driver
 
 ### Building images
 
@@ -43,14 +51,16 @@ $ GPU=0,1 ./nvidia-docker <docker-options> <docker-command> <docker-args>
 
 ### CUDA requirements
 
-Running a CUDA container requires a machine with at least one CUDA-capable GPU and a driver compatible with the CUDA toolkit version you are using.
+Running a CUDA container requires a machine with at least one CUDA-capable GPU and a driver compatible with the CUDA toolkit version you are using.  
+The machine running the CUDA container **only requires the NVIDIA driver**, the CUDA toolkit doesn't have to be installed.
 
-NVIDIA drivers are **backward-compatible** with CUDA toolkits versions:
+NVIDIA drivers are **backward-compatible** with CUDA toolkits versions
 
-CUDA toolkit version   | Minimum driver version
-:---------------------:|:-----------------------:
-  7.0                  | >= 346.46
-  7.5                  | >= 352.39
+CUDA toolkit version   | Minimum driver version  | Minimum GPU architecture
+:---------------------:|:-----------------------:|:-------------------------:
+  6.5                  | >= 340.29               | >= 2.0 (Fermi)
+  7.0                  | >= 346.46               | >= 2.0 (Fermi)
+  7.5                  | >= 352.39               | >= 2.0 (Fermi)
 
 
 ### Samples
