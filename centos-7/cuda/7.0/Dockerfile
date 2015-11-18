@@ -6,7 +6,7 @@ ENV NVIDIA_GPGKEY_SUM bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e
 RUN curl -fsSL http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
     echo "$NVIDIA_GPGKEY_SUM /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c --strict -
 
-ADD cuda.repo /etc/yum.repos.d/cuda.repo
+COPY cuda.repo /etc/yum.repos.d/cuda.repo
 
 ENV CUDA_VERSION 7.0
 LABEL com.nvidia.cuda.version="7.0"
