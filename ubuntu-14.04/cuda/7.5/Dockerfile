@@ -13,8 +13,8 @@ ENV CUDA_VERSION 7.5
 LABEL com.nvidia.cuda.version="7.5"
 
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-    cuda-toolkit-7-5=7.5-18 \
-    && rm -rf /var/lib/apt/lists/*
+        cuda-toolkit-7-5=7.5-18 && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
     echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
