@@ -1,3 +1,3 @@
-FROM cuda:latest
+FROM cuda
 
 CMD nvidia-smi -q

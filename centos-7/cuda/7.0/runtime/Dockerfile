@@ -11,9 +11,17 @@ COPY cuda.repo /etc/yum.repos.d/cuda.repo
 ENV CUDA_VERSION 7.0
 LABEL com.nvidia.cuda.version="7.0"
 
+ENV CUDA_PKG_VERSION 7-0-7.0-28
 RUN yum install -y \
-        cuda-toolkit-7-0-7.0-28 \
-        gcc-c++ && \
+        cuda-nvrtc-$CUDA_PKG_VERSION \
+        cuda-cusolver-$CUDA_PKG_VERSION \
+        cuda-cublas-$CUDA_PKG_VERSION \
+        cuda-cufft-$CUDA_PKG_VERSION \
+        cuda-curand-$CUDA_PKG_VERSION \
+        cuda-cusparse-$CUDA_PKG_VERSION \
+        cuda-npp-$CUDA_PKG_VERSION \
+        cuda-cudart-$CUDA_PKG_VERSION && \
+    ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
     rm -rf /var/cache/yum/*
 
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
