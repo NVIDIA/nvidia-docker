@@ -14,14 +14,14 @@ LABEL com.nvidia.cuda.version="7.5"
 
 ENV CUDA_PKG_VERSION 7-5=7.5-18
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-        cuda-nvrtc-$CUDA_PKG_VERSION \
-        cuda-cusolver-$CUDA_PKG_VERSION \
         cuda-cublas-$CUDA_PKG_VERSION \
+        cuda-cudart-$CUDA_PKG_VERSION \
         cuda-cufft-$CUDA_PKG_VERSION \
         cuda-curand-$CUDA_PKG_VERSION \
+        cuda-cusolver-$CUDA_PKG_VERSION \
         cuda-cusparse-$CUDA_PKG_VERSION \
         cuda-npp-$CUDA_PKG_VERSION \
-        cuda-cudart-$CUDA_PKG_VERSION && \
+        cuda-nvrtc-$CUDA_PKG_VERSION && \
     ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/*
 
