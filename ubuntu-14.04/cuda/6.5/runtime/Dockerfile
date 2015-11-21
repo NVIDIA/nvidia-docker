@@ -12,8 +12,15 @@ RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/r
 ENV CUDA_VERSION 6.5
 LABEL com.nvidia.cuda.version="6.5"
 
+ENV CUDA_PKG_VERSION 6-5=6.5-19
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-        cuda-toolkit-6-5=6.5-19 && \
+        cuda-cublas-$CUDA_PKG_VERSION \
+        cuda-cufft-$CUDA_PKG_VERSION \
+        cuda-curand-$CUDA_PKG_VERSION \
+        cuda-cusparse-$CUDA_PKG_VERSION \
+        cuda-npp-$CUDA_PKG_VERSION \
+        cuda-cudart-$CUDA_PKG_VERSION && \
+    ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \

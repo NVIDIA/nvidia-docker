@@ -10,32 +10,58 @@ Please be aware that this project is currently **experimental**.
 * Reproducible builds
 * Ease of deployment
 * Isolation of individual devices
-* Run across heterogeneous driver/toolkit environments *(e.g. CUDA 7.0 and 7.5 on a single host machine)*
+* Run across heterogeneous driver/toolkit environments
 * Requires only the NVIDIA driver
 
 ### Building images
 
 Images can be built on any machine running Docker, it doesn't require a NVIDIA GPU nor any driver installation.
 
-Building images is done through the Docker CLI or using the ```nvidia-docker``` wrapper similarly:
+#### CUDA
+Each CUDA image comes in two flavors:
+* ```runtime```: a lightweight image containing the bare minimum to deploy a pre-built application which uses CUDA.
+* ```devel```: extends the runtime image by adding the compiler toolchain, the debugging tools and the development files for the standard CUDA libraries. Use this image to compile a CUDA application from source.
+
+The ```devel``` image must be built **after** the ```runtime``` image:
 ```sh
-# With latest versions
-$ docker build -t cuda ubuntu/cuda/latest
+# Building a CUDA 7.5 development image based on Ubuntu
+docker build -t cuda:7.5-runtime ubuntu/cuda/7.5/runtime
+docker build -t cuda:7.5-devel ubuntu/cuda/7.5/devel
+docker tag cuda:7.5-devel cuda
 ```
 
 ```sh
-# With specific versions
-$ docker build -t cuda:7.5 ubuntu-14.04/cuda/7.5
+# Building a CUDA 7.5 development image based on CentOS
+docker build -t cuda:7.5-runtime centos/cuda/7.5/runtime
+docker build -t cuda:7.5-devel centos/cuda/7.5/devel
+docker tag cuda:7.5-devel cuda
 ```
 
 Alternatively, one can build an image directly from this repository:
 ```sh
-# With latest versions
-$ docker build -t cuda github.com/NVIDIA/nvidia-docker#:ubuntu/cuda/latest
+# Building a CUDA 7.5 development image based on Ubuntu
+docker build -t cuda:7.5-runtime github.com/NVIDIA/nvidia-docker#:ubuntu/cuda/7.5/runtime
+docker build -t cuda:7.5-devel github.com/NVIDIA/nvidia-docker#:ubuntu/cuda/7.5/devel
+docker tag cuda:7.5-devel cuda
 ```
+
+#### cuDNN
+
+Currently, only cuDNN v2 based on CUDA 7.0 is supported, this image also comes in two flavors: ```cudnn-runtime``` and ```cudnn-devel```.
 ```sh
-# With specific versions
-$ docker build -t cuda:7.5 github.com/NVIDIA/nvidia-docker#:ubuntu-14.04/cuda/7.5
+# Building a cuDNN image based on CUDA 7.0 runtime
+docker build -t cuda:7.0-runtime ubuntu/cuda/7.0/runtime
+docker build -t cuda:7.0-cudnn2-runtime ubuntu/cuda/7.0/runtime/cudnn2
+docker tag cuda:7.0-cudnn2-runtime cuda:cudnn-runtime
+```
+
+Building the development image requires the ``cuda:7.0-devel`` image:
+```sh
+# Building a cuDNN image based on CUDA 7.0 development
+docker build -t cuda:7.0-runtime ubuntu/cuda/7.0/runtime
+docker build -t cuda:7.0-devel ubuntu/cuda/7.0/devel
+docker build -t cuda:7.0-cudnn2-devel ubuntu/cuda/7.0/devel/cudnn2
+docker tag cuda:7.0-cudnn2-devel cuda:cudnn-devel
 ```
 
 ### NVIDIA Docker wrapper
@@ -46,7 +72,7 @@ GPUs are exported through a list of comma-separated IDs using the environment va
 The numbering is the same as reported by ```nvidia-smi``` or when running CUDA code with ```CUDA_DEVICE_ORDER=PCI_BUS_ID```, it is however **different** from the default CUDA ordering.
 
 ```sh
-$ GPU=0,1 ./nvidia-docker <docker-options> <docker-command> <docker-args>
+GPU=0,1 ./nvidia-docker <docker-options> <docker-command> <docker-args>
 ```
 
 ### CUDA requirements
@@ -66,10 +92,10 @@ CUDA toolkit version   | Minimum driver version  | Minimum GPU architecture
 ### Samples
 
 Once you have built the required images, a few examples are provided in the folder ```samples```.  
-The following assumes that you have an image in your repository named ```cuda``` (see ```samples/deviceQuery/Dockerfile```):
+The following assumes that you have an Ubuntu-based CUDA image in your repository (see ```samples/ubuntu/deviceQuery/Dockerfile```):
 ```sh
 # Run deviceQuery with one selected GPU
-$ docker build -t device_query samples/deviceQuery
+$ docker build -t device_query samples/ubuntu/deviceQuery
 $ GPU=0 ./nvidia-docker run device_query
 
 [ NVIDIA ] =INFO= Driver version: 352.39
