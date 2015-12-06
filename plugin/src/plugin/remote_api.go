@@ -1,0 +1,50 @@
+// Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
+
+package main
+
+import (
+	"net/http"
+
+	"graceful"
+)
+
+type restapi interface {
+	version() string
+
+	gpuInfo(http.ResponseWriter, *http.Request)
+	gpuStatus(http.ResponseWriter, *http.Request)
+	cli(http.ResponseWriter, *http.Request)
+}
+
+type RemoteAPI struct {
+	*graceful.HTTPServer
+
+	apis []restapi
+}
+
+func NewRemoteAPI(addr string) *RemoteAPI {
+	a := &RemoteAPI{
+		HTTPServer: graceful.NewHTTPServer("tcp", addr),
+	}
+	a.register(
+		new(remoteV10),
+	)
+	return a
+}
+
+func (a *RemoteAPI) register(apis ...restapi) {
+	for i, api := range apis {
+		prefix := "/" + api.version()
+
+	handlers:
+		a.Handle("GET", prefix+"/gpu/info", api.gpuInfo)
+		a.Handle("GET", prefix+"/gpu/status", api.gpuStatus)
+		a.Handle("GET", prefix+"/docker/cli", api.cli)
+
+		if i == len(apis)-1 && prefix != "" {
+			prefix = ""
+			goto handlers
+		}
+		a.apis = append(a.apis, api)
+	}
+}

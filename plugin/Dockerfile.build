@@ -1,0 +1,34 @@
+# Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
+
+FROM golang
+
+ENV NVIDIA_GPGKEY_SUM bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e0b5c1c
+ENV NVIDIA_GPGKEY_FPR 889bee522da690103c4b085ed88c3d385c37d3be
+ENV NVIDIA_GDK_SUM 1e32e58f69fe29ee67b845233e7aa9347f37994463252bccbc8bfc8a7104ab5a
+
+RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY && \
+    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
+    echo "$NVIDIA_GPGKEY_SUM cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+    cuda-cudart-dev-6-5=6.5-19 cuda-misc-headers-6-5=6.5-19 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN objcopy --redefine-sym memcpy=memcpy@GLIBC_2.2.5 /usr/local/cuda-6.5/lib64/libcudart_static.a
+
+RUN wget -O gdk.run -q http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_352_39_gdk_linux.run && \
+    echo "$NVIDIA_GDK_SUM gdk.run" | sha256sum -c --strict - && \
+    chmod +x gdk.run && ./gdk.run --silent && rm gdk.run
+
+COPY src /go/src
+VOLUME /go/bin
+
+ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"
+ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64 -L /usr/src/gdk/nvml/lib -ldl -lrt"
+
+ARG UID
+RUN useradd --uid $UID build
+USER build
+
+CMD go get -v -ldflags="-s" plugin
