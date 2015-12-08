@@ -119,7 +119,7 @@ func (c *LDCache) parse() error {
 		if err != nil {
 			return err
 		}
-		n = (-offset) & int64(unsafe.Alignof(c.header))
+		n = (-offset) & int64(unsafe.Alignof(c.header)-1)
 		_, err = c.Seek(n, 1) // skip padding
 		if err != nil {
 			return err
