@@ -11,6 +11,8 @@ import (
 	"graceful"
 )
 
+const sockName = "nvidia.sock"
+
 type plugin interface {
 	implement() string
 	register(*PluginAPI)
@@ -35,11 +37,11 @@ func accept(handler http.Handler) http.Handler {
 	return http.HandlerFunc(f)
 }
 
-func NewPluginAPI(addr string) *PluginAPI {
-	os.MkdirAll(path.Dir(addr), 0700)
+func NewPluginAPI(prefix string) *PluginAPI {
+	os.MkdirAll(prefix, 0700)
 
 	a := &PluginAPI{
-		HTTPServer: graceful.NewHTTPServer("unix", addr, accept),
+		HTTPServer: graceful.NewHTTPServer("unix", path.Join(prefix, sockName), accept),
 	}
 	a.Handle("POST", "/Plugin.Activate", a.activate)
 

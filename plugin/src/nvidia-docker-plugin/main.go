@@ -25,7 +25,7 @@ func init() {
 
 	flag.StringVar(&ListenAddr, "l", "localhost:3476", "Server listen address")
 	flag.StringVar(&VolumesPath, "v", "", "Path where to store the volumes (default is to use mktemp)")
-	flag.StringVar(&SocketPath, "s", "/run/docker/plugins/nvidia.sock", "NVIDIA plugin socket path")
+	flag.StringVar(&SocketPath, "s", "/run/docker/plugins", "NVIDIA plugin socket path")
 }
 
 func assert(err error) {
