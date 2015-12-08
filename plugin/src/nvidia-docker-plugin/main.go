@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -11,9 +12,9 @@ import (
 )
 
 var (
-	ListenAddr   string
-	VolumePrefix string
-	SocketPath   string
+	ListenAddr  string
+	VolumesPath string
+	SocketPath  string
 
 	Devices []nvidia.Device
 	Volumes nvidia.VolumeMap
@@ -23,7 +24,7 @@ func init() {
 	log.SetPrefix(os.Args[0] + " | ")
 
 	flag.StringVar(&ListenAddr, "l", "localhost:3476", "Server listen address")
-	flag.StringVar(&VolumePrefix, "p", "", "Volumes prefix path (default is to use mktemp)")
+	flag.StringVar(&VolumesPath, "v", "", "Path where to store the volumes (default is to use mktemp)")
 	flag.StringVar(&SocketPath, "s", "/run/docker/plugins/nvidia.sock", "NVIDIA plugin socket path")
 }
 
@@ -58,12 +59,13 @@ func main() {
 	Devices, err = nvidia.GetDevices()
 	assert(err)
 
-	if VolumePrefix == "" {
-		log.Println("Creating volumes")
-	} else {
-		log.Println("Creating volumes at", VolumePrefix)
+	if VolumesPath == "" {
+		VolumesPath, err = ioutil.TempDir("", "nvidia-volumes-")
+		assert(err)
+		defer func() { assert(os.RemoveAll(VolumesPath)) }()
 	}
-	Volumes, err = nvidia.GetVolumes(VolumePrefix)
+	log.Println("Creating volumes at", VolumesPath)
+	Volumes, err = nvidia.GetVolumes(VolumesPath)
 	assert(err)
 
 	plugin := NewPluginAPI(SocketPath)

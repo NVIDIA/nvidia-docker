@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"debug/elf"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -18,7 +17,6 @@ import (
 )
 
 const (
-	tempDir  = "nvidia-volumes-"
 	lib32Dir = "lib"
 	lib64Dir = "lib64"
 )
@@ -141,13 +139,6 @@ func which(bins ...string) ([]string, error) {
 }
 
 func GetVolumes(prefix string) (vols VolumeMap, err error) {
-	if prefix == "" {
-		prefix, err = ioutil.TempDir("", tempDir)
-		if err != nil {
-			return
-		}
-	}
-
 	cache, err := ldcache.Open()
 	if err != nil {
 		return nil, err
