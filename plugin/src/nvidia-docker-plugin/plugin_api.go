@@ -11,7 +11,10 @@ import (
 	"graceful"
 )
 
-const sockName = "nvidia.sock"
+const (
+	socketName   = "nvidia.sock"
+	acceptHeader = "application/vnd.docker.plugins.v1.1+json"
+)
 
 type plugin interface {
 	implement() string
@@ -25,10 +28,8 @@ type PluginAPI struct {
 }
 
 func accept(handler http.Handler) http.Handler {
-	const header = "application/vnd.docker.plugins.v1.1+json"
-
 	f := func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Accept") != header {
+		if r.Header.Get("Accept") != acceptHeader {
 			w.WriteHeader(http.StatusNotAcceptable)
 			return
 		}
@@ -41,7 +42,7 @@ func NewPluginAPI(prefix string) *PluginAPI {
 	os.MkdirAll(prefix, 0700)
 
 	a := &PluginAPI{
-		HTTPServer: graceful.NewHTTPServer("unix", path.Join(prefix, sockName), accept),
+		HTTPServer: graceful.NewHTTPServer("unix", path.Join(prefix, socketName), accept),
 	}
 	a.Handle("POST", "/Plugin.Activate", a.activate)
 

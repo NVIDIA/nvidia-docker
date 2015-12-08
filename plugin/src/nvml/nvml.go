@@ -19,7 +19,10 @@ const (
 	szProcName = 64
 )
 
-var ErrCPUAffinity = errors.New("failed to retrieve CPU affinity")
+var (
+	ErrCPUAffinity        = errors.New("failed to retrieve CPU affinity")
+	ErrUnsupportedP2PLink = errors.New("unsupported P2P link type")
+)
 
 type P2PLinkType uint
 
@@ -326,7 +329,7 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 	case C.NVML_TOPOLOGY_SYSTEM:
 		link = P2PLinkCrossCPU
 	default:
-		err = errors.New("unsupported P2P link type")
+		err = ErrUnsupportedP2PLink
 	}
 	return
 }
