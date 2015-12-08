@@ -7,7 +7,7 @@ USER_ID  := $(shell id -u)
 IMAGE  := nvdocker-build
 PREFIX := /usr/local/nvidia
 TARGET := nvidia-docker-plugin
-PLUGIN := $(BIN_DIR)/plugin
+PLUGIN := $(BIN_DIR)/nvidia-docker-plugin
 
 .PHONY: all install clean
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
 
-package main
+package nvidia
 
 import (
 	"bufio"

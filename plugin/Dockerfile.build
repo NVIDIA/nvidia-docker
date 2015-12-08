@@ -31,4 +31,4 @@ ARG UID
 RUN useradd --uid $UID build
 USER build
 
-CMD go get -v -ldflags="-s" plugin
+CMD go get -v -ldflags="-s" nvidia-docker-plugin

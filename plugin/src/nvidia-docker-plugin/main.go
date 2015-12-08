@@ -6,9 +6,8 @@ import (
 	"flag"
 	"log"
 	"os"
-	"os/exec"
 
-	"nvml"
+	"nvidia"
 )
 
 var (
@@ -16,12 +15,12 @@ var (
 	VolumePrefix string
 	SocketPath   string
 
-	Devices []Device
-	Volumes VolumeMap
+	Devices []nvidia.Device
+	Volumes nvidia.VolumeMap
 )
 
 func init() {
-	log.SetPrefix("nvidia-docker-plugin | ")
+	log.SetPrefix(os.Args[0] + " | ")
 
 	flag.StringVar(&ListenAddr, "l", "localhost:3476", "Server listen address")
 	flag.StringVar(&VolumePrefix, "p", "", "Volumes prefix path (default is to use mktemp)")
@@ -42,10 +41,6 @@ func exit() {
 	os.Exit(code)
 }
 
-func modprobeUVM() error {
-	return exec.Command("nvidia-modprobe", "-u", "-c=0").Run()
-}
-
 func main() {
 	var err error
 
@@ -53,14 +48,14 @@ func main() {
 	defer exit()
 
 	log.Println("Loading NVIDIA management library")
-	assert(nvml.Init())
-	defer func() { assert(nvml.Shutdown()) }()
+	assert(nvidia.Init())
+	defer func() { assert(nvidia.Shutdown()) }()
 
-	log.Println("Loading NVIDIA unified memory module")
-	assert(modprobeUVM())
+	log.Println("Loading NVIDIA unified memory")
+	assert(nvidia.LoadUVM())
 
 	log.Println("Discovering GPU devices")
-	Devices, err = GetDevices()
+	Devices, err = nvidia.GetDevices()
 	assert(err)
 
 	if VolumePrefix == "" {
@@ -68,7 +63,7 @@ func main() {
 	} else {
 		log.Println("Creating volumes at", VolumePrefix)
 	}
-	Volumes, err = GetVolumes(VolumePrefix)
+	Volumes, err = nvidia.GetVolumes(VolumePrefix)
 	assert(err)
 
 	plugin := NewPluginAPI(SocketPath)

@@ -12,8 +12,7 @@ import (
 	"text/tabwriter"
 	"text/template"
 
-	"cuda"
-	"nvml"
+	"nvidia"
 )
 
 type remoteV10 struct{}
@@ -22,8 +21,8 @@ func (r *remoteV10) version() string { return "v1.0" }
 
 func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	const tpl = `
-	Driver version:  	{{nvmlDriverVersion}}
-	Supported CUDA version:  	{{cudaDriverVersion}}
+	Driver version:  	{{driverVersion}}
+	Supported CUDA version:  	{{cudaVersion}}
 	{{range $i, $e := .}}
 	Device #{{$i}}
 	  Name:  	{{.Name}}
@@ -54,8 +53,8 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	{{end}}
 	`
 	m := template.FuncMap{
-		"nvmlDriverVersion": nvml.GetDriverVersion,
-		"cudaDriverVersion": cuda.GetDriverVersion,
+		"driverVersion": nvidia.GetDriverVersion,
+		"cudaVersion":   nvidia.GetCUDAVersion,
 	}
 	t := template.Must(template.New("").Funcs(m).Parse(tpl))
 	w := tabwriter.NewWriter(resp, 0, 4, 0, ' ', 0)
