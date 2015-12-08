@@ -12,8 +12,10 @@ type restapi interface {
 	version() string
 
 	gpuInfo(http.ResponseWriter, *http.Request)
+	gpuInfoJSON(http.ResponseWriter, *http.Request)
 	gpuStatus(http.ResponseWriter, *http.Request)
-	cli(http.ResponseWriter, *http.Request)
+	gpuStatusJSON(http.ResponseWriter, *http.Request)
+	dockerCLI(http.ResponseWriter, *http.Request)
 }
 
 type RemoteAPI struct {
@@ -38,8 +40,10 @@ func (a *RemoteAPI) register(apis ...restapi) {
 
 	handlers:
 		a.Handle("GET", prefix+"/gpu/info", api.gpuInfo)
+		a.Handle("GET", prefix+"/gpu/info/json", api.gpuInfoJSON)
 		a.Handle("GET", prefix+"/gpu/status", api.gpuStatus)
-		a.Handle("GET", prefix+"/docker/cli", api.cli)
+		a.Handle("GET", prefix+"/gpu/status/json", api.gpuStatusJSON)
+		a.Handle("GET", prefix+"/docker/cli", api.dockerCLI)
 
 		if i == len(apis)-1 && prefix != "" {
 			prefix = ""

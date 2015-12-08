@@ -17,8 +17,19 @@ type Device struct {
 	*CUDADev
 }
 
-func (d *Device) Status() (*nvml.DeviceStatus, error) {
-	return (*nvml.Device)(d.NVMLDev).Status()
+type NVMLDevStatus nvml.DeviceStatus
+
+type DeviceStatus struct {
+	*NVMLDevStatus
+}
+
+func (d *Device) Status() (*DeviceStatus, error) {
+	s, err := (*nvml.Device)(d.NVMLDev).Status()
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeviceStatus{(*NVMLDevStatus)(s)}, nil
 }
 
 type deviceSorter struct {

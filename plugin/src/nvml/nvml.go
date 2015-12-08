@@ -91,14 +91,25 @@ type UtilizationInfo struct {
 	Decoder uint
 }
 
+type PCIThroughputInfo struct {
+	RX uint
+	TX uint
+}
+
 type PCIStatusInfo struct {
 	BAR1Used   uint64
-	Throughput []uint
+	Throughput PCIThroughputInfo
+}
+
+type ECCErrorsInfo struct {
+	L1     uint64
+	L2     uint64
+	Global uint64
 }
 
 type MemoryInfo struct {
 	GlobalUsed uint64
-	ECCErrors  []uint64
+	ECCErrors  ECCErrorsInfo
 }
 
 type ProcessInfo struct {
@@ -286,14 +297,14 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 			C.NVML_MEMORY_LOCATION_L2_CACHE, &ecc[1]))
 		assert(C.nvmlDeviceGetMemoryErrorCounter(d.handle, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC,
 			C.NVML_MEMORY_LOCATION_DEVICE_MEMORY, &ecc[2]))
-		status.Memory.ECCErrors = []uint64{uint64(ecc[0]), uint64(ecc[1]), uint64(ecc[2])}
+		status.Memory.ECCErrors = ECCErrorsInfo{uint64(ecc[0]), uint64(ecc[1]), uint64(ecc[2])}
 	}
 
 	r = C.nvmlDeviceGetPcieThroughput(d.handle, C.NVML_PCIE_UTIL_RX_BYTES, &throughput[0])
 	if r != C.NVML_ERROR_NOT_SUPPORTED { // only supported on Maxwell or newer
 		assert(r)
 		assert(C.nvmlDeviceGetPcieThroughput(d.handle, C.NVML_PCIE_UTIL_TX_BYTES, &throughput[1]))
-		status.PCI.Throughput = []uint{uint(throughput[0]), uint(throughput[1])}
+		status.PCI.Throughput = PCIThroughputInfo{uint(throughput[0]), uint(throughput[1])}
 	}
 
 	status.Processes = make([]ProcessInfo, nprocs)

@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -48,7 +49,7 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	    SM:  	{{.Clocks.SM}} MHz
 	    Memory:  	{{.Clocks.Memory}} MHz
 	    Graphics:  	{{.Clocks.Graphics}} MHz
-	  P2P Available{{if len .Topology | eq 0}}:  	N/A{{else}}{{range .Topology}}
+	  P2P Available{{if len .Topology | eq 0}}:  	None{{else}}{{range .Topology}}
 	    {{.BusID}} - {{(.Link.String)}}{{end}}{{end}}
 	{{end}}
 	`
@@ -63,6 +64,41 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	assert(w.Flush())
 }
 
+func (r *remoteV10) gpuInfoJSON(resp http.ResponseWriter, req *http.Request) {
+	var body bytes.Buffer
+	if err := writeInfoJSON(&body); err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Write(body.Bytes())
+}
+
+func writeInfoJSON(wr io.Writer) error {
+	driverVersion, err := nvidia.GetDriverVersion()
+	if err != nil {
+		return err
+	}
+
+	cudaVersion, err := nvidia.GetCUDAVersion()
+	if err != nil {
+		return err
+	}
+
+	r := struct {
+		DriverVersion string
+		CUDAVersion   string
+		Devices       []nvidia.Device
+	}{
+		driverVersion,
+		cudaVersion,
+		Devices,
+	}
+	assert(json.NewEncoder(wr).Encode(r))
+	return nil
+}
+
 func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	const tpl = `{{range $i, $e := .}}{{$s := (.Status)}}
 	Device #{{$i}}
@@ -74,20 +110,20 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	    Decoder:  	{{$s.Utilization.Decoder}} %
 	  Memory
 	    Global:  	{{$s.Memory.GlobalUsed}} / {{.Memory.Global}} MiB
-	    ECC Errors{{if len $s.Memory.ECCErrors | eq 0}}:  	N/A{{else}}
-	      L1 Cache:  	{{index $s.Memory.ECCErrors 0}}
-	      L2 Cache:  	{{index $s.Memory.ECCErrors 1}}
-	      Memory:  	{{index $s.Memory.ECCErrors 2}}{{end}}
+	    ECC Errors{{if not $s.Memory.ECCErrors}}:  	N/A{{else}}
+	      L1 Cache:  	{{$s.Memory.ECCErrors.L1}}
+	      L2 Cache:  	{{$s.Memory.ECCErrors.L2}}
+	      Memory:  	{{$s.Memory.ECCErrors.Global}}{{end}}
 	  PCI
 	    BAR1:  	{{$s.PCI.BAR1Used}} / {{.PCI.BAR1}} MiB
-	    Throughput{{if len $s.PCI.Throughput | eq 0}}:  	N/A{{else}}
-	      RX:  	{{index $s.PCI.Throughput 0}} KB/s
-	      TX:  	{{index $s.PCI.Throughput 1}} KB/s{{end}}
+	    Throughput{{if not $s.PCI.Throughput}}:  	N/A{{else}}
+	      RX:  	{{$s.PCI.Throughput.RX}} KB/s
+	      TX:  	{{$s.PCI.Throughput.TX}} KB/s{{end}}
 	  Clocks
 	    SM:  	{{$s.Clocks.SM}} MHz
 	    Memory:  	{{$s.Clocks.Memory}} MHz
 	    Graphics:  	{{$s.Clocks.Graphics}} MHz
-	  Processes{{if len $s.Processes | eq 0}}:  	N/A{{else}}{{range $s.Processes}}
+	  Processes{{if len $s.Processes | eq 0}}:  	None{{else}}{{range $s.Processes}}
 	    {{.PID}} - {{.Name}}{{end}}{{end}}
 	{{end}}
 	`
@@ -99,17 +135,43 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	assert(w.Flush())
 }
 
-func (r *remoteV10) cli(resp http.ResponseWriter, req *http.Request) {
+func (r *remoteV10) gpuStatusJSON(resp http.ResponseWriter, req *http.Request) {
+	var body bytes.Buffer
+	if err := writeStatusJSON(&body); err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Write(body.Bytes())
+}
+
+func writeStatusJSON(wr io.Writer) error {
+	status := make([]*nvidia.DeviceStatus, 0, len(Devices))
+	for i := range Devices {
+		s, err := Devices[i].Status()
+		if err != nil {
+			return err
+		}
+		status = append(status, s)
+	}
+
+	r := struct{ Devices []*nvidia.DeviceStatus }{status}
+	assert(json.NewEncoder(wr).Encode(r))
+	return nil
+}
+
+func (r *remoteV10) dockerCLI(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
 
 	ids := strings.Split(req.FormValue("dev"), " ")
-	if err := cliDevice(&body, ids); err != nil {
+	if err := dockerCLIDevice(&body, ids); err != nil {
 		http.Error(resp, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	names := strings.Split(req.FormValue("vol"), " ")
-	if err := cliVolume(&body, names); err != nil {
+	if err := dockerCLIVolume(&body, names); err != nil {
 		http.Error(resp, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -117,7 +179,7 @@ func (r *remoteV10) cli(resp http.ResponseWriter, req *http.Request) {
 	resp.Write(body.Bytes())
 }
 
-func cliDevice(wr io.Writer, ids []string) error {
+func dockerCLIDevice(wr io.Writer, ids []string) error {
 	const tpl = "--device=/dev/nvidiactl --device=/dev/nvidia-uvm {{range .}}--device={{.}} {{end}}"
 
 	devs := make([]string, 0, len(Devices))
@@ -141,7 +203,7 @@ func cliDevice(wr io.Writer, ids []string) error {
 	return nil
 }
 
-func cliVolume(wr io.Writer, names []string) error {
+func dockerCLIVolume(wr io.Writer, names []string) error {
 	const tpl = "--volume-driver=nvidia {{range .}}--volume={{.}} {{end}}"
 
 	vols := make([]string, 0, len(Volumes))
