@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -21,10 +22,9 @@ func (p *pluginVolume) register(api *PluginAPI) {
 	api.Handle("POST", prefix+".Path", p.path)
 }
 
-func sptr(s string) *string { return &s }
-
 func errVolumeUnknown(vol string) *string {
-	return sptr("No such volume: " + vol)
+	s := "No such volume: " + vol
+	return &s
 }
 
 func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
@@ -32,10 +32,9 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 	r := struct{ Err *string }{}
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
+	log.Printf("Received create request for volume '%s'\n", q.Name)
 	if v, ok := Volumes[q.Name]; ok {
-		if err := v.Create(); err != nil {
-			r.Err = sptr(err.Error())
-		}
+		assert(v.Create())
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
 	}
@@ -47,10 +46,9 @@ func (p *pluginVolume) remove(resp http.ResponseWriter, req *http.Request) {
 	r := struct{ Err *string }{}
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
+	log.Printf("Received remove request for volume '%s'\n", q.Name)
 	if v, ok := Volumes[q.Name]; ok {
-		if err := v.Remove(); err != nil {
-			r.Err = sptr(err.Error())
-		}
+		assert(v.Remove())
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
 	}

@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -62,9 +63,11 @@ func (a *PluginAPI) register(plugins ...plugin) {
 func (a *PluginAPI) activate(resp http.ResponseWriter, req *http.Request) {
 	r := struct{ Implements []string }{}
 
+	log.Println("Received handshake request")
 	r.Implements = make([]string, len(a.plugins))
 	for i, p := range a.plugins {
 		r.Implements[i] = p.implement()
 	}
 	assert(json.NewEncoder(resp).Encode(r))
+	log.Println("Plugins activated", r.Implements)
 }
