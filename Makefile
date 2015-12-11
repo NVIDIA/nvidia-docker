@@ -6,7 +6,7 @@ DOCKER_BIN ?= docker
 ifeq ($(OS), ubuntu)
 	CUDA_VERSIONS := 7.5 7.0 6.5
 else ifeq ($(OS), centos)
-        CUDA_VERSIONS := 7.5 7.0
+	CUDA_VERSIONS := 7.5 7.0
 else
 $(error unsupported OS: $(OS))
 endif
@@ -15,10 +15,10 @@ CUDA_LATEST := $(word 1, $(CUDA_VERSIONS))
 # cuDNN versions
 ifeq ($(OS), ubuntu)
 	CUDNN_VERSIONS := 7.5-cudnn4-devel 7.5-cudnn4-runtime \
-			  7.5-cudnn3-devel 7.5-cudnn3-runtime \
-			  	      7.0-cudnn4-devel 7.0-cudnn4-runtime \
-			  		  7.0-cudnn3-devel 7.0-cudnn3-runtime \
-	                  7.0-cudnn2-devel 7.0-cudnn2-runtime
+					7.5-cudnn3-devel 7.5-cudnn3-runtime \
+					7.0-cudnn4-devel 7.0-cudnn4-runtime \
+					7.0-cudnn3-devel 7.0-cudnn3-runtime \
+					7.0-cudnn2-devel 7.0-cudnn2-runtime
 endif
 CUDNN_DEVEL_LATEST := $(word 1, $(CUDNN_VERSIONS))
 CUDNN_RUNTIME_LATEST := $(word 2, $(CUDNN_VERSIONS))
@@ -86,7 +86,7 @@ push: all-cuda all-cudnn
 		echo "Error: USERNAME not set"; \
 		exit 1; \
 	fi; \
-        # Retag all images with the username as a prefix.
+	# Retag all images with the username as a prefix.
 	$(DOCKER_BIN) images | awk '$$1 == "cuda" { print $$2 }' | xargs -I {} $(DOCKER_BIN) tag -f cuda:{} $(USERNAME)/cuda:{}
 	$(DOCKER_BIN) push $(USERNAME)/cuda
 	$(DOCKER_BIN) images | awk '$$1 == "$(USERNAME)/cuda" { print $$2 }' | xargs -I {} $(DOCKER_BIN) rmi $(USERNAME)/cuda:{}
