@@ -13,7 +13,8 @@ CUDA_LATEST := $(word 1, $(CUDA_VERSIONS))
 
 # cuDNN versions
 ifeq ($(OS), ubuntu)
-	CUDNN_VERSIONS := 7.5-cudnn3-devel 7.5-cudnn3-runtime \
+	CUDNN_VERSIONS := 7.5-cudnn4-devel 7.5-cudnn4-runtime \
+			  7.5-cudnn3-devel 7.5-cudnn3-runtime \
 	                  7.0-cudnn2-devel 7.0-cudnn2-runtime
 endif
 CUDNN_DEVEL_LATEST := $(word 1, $(CUDNN_VERSIONS))
@@ -68,6 +69,12 @@ cudnn-runtime: $(CUDNN_RUNTIME_LATEST)
 
 %-cudnn3-runtime: %-runtime $(OS)/cuda/%/runtime/cudnn3/Dockerfile
 	docker build -t cuda:$@ $(OS)/cuda/$*/runtime/cudnn3
+
+%-cudnn4-devel: %-devel $(OS)/cuda/%/devel/cudnn4/Dockerfile
+	docker build -t cuda:$@ $(OS)/cuda/$*/devel/cudnn4
+
+%-cudnn4-runtime: %-runtime $(OS)/cuda/%/runtime/cudnn4/Dockerfile
+	docker build -t cuda:$@ $(OS)/cuda/$*/runtime/cudnn4
 
 all-cudnn: $(CUDNN_VERSIONS) cudnn cudnn-devel cudnn-runtime
 
