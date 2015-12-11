@@ -15,6 +15,8 @@ CUDA_LATEST := $(word 1, $(CUDA_VERSIONS))
 ifeq ($(OS), ubuntu)
 	CUDNN_VERSIONS := 7.5-cudnn4-devel 7.5-cudnn4-runtime \
 			  7.5-cudnn3-devel 7.5-cudnn3-runtime \
+			  	      7.0-cudnn4-devel 7.0-cudnn4-runtime \
+			  		  7.0-cudnn3-devel 7.0-cudnn3-runtime \
 	                  7.0-cudnn2-devel 7.0-cudnn2-runtime
 endif
 CUDNN_DEVEL_LATEST := $(word 1, $(CUDNN_VERSIONS))
