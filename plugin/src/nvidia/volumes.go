@@ -6,19 +6,30 @@ import (
 	"bufio"
 	"bytes"
 	"debug/elf"
+	"encoding/binary"
 	"io"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"ldcache"
 )
 
 const (
+	binDir   = "bin"
 	lib32Dir = "lib"
 	lib64Dir = "lib64"
+)
+
+type ctype uint
+type components map[ctype][]string
+
+const (
+	libraries ctype = iota
+	binaries
 )
 
 type volumeDir struct {
@@ -34,7 +45,7 @@ type volumeInfo struct {
 type Volume struct {
 	Name       string
 	Mountpoint string
-	components []string
+	objs       components
 
 	*volumeInfo
 }
@@ -43,27 +54,94 @@ type VolumeMap map[string]*Volume
 
 var volumes = []Volume{
 	{
-		"bin",
-		"/usr/local/nvidia/bin",
-		[]string{
-			"nvidia-cuda-mps-control",
-			"nvidia-cuda-mps-server",
-			"nvidia-debugdump",
-			"nvidia-persistenced",
-			"nvidia-smi",
-		}, nil,
-	},
-	{
-		"cuda",
+		"driver",
 		"/usr/local/nvidia",
-		[]string{
-			"libcuda.so",
-			"libnvcuvid.so",
-			"libnvidia-compiler.so",
-			"libnvidia-encode.so",
-			"libnvidia-ml.so",
+		components{
+			binaries: {
+				//"nvidia-modprobe",       // Kernel module loader
+				//"nvidia-settings",       // X server settings
+				//"nvidia-xconfig",        // X xorg.conf editor
+				"nvidia-cuda-mps-control", // Multi process service CLI
+				"nvidia-cuda-mps-server",  // Multi process service server
+				"nvidia-debugdump",        // GPU coredump utility
+				"nvidia-persistenced",     // Persistence mode utility
+				"nvidia-smi",              // System management interface
+			},
+			libraries: {
+				//"libnvidia-cfg.so",  // GPU configuration (used by nvidia-xconfig)
+				//"libnvidia-gtk2.so", // GTK2 (used by nvidia-settings)
+				//"libnvidia-gtk3.so", // GTK3 (used by nvidia-settings)
+				//"libnvidia-wfb.so",  // Wrapped software rendering
+
+				"libnvidia-ml.so", // Management library
+				"libcuda.so",      // CUDA runtime
+
+				//"libvdpau.so",       // VDPAU ICD
+				//"libvdpau_trace.so", // VDPAU debug trace
+				"libvdpau_nvidia.so",  // VDPAU vendor
+				"libnvidia-encode.so", // Video encoder
+				"libnvcuvid.so",       // Video decoder
+
+				"libnvidia-fbc.so", // Framebuffer capture
+				"libnvidia-ifr.so", // OpenGL framebuffer capture
+
+				//"libOpenCL.so",        // OpenCL ICD
+				"libnvidia-opencl.so",   // OpenCL vendor
+				"libnvidia-compiler.so", // PTX compiler (used by libnvidia-opencl)
+
+				//"libglx.so",         // GLX extension module for X server
+				"libGL.so",            // OpenGL / GLX
+				"libnvidia-glcore.so", // OpenGL core (used by libGL and libglx)
+				"libnvidia-tls.so",    // Thread local storage (used by libGL and libglx)
+
+				//"libOpenGL.so",       // OpenGL ICD
+				//"libEGL.so",          // EGL ICD
+				//"libGLdispatch.so",   // OpenGL vendor dispatch (used by libOpenGL and libEGL)
+				"libEGL_nvidia.so",     // EGL vendor
+				"libGLESv1_CM.so",      // OpenGL ES v1 common profile
+				"libGLESv2.so",         // OpenGL ES v2
+				"libnvidia-eglcore.so", // EGL core (used by libGLES and libEGL_nvidia)
+				"libnvidia-glsi.so",    // OpenGL system interaction (used by libEGL_nvidia)
+			},
 		}, nil,
 	},
+}
+
+func blacklisted(file string, obj *elf.File) (bool, error) {
+	lib := regexp.MustCompile("^.*/lib([\\w-]+)\\.so[\\d.]*$")
+	glcore := regexp.MustCompile("libnvidia-e?glcore.so")
+
+	if m := lib.FindStringSubmatch(file); m != nil {
+		switch m[1] {
+
+		// Blacklist EGL/OpenGL libraries issued by other vendors
+		case "GLESv1_CM":
+			fallthrough
+		case "GLESv2":
+			fallthrough
+		case "GL":
+			deps, err := obj.DynString(elf.DT_NEEDED)
+			if err != nil {
+				return false, err
+			}
+			for _, d := range deps {
+				if glcore.MatchString(d) {
+					return false, nil
+				}
+			}
+			return true, nil
+
+		// Blacklist TLS libraries using the old ABI (!= 2.3.99)
+		case "nvidia-tls":
+			const abi = 0x6300000003
+			s, err := obj.Section(".note.ABI-tag").Data()
+			if err != nil {
+				return false, err
+			}
+			return binary.LittleEndian.Uint64(s[24:]) != abi, nil
+		}
+	}
+	return false, nil
 }
 
 func (v *Volume) Create() (err error) {
@@ -86,14 +164,22 @@ func (v *Volume) Create() (err error) {
 			if err != nil {
 				return err
 			}
-			soname, err := obj.DynString(elf.DT_SONAME)
-			obj.Close()
+			defer obj.Close()
+
+			ok, err := blacklisted(f, obj)
 			if err != nil {
 				return err
+			}
+			if ok {
+				continue
 			}
 
 			l := path.Join(dir, path.Base(f))
 			if err := os.Link(f, l); err != nil {
+				return err
+			}
+			soname, err := obj.DynString(elf.DT_SONAME)
+			if err != nil {
 				return err
 			}
 			if len(soname) > 0 {
@@ -157,18 +243,21 @@ func GetVolumes(prefix string) (vols VolumeMap, err error) {
 			Path: path.Join(prefix, vol.Name),
 		}
 
-		if vol.Name == "bin" {
-			bins, err := which(vol.components...)
-			if err != nil {
-				return nil, err
+		for t, c := range vol.objs {
+			switch t {
+			case binaries:
+				bins, err := which(c...)
+				if err != nil {
+					return nil, err
+				}
+				vol.dirs = append(vol.dirs, volumeDir{binDir, bins})
+			case libraries:
+				libs32, libs64 := cache.Lookup(c...)
+				vol.dirs = append(vol.dirs,
+					volumeDir{lib32Dir, libs32},
+					volumeDir{lib64Dir, libs64},
+				)
 			}
-			vol.dirs = append(vol.dirs, volumeDir{".", bins})
-		} else {
-			libs32, libs64 := cache.Lookup(vol.components...)
-			vol.dirs = append(vol.dirs,
-				volumeDir{lib32Dir, libs32},
-				volumeDir{lib64Dir, libs64},
-			)
 		}
 		vols[vol.Name] = vol
 	}
