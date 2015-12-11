@@ -4,6 +4,8 @@ package main
 
 import (
 	"bytes"
+	"compress/zlib"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -225,4 +227,46 @@ func dockerCLIVolume(wr io.Writer, names []string) error {
 	t := template.Must(template.New("").Parse(tpl))
 	assert(t.Execute(wr, vols))
 	return nil
+}
+
+// Zlib compress
+func compress(buf []byte) []byte {
+	b := bytes.NewBuffer(make([]byte, 0, len(buf)))
+	w := zlib.NewWriter(b)
+	_, err := w.Write(buf)
+	assert(err)
+	err = w.Close()
+	assert(err)
+	return b.Bytes()
+}
+
+// Base 64 (RFC 6920)
+func encode(buf []byte) string {
+	s := base64.URLEncoding.EncodeToString(buf)
+	if n := len(buf) % 3; n > 0 {
+		s = s[:len(s)-(3-n)] // remove padding
+	}
+	return s
+}
+
+func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
+	const format = "--attributes=gpus:%s --resources=gpus:{%s}"
+
+	// Generate Mesos attributes
+	var b bytes.Buffer
+	if err := writeInfoJSON(&b); err != nil {
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	attr := encode(compress(b.Bytes()))
+
+	// Generate Mesos custom resources
+	uuids := make([]string, 0, len(Devices))
+	for i := range Devices {
+		uuids = append(uuids, Devices[i].UUID)
+	}
+	res := strings.Join(uuids, ",")
+
+	_, err := fmt.Fprintf(resp, format, attr, res)
+	assert(err)
 }
