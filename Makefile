@@ -88,5 +88,15 @@ push: all-cuda all-cudnn
 	docker push $(USERNAME)/cuda
 	docker images | awk '$$1 == "$(USERNAME)/cuda" { print $$2 }' | xargs -I {} docker rmi $(USERNAME)/cuda:{}
 
+pull:
+	if [ -z "$(USERNAME)" ]; then \
+		echo "Error: USERNAME not set"; \
+		exit 1; \
+	fi; \
+        # Download all images from the Docker Hub and retag them to remove the prefix.
+	docker pull --all-tags $(USERNAME)/cuda
+	docker images | awk '$$1 == "$(USERNAME)/cuda" { print $$2 }' | \
+		xargs -I {} sh -c 'docker tag -f $(USERNAME)/cuda:{} cuda:{} ; docker rmi $(USERNAME)/cuda:{}'
+
 clean:
 	docker rmi -f `docker images -q --filter "label=com.nvidia.cuda.version"`
