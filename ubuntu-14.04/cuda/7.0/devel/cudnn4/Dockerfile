@@ -1,4 +1,4 @@
-FROM cuda:7.5-devel
+FROM cuda:7.0-devel
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
