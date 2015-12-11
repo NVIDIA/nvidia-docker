@@ -79,6 +79,10 @@ cudnn-runtime: $(CUDNN_RUNTIME_LATEST)
 
 all-cudnn: $(CUDNN_VERSIONS) cudnn cudnn-devel cudnn-runtime
 
+# caffe-nv images
+caffe: $(OS)/caffe/Dockerfile
+	docker build -t caffe $(OS)/caffe
+
 push: all-cuda all-cudnn
 	if [ -z "$(USERNAME)" ]; then \
 		echo "Error: USERNAME not set"; \
