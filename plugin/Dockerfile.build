@@ -1,5 +1,3 @@
-# Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
-
 FROM golang
 
 ENV NVIDIA_GPGKEY_SUM bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e0b5c1c
@@ -31,4 +29,4 @@ ARG UID
 RUN useradd --uid $UID build
 USER build
 
-CMD go get -v -ldflags="-s" nvidia-docker-plugin
+CMD go get -v -ldflags="-s" nvidia-docker nvidia-docker-plugin
