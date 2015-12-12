@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -44,7 +45,22 @@ func exit() {
 	os.Exit(code)
 }
 
-func Setup(image string) []string {
+func SetupVolumes() {
+	vols, err := nvidia.LookupVolumes("")
+	assert(err)
+
+	for _, v := range vols {
+		n := fmt.Sprintf("%s_%s", PluginName, v.Name)
+		assert(docker.CreateVolume(n))
+		path, err := docker.InspectVolume(n)
+		assert(err)
+		assert(volumeEmpty(n, path))
+		assert(v.CreateAt(path))
+		fmt.Println(n)
+	}
+}
+
+func GenDockerArgs(image string) []string {
 	vols, err := volumesNeeded(image)
 	assert(err)
 	if vols == nil {
@@ -64,7 +80,7 @@ func Setup(image string) []string {
 }
 
 func main() {
-	var image string
+	var option string
 
 	args := os.Args[1:]
 	defer exit()
@@ -75,16 +91,21 @@ func main() {
 	command, i, err := docker.ParseArgs(args)
 	assert(err)
 	if command != "" {
-		image, i, err = docker.ParseArgs(args[i+1:], command)
+		option, i, err = docker.ParseArgs(args[i+1:], command)
 		assert(err)
 	}
 	switch command {
 	case "create":
 		fallthrough
 	case "run":
-		if image != "" {
-			nvargs := Setup(image)
-			args = append(args[:i], append(nvargs, args[i:]...)...)
+		if option != "" {
+			a := GenDockerArgs(option)
+			args = append(args[:i], append(a, args[i:]...)...)
+		}
+	case "volume":
+		if option == "setup" {
+			SetupVolumes()
+			return
 		}
 	default:
 	}

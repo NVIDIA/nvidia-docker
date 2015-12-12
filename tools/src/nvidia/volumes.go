@@ -138,6 +138,11 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 	return false, nil
 }
 
+func (v *Volume) CreateAt(path string) error {
+	v.Path = path
+	return v.Create()
+}
+
 func (v *Volume) Create() (err error) {
 	if err = os.MkdirAll(v.Path, 0755); err != nil {
 		return

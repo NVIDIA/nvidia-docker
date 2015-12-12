@@ -4,6 +4,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"strconv"
 	"strings"
 
@@ -15,6 +17,19 @@ const (
 	labelCUDAVersion   = "com.nvidia.cuda.version"
 	labelVolumesNeeded = "com.nvidia.volumes.needed"
 )
+
+func volumeEmpty(vol, path string) error {
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err = f.Readdirnames(1); err == io.EOF {
+		return nil
+	}
+	return fmt.Errorf("volume %s already exists and is not empty", vol)
+}
 
 func cudaIsSupported(image string) error {
 	var vmaj, vmin int
