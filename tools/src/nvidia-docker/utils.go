@@ -76,15 +76,13 @@ func devicesArgs(devs []nvidia.Device) ([]string, error) {
 func volumesArgs(vols []string) ([]string, error) {
 	args := make([]string, 0, len(vols))
 
-	for i := range nvidia.Volumes {
-		vol := &nvidia.Volumes[i]
-
+	for _, vol := range nvidia.Volumes {
 		for _, v := range vols {
 			if v == vol.Name {
 				// Check if the volume exists locally otherwise fallback to using the plugin
-				lv := fmt.Sprintf("%s_%s", PluginName, v)
-				if _, err := docker.InspectVolume(lv); err == nil {
-					args = append(args, fmt.Sprintf("--volume=%s:%s", lv, vol.Mountpoint))
+				n := fmt.Sprintf("%s_%s", PluginName, v)
+				if _, err := docker.InspectVolume(n); err == nil {
+					args = append(args, fmt.Sprintf("--volume=%s:%s", n, vol.Mountpoint))
 				} else {
 					args = append(args, fmt.Sprintf("--volume-driver=%s", PluginName))
 					args = append(args, fmt.Sprintf("--volume=%s:%s", v, vol.Mountpoint))
