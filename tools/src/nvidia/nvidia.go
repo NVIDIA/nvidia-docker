@@ -3,6 +3,7 @@
 package nvidia
 
 import (
+	"os"
 	"os/exec"
 
 	"cuda"
@@ -18,6 +19,9 @@ func Shutdown() error {
 }
 
 func LoadUVM() error {
+	if _, err := os.Stat("/dev/nvidia-uvm"); err == nil {
+		return nil
+	}
 	return exec.Command("nvidia-modprobe", "-u", "-c=0").Run()
 }
 
