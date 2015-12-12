@@ -54,34 +54,44 @@ func volumesNeeded(image string) ([]string, error) {
 	return strings.Split(label, " "), nil
 }
 
-func devicesArgs() ([]string, error) {
+func devicesArgs(devs []nvidia.Device) ([]string, error) {
 	args := []string{"--device=/dev/nvidiactl", "--device=/dev/nvidia-uvm"}
 
 	if len(GPU) == 0 {
-		for i := range Devices {
-			args = append(args, fmt.Sprintf("--device=%s", Devices[i].Path))
+		for i := range devs {
+			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
 		}
 	} else {
 		for _, id := range GPU {
 			i, err := strconv.Atoi(id)
-			if err != nil || i < 0 || i >= len(Devices) {
+			if err != nil || i < 0 || i >= len(devs) {
 				return nil, fmt.Errorf("invalid device: %s", id)
 			}
-			args = append(args, fmt.Sprintf("--device=%s", Devices[i].Path))
+			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
 		}
 	}
 	return args, nil
 }
 
-func volumesArgs(needed []string) ([]string, error) {
-	args := make([]string, 0, len(needed))
+func volumesArgs(vols []string) ([]string, error) {
+	args := make([]string, 0, len(vols))
 
-	for _, n := range needed {
-		v, ok := Volumes[n]
-		if !ok {
-			return nil, fmt.Errorf("invalid volume: %s", n)
+	for i := range nvidia.Volumes {
+		vol := &nvidia.Volumes[i]
+
+		for _, v := range vols {
+			if v == vol.Name {
+				// Check if the volume exists locally otherwise fallback to using the plugin
+				lv := fmt.Sprintf("%s_%s", PluginName, v)
+				if _, err := docker.InspectVolume(lv); err == nil {
+					args = append(args, fmt.Sprintf("--volume=%s:%s", lv, vol.Mountpoint))
+				} else {
+					args = append(args, fmt.Sprintf("--volume-driver=%s", PluginName))
+					args = append(args, fmt.Sprintf("--volume=%s:%s", v, vol.Mountpoint))
+				}
+				break
+			}
 		}
-		args = append(args, fmt.Sprintf("--volume=%s:%s", v.Path, v.Mountpoint))
 	}
 	return args, nil
 }

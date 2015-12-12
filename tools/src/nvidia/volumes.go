@@ -24,40 +24,34 @@ const (
 	lib64Dir = "lib64"
 )
 
-type ctype uint
-type components map[ctype][]string
-
-const (
-	libraries ctype = iota
-	binaries
-)
+type components map[string][]string
 
 type volumeDir struct {
 	name  string
 	files []string
 }
 
-type volumeInfo struct {
+type VolumeInfo struct {
+	Name       string
+	Mountpoint string
+	Components components
+}
+
+type Volume struct {
+	*VolumeInfo
+
 	Path string
 	dirs []volumeDir
 }
 
-type Volume struct {
-	Name       string
-	Mountpoint string
-	objs       components
-
-	*volumeInfo
-}
-
 type VolumeMap map[string]*Volume
 
-var volumes = []Volume{
+var Volumes = []VolumeInfo{
 	{
 		"driver",
 		"/usr/local/nvidia",
 		components{
-			binaries: {
+			"binaries": {
 				//"nvidia-modprobe",       // Kernel module loader
 				//"nvidia-settings",       // X server settings
 				//"nvidia-xconfig",        // X xorg.conf editor
@@ -67,7 +61,7 @@ var volumes = []Volume{
 				"nvidia-persistenced",     // Persistence mode utility
 				"nvidia-smi",              // System management interface
 			},
-			libraries: {
+			"libraries": {
 				//"libnvidia-cfg.so",  // GPU configuration (used by nvidia-xconfig)
 				//"libnvidia-gtk2.so", // GTK2 (used by nvidia-settings)
 				//"libnvidia-gtk3.so", // GTK3 (used by nvidia-settings)
@@ -103,7 +97,7 @@ var volumes = []Volume{
 				"libnvidia-eglcore.so", // EGL core (used by libGLES and libEGL_nvidia)
 				"libnvidia-glsi.so",    // OpenGL system interaction (used by libEGL_nvidia)
 			},
-		}, nil,
+		},
 	},
 }
 
@@ -224,7 +218,7 @@ func which(bins ...string) ([]string, error) {
 	return paths, nil
 }
 
-func GetVolumes(prefix string) (vols VolumeMap, err error) {
+func LookupVolumes(prefix string) (vols VolumeMap, err error) {
 	cache, err := ldcache.Open()
 	if err != nil {
 		return nil, err
@@ -235,23 +229,23 @@ func GetVolumes(prefix string) (vols VolumeMap, err error) {
 		}
 	}()
 
-	vols = make(VolumeMap, len(volumes))
+	vols = make(VolumeMap, len(Volumes))
 
-	for i := range volumes {
-		vol := &volumes[i]
-		vol.volumeInfo = &volumeInfo{
-			Path: path.Join(prefix, vol.Name),
+	for i := range Volumes {
+		vol := &Volume{
+			VolumeInfo: &Volumes[i],
+			Path:       path.Join(prefix, Volumes[i].Name),
 		}
 
-		for t, c := range vol.objs {
+		for t, c := range vol.Components {
 			switch t {
-			case binaries:
+			case "binaries":
 				bins, err := which(c...)
 				if err != nil {
 					return nil, err
 				}
 				vol.dirs = append(vol.dirs, volumeDir{binDir, bins})
-			case libraries:
+			case "libraries":
 				libs32, libs64 := cache.Lookup(c...)
 				vol.dirs = append(vol.dirs,
 					volumeDir{lib32Dir, libs32},

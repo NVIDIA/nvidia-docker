@@ -11,27 +11,18 @@ import (
 	"nvidia"
 )
 
+const PluginName = "nvidia"
+
 const (
-	EnvVolumesPath = "NV_VOLUMES_PATH"
-	EnvDockerBin   = "NV_DOCKER_BIN"
-	EnvGPU         = "NV_GPU"
+	EnvDockerBin = "NV_DOCKER_BIN"
+	EnvGPU       = "NV_GPU"
 )
 
-var (
-	VolumesPath string
-	DockerBin   []string
-	GPU         []string
-
-	Devices []nvidia.Device
-	Volumes nvidia.VolumeMap
-)
+var GPU []string
 
 func init() {
 	log.SetPrefix(os.Args[0] + " | ")
 
-	if VolumesPath = os.Getenv(EnvVolumesPath); VolumesPath == "" {
-		VolumesPath = "/usr/local/nvidia/volumes"
-	}
 	GPU = strings.FieldsFunc(os.Getenv(EnvGPU), func(c rune) bool {
 		return c == ' ' || c == ','
 	})
@@ -59,24 +50,16 @@ func Setup(image string) []string {
 	if vols == nil {
 		return nil
 	}
-
-	assert(nvidia.Init())
-	defer func() { assert(nvidia.Shutdown()) }()
-
 	assert(cudaIsSupported(image))
-	assert(nvidia.LoadUVM())
-	Devices, err = nvidia.GetDevices()
-	assert(err)
-	Volumes, err = nvidia.GetVolumes(VolumesPath)
-	assert(err)
-	for _, v := range Volumes {
-		assert(v.Create())
-	}
 
-	d, err := devicesArgs()
+	// FIXME avoid looking up every devices
+	devs, err := nvidia.LookupDevices()
+	assert(err)
+	d, err := devicesArgs(devs)
 	assert(err)
 	v, err := volumesArgs(vols)
 	assert(err)
+
 	return append(d, v...)
 }
 
@@ -85,6 +68,9 @@ func main() {
 
 	args := os.Args[1:]
 	defer exit()
+
+	assert(nvidia.Init())
+	defer func() { assert(nvidia.Shutdown()) }()
 
 	command, i, err := docker.ParseArgs(args)
 	assert(err)
@@ -103,5 +89,6 @@ func main() {
 	default:
 	}
 
+	assert(nvidia.LoadUVM())
 	assert(docker.Docker(args...))
 }

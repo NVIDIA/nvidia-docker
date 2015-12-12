@@ -56,7 +56,7 @@ func main() {
 	assert(nvidia.LoadUVM())
 
 	log.Println("Discovering GPU devices")
-	Devices, err = nvidia.GetDevices()
+	Devices, err = nvidia.LookupDevices()
 	assert(err)
 
 	if VolumesPath == "" {
@@ -65,7 +65,7 @@ func main() {
 		defer func() { assert(os.RemoveAll(VolumesPath)) }()
 	}
 	log.Println("Provisioning volumes at", VolumesPath)
-	Volumes, err = nvidia.GetVolumes(VolumesPath)
+	Volumes, err = nvidia.LookupVolumes(VolumesPath)
 	assert(err)
 
 	plugin := NewPluginAPI(SocketPath)

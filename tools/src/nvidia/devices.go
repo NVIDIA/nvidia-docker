@@ -48,7 +48,7 @@ func (s *deviceSorter) Less(i, j int) bool {
 	return s.devs[i].PCI.BusID < s.devs[j].PCI.BusID
 }
 
-func GetDevices() (devs []Device, err error) {
+func LookupDevices() (devs []Device, err error) {
 	var i uint
 
 	n, err := nvml.GetDeviceCount()
