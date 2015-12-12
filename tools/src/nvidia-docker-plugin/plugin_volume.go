@@ -28,8 +28,8 @@ func errVolumeUnknown(vol string) *string {
 }
 
 func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
-	q := struct{ Name string }{}
-	r := struct{ Err *string }{}
+	var q struct{ Name string }
+	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received create request for volume '%s'\n", q.Name)
@@ -42,8 +42,8 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (p *pluginVolume) remove(resp http.ResponseWriter, req *http.Request) {
-	q := struct{ Name string }{}
-	r := struct{ Err *string }{}
+	var q struct{ Name string }
+	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received remove request for volume '%s'\n", q.Name)
@@ -56,8 +56,8 @@ func (p *pluginVolume) remove(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (p *pluginVolume) mount(resp http.ResponseWriter, req *http.Request) {
-	q := struct{ Name string }{}
-	r := struct{ Mountpoint, Err *string }{}
+	var q struct{ Name string }
+	var r struct{ Mountpoint, Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	if v, ok := Volumes[q.Name]; ok {
@@ -69,8 +69,8 @@ func (p *pluginVolume) mount(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (p *pluginVolume) unmount(resp http.ResponseWriter, req *http.Request) {
-	q := struct{ Name string }{}
-	r := struct{ Err *string }{}
+	var q struct{ Name string }
+	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	if _, ok := Volumes[q.Name]; !ok {
