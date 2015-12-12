@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"docker"
 	"nvidia"
 )
 
@@ -19,7 +20,7 @@ func cudaIsSupported(image string) error {
 	var vmaj, vmin int
 	var lmaj, lmin int
 
-	label, err := DockerGetLabel(image, labelCUDAVersion)
+	label, err := docker.Label(image, labelCUDAVersion)
 	if err != nil {
 		return err
 	}
@@ -43,7 +44,7 @@ func cudaIsSupported(image string) error {
 }
 
 func volumesNeeded(image string) ([]string, error) {
-	label, err := DockerGetLabel(image, labelVolumesNeeded)
+	label, err := docker.Label(image, labelVolumesNeeded)
 	if err != nil {
 		return nil, err
 	}

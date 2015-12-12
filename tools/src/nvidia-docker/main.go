@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"docker"
 	"nvidia"
 )
 
@@ -31,12 +32,11 @@ func init() {
 	if VolumesPath = os.Getenv(EnvVolumesPath); VolumesPath == "" {
 		VolumesPath = "/usr/local/nvidia/volumes"
 	}
-	if DockerBin = strings.Fields(os.Getenv(EnvDockerBin)); len(DockerBin) == 0 {
-		DockerBin = []string{"docker"}
-	}
 	GPU = strings.FieldsFunc(os.Getenv(EnvGPU), func(c rune) bool {
 		return c == ' ' || c == ','
 	})
+	bin := strings.Fields(os.Getenv(EnvDockerBin))
+	docker.SetBinary(bin...)
 }
 
 func assert(err error) {
@@ -93,10 +93,10 @@ func main() {
 	args := os.Args[1:]
 	defer exit()
 
-	command, i, err := DockerParseArgs(args)
+	command, i, err := docker.ParseArgs(args)
 	assert(err)
 	if command != "" {
-		image, i, err = DockerParseArgs(args[i+1:], command)
+		image, i, err = docker.ParseArgs(args[i+1:], command)
 		assert(err)
 	}
 	switch command {
@@ -110,5 +110,5 @@ func main() {
 	default:
 	}
 
-	assert(Docker(args...))
+	assert(docker.Docker(args...))
 }

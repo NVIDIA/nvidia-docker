@@ -1,20 +1,29 @@
 // Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
 
-package main
+package docker
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os/exec"
 	"regexp"
 	"syscall"
 )
 
+var dockerBin = []string{"docker"}
+
+func SetBinary(bin ...string) {
+	if len(bin) > 0 {
+		dockerBin = bin
+	}
+}
+
 func docker(command string, arg ...string) ([]byte, error) {
 	var buf bytes.Buffer
 
-	args := append(append(DockerBin[1:], command), arg...)
-	cmd := exec.Command(DockerBin[0], args...)
+	args := append(append(dockerBin[1:], command), arg...)
+	cmd := exec.Command(dockerBin[0], args...)
 	cmd.Stderr = &buf
 
 	b, err := cmd.Output()
@@ -25,7 +34,7 @@ func docker(command string, arg ...string) ([]byte, error) {
 	return b, nil
 }
 
-func DockerParseArgs(args []string, cmd ...string) (string, int, error) {
+func ParseArgs(args []string, cmd ...string) (string, int, error) {
 	type void struct{}
 
 	re := regexp.MustCompile("(?m)^\\s*(-[^=]+)=[^{true}{false}].*$")
@@ -56,7 +65,7 @@ func DockerParseArgs(args []string, cmd ...string) (string, int, error) {
 	return "", -1, nil
 }
 
-func DockerGetLabel(image, label string) (string, error) {
+func Label(image, label string) (string, error) {
 	format := fmt.Sprintf(`--format='{{index .Config.Labels "%s"}}'`, label)
 
 	b, err := docker("inspect", format, image)
@@ -66,12 +75,30 @@ func DockerGetLabel(image, label string) (string, error) {
 	return string(bytes.Trim(b, " \n")), nil
 }
 
+func CreateVolume(name string) error {
+	_, err := docker("volume", "create", "--name", name)
+	return err
+}
+
+func InspectVolume(name string) (string, error) {
+	var vol []struct{ Name, Driver, Mountpoint string }
+
+	b, err := docker("volume", "inspect", name)
+	if err != nil {
+		return "", err
+	}
+	if err := json.Unmarshal(b, &vol); err != nil {
+		return "", err
+	}
+	return vol[0].Mountpoint, nil
+}
+
 func Docker(arg ...string) error {
-	cmd, err := exec.LookPath(DockerBin[0])
+	cmd, err := exec.LookPath(dockerBin[0])
 	if err != nil {
 		return err
 	}
-	args := append(DockerBin, arg...)
+	args := append(dockerBin, arg...)
 
 	return syscall.Exec(cmd, args, nil)
 }
