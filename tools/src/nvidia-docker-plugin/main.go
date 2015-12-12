@@ -64,7 +64,7 @@ func main() {
 		assert(err)
 		defer func() { assert(os.RemoveAll(VolumesPath)) }()
 	}
-	log.Println("Creating volumes at", VolumesPath)
+	log.Println("Provisioning volumes at", VolumesPath)
 	Volumes, err = nvidia.GetVolumes(VolumesPath)
 	assert(err)
 

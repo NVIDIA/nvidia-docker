@@ -60,20 +60,13 @@ func Setup(image string) []string {
 		return nil
 	}
 
-	log.Println("Loading NVIDIA management library")
 	assert(nvidia.Init())
 	defer func() { assert(nvidia.Shutdown()) }()
 
 	assert(cudaIsSupported(image))
-
-	log.Println("Loading NVIDIA unified memory")
 	assert(nvidia.LoadUVM())
-
-	log.Println("Discovering GPU devices")
 	Devices, err = nvidia.GetDevices()
 	assert(err)
-
-	log.Println("Creating volumes at", VolumesPath)
 	Volumes, err = nvidia.GetVolumes(VolumesPath)
 	assert(err)
 	for _, v := range Volumes {

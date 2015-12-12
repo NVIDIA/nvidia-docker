@@ -76,17 +76,17 @@ var volumes = []Volume{
 				"libnvidia-ml.so", // Management library
 				"libcuda.so",      // CUDA runtime
 
-				//"libvdpau.so",       // VDPAU ICD
+				//"libvdpau.so",       // VDPAU ICD loader
 				//"libvdpau_trace.so", // VDPAU debug trace
-				"libvdpau_nvidia.so",  // VDPAU vendor
+				"libvdpau_nvidia.so",  // NVIDIA VDPAU ICD
 				"libnvidia-encode.so", // Video encoder
 				"libnvcuvid.so",       // Video decoder
 
 				"libnvidia-fbc.so", // Framebuffer capture
 				"libnvidia-ifr.so", // OpenGL framebuffer capture
 
-				//"libOpenCL.so",        // OpenCL ICD
-				"libnvidia-opencl.so",   // OpenCL vendor
+				//"libOpenCL.so",        // OpenCL ICD loader
+				"libnvidia-opencl.so",   // NVIDIA OpenCL ICD
 				"libnvidia-compiler.so", // PTX compiler (used by libnvidia-opencl)
 
 				//"libglx.so",         // GLX extension module for X server
@@ -94,10 +94,10 @@ var volumes = []Volume{
 				"libnvidia-glcore.so", // OpenGL core (used by libGL and libglx)
 				"libnvidia-tls.so",    // Thread local storage (used by libGL and libglx)
 
-				//"libOpenGL.so",       // OpenGL ICD
-				//"libEGL.so",          // EGL ICD
-				//"libGLdispatch.so",   // OpenGL vendor dispatch (used by libOpenGL and libEGL)
-				"libEGL_nvidia.so",     // EGL vendor
+				//"libOpenGL.so",       // OpenGL ICD loader
+				//"libEGL.so",          // EGL ICD loader
+				//"libGLdispatch.so",   // OpenGL dispatch (used by libOpenGL and libEGL)
+				"libEGL_nvidia.so",     // NVIDIA EGL ICD
 				"libGLESv1_CM.so",      // OpenGL ES v1 common profile
 				"libGLESv2.so",         // OpenGL ES v2
 				"libnvidia-eglcore.so", // EGL core (used by libGLES and libEGL_nvidia)
