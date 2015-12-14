@@ -5,8 +5,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"os"
-	"strings"
 
 	"docker"
 	"nvidia"
@@ -14,21 +14,14 @@ import (
 
 const PluginName = "nvidia"
 
-const (
-	EnvDockerBin = "NV_DOCKER_BIN"
-	EnvGPU       = "NV_GPU"
+var (
+	Host *url.URL
+	GPU  []string
 )
-
-var GPU []string
 
 func init() {
 	log.SetPrefix(os.Args[0] + " | ")
-
-	GPU = strings.FieldsFunc(os.Getenv(EnvGPU), func(c rune) bool {
-		return c == ' ' || c == ','
-	})
-	bin := strings.Fields(os.Getenv(EnvDockerBin))
-	docker.SetBinary(bin...)
+	LoadEnvironment()
 }
 
 func assert(err error) {
