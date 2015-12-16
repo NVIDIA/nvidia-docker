@@ -68,25 +68,18 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 
 func (r *remoteV10) gpuInfoJSON(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
-	if err := writeInfoJSON(&body); err != nil {
-		http.Error(resp, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
+	writeInfoJSON(&body)
 	resp.Header().Set("Content-Type", "application/json")
-	resp.Write(body.Bytes())
+	_, err := body.WriteTo(resp)
+	assert(err)
 }
 
-func writeInfoJSON(wr io.Writer) error {
+func writeInfoJSON(wr io.Writer) {
 	driverVersion, err := nvidia.GetDriverVersion()
-	if err != nil {
-		return err
-	}
-
+	assert(err)
 	cudaVersion, err := nvidia.GetCUDAVersion()
-	if err != nil {
-		return err
-	}
+	assert(err)
 
 	r := struct {
 		DriverVersion string
@@ -98,7 +91,6 @@ func writeInfoJSON(wr io.Writer) error {
 		Devices,
 	}
 	assert(json.NewEncoder(wr).Encode(r))
-	return nil
 }
 
 func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
@@ -129,7 +121,6 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	    {{.PID}} - {{.Name}}{{end}}{{end}}
 	{{end}}
 	`
-
 	t := template.Must(template.New("").Parse(tpl))
 	w := tabwriter.NewWriter(resp, 0, 4, 0, ' ', 0)
 
@@ -139,50 +130,46 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 
 func (r *remoteV10) gpuStatusJSON(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
-	if err := writeStatusJSON(&body); err != nil {
-		http.Error(resp, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
+	writeStatusJSON(&body)
 	resp.Header().Set("Content-Type", "application/json")
-	resp.Write(body.Bytes())
+	_, err := body.WriteTo(resp)
+	assert(err)
 }
 
-func writeStatusJSON(wr io.Writer) error {
+func writeStatusJSON(wr io.Writer) {
 	status := make([]*nvidia.DeviceStatus, 0, len(Devices))
+
 	for i := range Devices {
 		s, err := Devices[i].Status()
-		if err != nil {
-			return err
-		}
+		assert(err)
 		status = append(status, s)
 	}
-
 	r := struct{ Devices []*nvidia.DeviceStatus }{status}
 	assert(json.NewEncoder(wr).Encode(r))
-	return nil
 }
 
 func (r *remoteV10) dockerCLI(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
 
-	ids := strings.Split(req.FormValue("dev"), " ")
-	if err := dockerCLIDevice(&body, ids); err != nil {
+	devs := strings.Split(req.FormValue("dev"), " ")
+	vols := strings.Split(req.FormValue("vol"), " ")
+
+	if err := dockerCLIDevices(&body, devs); err != nil {
 		http.Error(resp, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	names := strings.Split(req.FormValue("vol"), " ")
-	if err := dockerCLIVolume(&body, names); err != nil {
+	body.WriteRune(' ')
+	if err := dockerCLIVolumes(&body, vols); err != nil {
 		http.Error(resp, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	resp.Write(body.Bytes())
+	_, err := body.WriteTo(resp)
+	assert(err)
 }
 
-func dockerCLIDevice(wr io.Writer, ids []string) error {
-	const tpl = "--device=/dev/nvidiactl --device=/dev/nvidia-uvm {{range .}}--device={{.}} {{end}}"
+func dockerCLIDevices(wr io.Writer, ids []string) error {
+	const tpl = "--device=/dev/nvidiactl --device=/dev/nvidia-uvm{{range .}} --device={{.}}{{end}}"
 
 	devs := make([]string, 0, len(Devices))
 
@@ -199,14 +186,13 @@ func dockerCLIDevice(wr io.Writer, ids []string) error {
 			devs = append(devs, Devices[i].Path)
 		}
 	}
-
 	t := template.Must(template.New("").Parse(tpl))
 	assert(t.Execute(wr, devs))
 	return nil
 }
 
-func dockerCLIVolume(wr io.Writer, names []string) error {
-	const tpl = "--volume-driver=nvidia {{range .}}--volume={{.}} {{end}}"
+func dockerCLIVolumes(wr io.Writer, names []string) error {
+	const tpl = "--volume-driver=nvidia{{range .}} --volume={{.}}{{end}}"
 
 	vols := make([]string, 0, len(Volumes))
 
@@ -223,30 +209,9 @@ func dockerCLIVolume(wr io.Writer, names []string) error {
 			vols = append(vols, fmt.Sprintf("%s:%s", v.Name, v.Mountpoint))
 		}
 	}
-
 	t := template.Must(template.New("").Parse(tpl))
 	assert(t.Execute(wr, vols))
 	return nil
-}
-
-// Zlib compress
-func compress(buf []byte) []byte {
-	b := bytes.NewBuffer(make([]byte, 0, len(buf)))
-	w := zlib.NewWriter(b)
-	_, err := w.Write(buf)
-	assert(err)
-	err = w.Close()
-	assert(err)
-	return b.Bytes()
-}
-
-// Base 64 (RFC 6920)
-func encode(buf []byte) string {
-	s := base64.URLEncoding.EncodeToString(buf)
-	if n := len(buf) % 3; n > 0 {
-		s = s[:len(s)-(3-n)] // remove padding
-	}
-	return s
 }
 
 func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
@@ -254,11 +219,8 @@ func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
 
 	// Generate Mesos attributes
 	var b bytes.Buffer
-	if err := writeInfoJSON(&b); err != nil {
-		http.Error(resp, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	attr := encode(compress(b.Bytes()))
+	writeInfoJSON(&b)
+	attr := base64Encode(zlibCompress(b.Bytes()))
 
 	// Generate Mesos custom resources
 	uuids := make([]string, 0, len(Devices))
@@ -269,4 +231,22 @@ func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
 
 	_, err := fmt.Fprintf(resp, format, attr, res)
 	assert(err)
+}
+
+func zlibCompress(buf []byte) []byte {
+	b := bytes.NewBuffer(make([]byte, 0, len(buf)))
+	w := zlib.NewWriter(b)
+	_, err := w.Write(buf)
+	assert(err)
+	err = w.Close()
+	assert(err)
+	return b.Bytes()
+}
+
+func base64Encode(buf []byte) string {
+	s := base64.URLEncoding.EncodeToString(buf)
+	if n := len(buf) % 3; n > 0 {
+		s = s[:len(s)-(3-n)] // remove padding (RFC 6920)
+	}
+	return s
 }
