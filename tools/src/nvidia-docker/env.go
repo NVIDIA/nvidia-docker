@@ -27,17 +27,38 @@ func LoadEnvironment() {
 }
 
 func getHost() (host *url.URL) {
-	re := regexp.MustCompile("([0-9A-Za-z.:-]+):\\d+")
+	var err error
 
-	u, _ := url.Parse(os.Getenv(envNVHost))
-	if (u.Scheme == "http" || u.Scheme == "ssh") && re.MatchString(u.Host) {
-		return u
+	re := regexp.MustCompile("^([0-9A-Za-z.:\\-\\[\\]]+)(:\\d+)$")
+
+	if h := os.Getenv(envNVHost); h != "" {
+		host, err = url.Parse(h)
+		if err != nil {
+			return nil
+		}
+	} else {
+		host, err = url.Parse(os.Getenv(envDockerHost))
+		if err != nil {
+			return nil
+		}
+		if host.Scheme == "tcp" {
+			host.Scheme = "ssh"
+			host.Host = re.ReplaceAllString(host.Host, "$1:3476")
+		}
 	}
-	u, _ = url.Parse(os.Getenv(envDockerHost))
-	if u.Scheme == "tcp" && re.MatchString(u.Host) {
-		u.Scheme = "http"
-		u.Host = re.ReplaceAllString(u.Host, "$1:3476")
-		return u
+	if re.MatchString(host.Host) {
+		switch host.Scheme {
+		case "ssh":
+			m := re.FindStringSubmatch(host.Host)
+			host.Host = m[1]
+			if !re.MatchString(host.Host) {
+				host.Host += ":22"
+			}
+			host.Opaque = "localhost" + m[2]
+			return
+		case "http":
+			return
+		}
 	}
 	return nil
 }

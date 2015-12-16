@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -11,8 +10,6 @@ import (
 	"docker"
 	"nvidia"
 )
-
-const PluginName = "nvidia"
 
 var (
 	Host *url.URL
@@ -38,38 +35,20 @@ func exit() {
 	os.Exit(code)
 }
 
-func SetupVolumes() {
-	vols, err := nvidia.LookupVolumes("")
-	assert(err)
-
-	for _, v := range vols {
-		n := fmt.Sprintf("%s_%s", PluginName, v.Name)
-		assert(docker.CreateVolume(n))
-		path, err := docker.InspectVolume(n)
-		assert(err)
-		assert(volumeEmpty(n, path))
-		assert(v.CreateAt(path))
-		fmt.Println(n)
-	}
-}
-
-func GenDockerArgs(image string) []string {
-	vols, err := volumesNeeded(image)
+func GenerateDockerArgs(image string) []string {
+	vols, err := VolumesNeeded(image)
 	assert(err)
 	if vols == nil {
 		return nil
 	}
-	assert(cudaIsSupported(image))
-
-	// FIXME avoid looking up every devices
-	devs, err := nvidia.LookupDevices()
+	if Host != nil {
+		args, err := GenerateRemoteArgs(image, vols)
+		assert(err)
+		return args
+	}
+	args, err := GenerateLocalArgs(image, vols)
 	assert(err)
-	d, err := devicesArgs(devs)
-	assert(err)
-	v, err := volumesArgs(vols)
-	assert(err)
-
-	return append(d, v...)
+	return args
 }
 
 func main() {
@@ -92,12 +71,12 @@ func main() {
 		fallthrough
 	case "run":
 		if option != "" {
-			a := GenDockerArgs(option)
+			a := GenerateDockerArgs(option)
 			args = append(args[:i], append(a, args[i:]...)...)
 		}
 	case "volume":
 		if option == "setup" {
-			SetupVolumes()
+			assert(CreateLocalVolumes())
 			return
 		}
 	default:
