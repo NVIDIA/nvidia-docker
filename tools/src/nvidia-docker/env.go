@@ -12,18 +12,18 @@ import (
 )
 
 const (
-	envDockerHost  = "DOCKER_HOST"
-	envNVDockerBin = "NV_DOCKER_BIN"
-	envNVHost      = "NV_HOST"
-	envNVGPU       = "NV_GPU"
+	envDockerHost = "DOCKER_HOST"
+	envNVDocker   = "NV_DOCKER"
+	envNVHost     = "NV_HOST"
+	envNVGPU      = "NV_GPU"
 )
 
 func LoadEnvironment() {
 	Host = getHost()
 	GPU = getGPU()
 
-	b := getDockerBin()
-	docker.SetBinary(b...)
+	cmd := getDocker()
+	docker.SetCommand(cmd...)
 }
 
 func getHost() (host *url.URL) {
@@ -69,6 +69,6 @@ func getGPU() []string {
 	})
 }
 
-func getDockerBin() []string {
-	return strings.Fields(os.Getenv(envNVDockerBin))
+func getDocker() []string {
+	return strings.Fields(os.Getenv(envNVDocker))
 }

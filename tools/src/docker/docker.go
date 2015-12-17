@@ -11,19 +11,19 @@ import (
 	"syscall"
 )
 
-var dockerBin = []string{"docker"}
+var dockerCmd = []string{"docker"}
 
-func SetBinary(bin ...string) {
-	if len(bin) > 0 {
-		dockerBin = bin
+func SetCommand(cmd ...string) {
+	if len(cmd) > 0 {
+		dockerCmd = cmd
 	}
 }
 
 func docker(command string, arg ...string) ([]byte, error) {
 	var buf bytes.Buffer
 
-	args := append(append(dockerBin[1:], command), arg...)
-	cmd := exec.Command(dockerBin[0], args...)
+	args := append(append(dockerCmd[1:], command), arg...)
+	cmd := exec.Command(dockerCmd[0], args...)
 	cmd.Stderr = &buf
 
 	b, err := cmd.Output()
@@ -94,11 +94,11 @@ func InspectVolume(name string) (string, error) {
 }
 
 func Docker(arg ...string) error {
-	cmd, err := exec.LookPath(dockerBin[0])
+	cmd, err := exec.LookPath(dockerCmd[0])
 	if err != nil {
 		return err
 	}
-	args := append(dockerBin, arg...)
+	args := append(dockerCmd, arg...)
 
 	return syscall.Exec(cmd, args, nil)
 }
