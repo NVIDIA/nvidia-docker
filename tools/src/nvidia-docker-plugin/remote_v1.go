@@ -28,16 +28,16 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	Supported CUDA version:  	{{cudaVersion}}
 	{{range $i, $e := .}}
 	Device #{{$i}}
-	  Name:  	{{.Name}}
+	  Model:  	{{.Model}}
 	  UUID:  	{{.UUID}}
 	  Path:  	{{.Path}}
-	  Gen: 	{{.Gen}}
+	  Family: 	{{.Family}}
 	  Arch:  	{{.Arch}}
 	  Cores:  	{{.Cores}}
 	  Power:  	{{.Power}} W
 	  CPU Affinity:  	NUMA node{{.CPUAffinity}}
 	  PCI
-	    BusID:  	{{.PCI.BusID}}
+	    Bus ID:  	{{.PCI.BusID}}
 	    BAR1:  	{{.PCI.BAR1}} MiB
 	    Bandwidth:  	{{.PCI.Bandwidth}} GB/s
 	  Memory
@@ -48,9 +48,8 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	    L2 Cache:  	{{.Memory.L2Cache}} KiB
 	    Bandwidth:  	{{.Memory.Bandwidth}} GB/s
 	  Clocks
-	    SM:  	{{.Clocks.SM}} MHz
+	    Core:  	{{.Clocks.Core}} MHz
 	    Memory:  	{{.Clocks.Memory}} MHz
-	    Graphics:  	{{.Clocks.Graphics}} MHz
 	  P2P Available{{if len .Topology | eq 0}}:  	None{{else}}{{range .Topology}}
 	    {{.BusID}} - {{(.Link.String)}}{{end}}{{end}}
 	{{end}}
@@ -76,20 +75,19 @@ func (r *remoteV10) gpuInfoJSON(resp http.ResponseWriter, req *http.Request) {
 }
 
 func writeInfoJSON(wr io.Writer) {
-	driverVersion, err := nvidia.GetDriverVersion()
-	assert(err)
-	cudaVersion, err := nvidia.GetCUDAVersion()
-	assert(err)
+	var err error
 
 	r := struct {
-		DriverVersion string
-		CUDAVersion   string
-		Devices       []nvidia.Device
+		Version struct{ Driver, CUDA string }
+		Devices []nvidia.Device
 	}{
-		driverVersion,
-		cudaVersion,
-		Devices,
+		Devices: Devices,
 	}
+	r.Version.Driver, err = nvidia.GetDriverVersion()
+	assert(err)
+	r.Version.CUDA, err = nvidia.GetCUDAVersion()
+	assert(err)
+
 	assert(json.NewEncoder(wr).Encode(r))
 }
 
@@ -105,18 +103,17 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	  Memory
 	    Global:  	{{$s.Memory.GlobalUsed}} / {{.Memory.Global}} MiB
 	    ECC Errors{{if not $s.Memory.ECCErrors}}:  	N/A{{else}}
-	      L1 Cache:  	{{$s.Memory.ECCErrors.L1}}
-	      L2 Cache:  	{{$s.Memory.ECCErrors.L2}}
-	      Memory:  	{{$s.Memory.ECCErrors.Global}}{{end}}
+	      L1 Cache:  	{{$s.Memory.ECCErrors.L1Cache}}
+	      L2 Cache:  	{{$s.Memory.ECCErrors.L2Cache}}
+	      Global:  	{{$s.Memory.ECCErrors.Global}}{{end}}
 	  PCI
 	    BAR1:  	{{$s.PCI.BAR1Used}} / {{.PCI.BAR1}} MiB
 	    Throughput{{if not $s.PCI.Throughput}}:  	N/A{{else}}
 	      RX:  	{{$s.PCI.Throughput.RX}} KB/s
 	      TX:  	{{$s.PCI.Throughput.TX}} KB/s{{end}}
 	  Clocks
-	    SM:  	{{$s.Clocks.SM}} MHz
+	    Core:  	{{$s.Clocks.Core}} MHz
 	    Memory:  	{{$s.Clocks.Memory}} MHz
-	    Graphics:  	{{$s.Clocks.Graphics}} MHz
 	  Processes{{if len $s.Processes | eq 0}}:  	None{{else}}{{range $s.Processes}}
 	    {{.PID}} - {{.Name}}{{end}}{{end}}
 	{{end}}

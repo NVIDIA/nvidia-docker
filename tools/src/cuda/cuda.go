@@ -25,7 +25,7 @@ type MemoryInfo struct {
 type Device struct {
 	handle C.int
 
-	Gen    string
+	Family string
 	Arch   string
 	Cores  uint
 	Memory MemoryInfo
@@ -39,7 +39,7 @@ func cudaErr(ret C.cudaError_t) error {
 	return errors.New(err)
 }
 
-var archToGen = map[string]string{
+var archToFamily = map[string]string{
 	"1": "Tesla",
 	"2": "Fermi",
 	"3": "Kepler",
@@ -96,7 +96,7 @@ func NewDevice(busID string) (*Device, error) {
 
 	return &Device{
 		handle: dev,
-		Gen:    archToGen[arch[:1]],
+		Family: archToFamily[arch[:1]],
 		Arch:   arch,
 		Cores:  cores * uint(prop.multiProcessorCount),
 		Memory: MemoryInfo{

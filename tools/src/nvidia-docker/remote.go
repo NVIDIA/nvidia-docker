@@ -27,7 +27,9 @@ const (
 )
 
 func GenerateRemoteArgs(image string, vols []string) ([]string, error) {
-	var info struct{ CUDAVersion string }
+	var info struct {
+		Version struct{ CUDA string }
+	}
 
 	c := httpClient(Host)
 
@@ -40,7 +42,7 @@ func GenerateRemoteArgs(image string, vols []string) ([]string, error) {
 	if err := json.NewDecoder(r.Body).Decode(&info); err != nil {
 		return nil, err
 	}
-	if err := cudaSupported(image, info.CUDAVersion); err != nil {
+	if err := cudaSupported(image, info.Version.CUDA); err != nil {
 		return nil, err
 	}
 

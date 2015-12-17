@@ -13,7 +13,7 @@ import (
 
 const (
 	szDriver   = C.NVML_SYSTEM_DRIVER_VERSION_BUFFER_SIZE
-	szName     = C.NVML_DEVICE_NAME_BUFFER_SIZE
+	szModel    = C.NVML_DEVICE_NAME_BUFFER_SIZE
 	szUUID     = C.NVML_DEVICE_UUID_BUFFER_SIZE
 	szProcs    = 32
 	szProcName = 64
@@ -61,9 +61,8 @@ func (t P2PLinkType) String() string {
 }
 
 type ClockInfo struct {
-	Graphics uint
-	SM       uint
-	Memory   uint
+	Core   uint
+	Memory uint
 }
 
 type PCIInfo struct {
@@ -75,7 +74,7 @@ type PCIInfo struct {
 type Device struct {
 	handle C.nvmlDevice_t
 
-	Name        string
+	Model       string
 	UUID        string
 	Path        string
 	Power       uint
@@ -102,9 +101,9 @@ type PCIStatusInfo struct {
 }
 
 type ECCErrorsInfo struct {
-	L1     uint64
-	L2     uint64
-	Global uint64
+	L1Cache uint64
+	L2Cache uint64
+	Global  uint64
 }
 
 type MemoryInfo struct {
@@ -177,13 +176,13 @@ var pcieGenToBandwidth = map[int]uint{
 func NewDevice(idx uint) (device *Device, err error) {
 	var (
 		dev   C.nvmlDevice_t
-		name  [szName]C.char
+		model [szModel]C.char
 		uuid  [szUUID]C.char
 		pci   C.nvmlPciInfo_t
 		minor C.uint
 		bar1  C.nvmlBAR1Memory_t
 		power C.uint
-		clock [3]C.uint
+		clock [2]C.uint
 		pciel [2]C.uint
 		mask  cpuMask
 	)
@@ -195,15 +194,14 @@ func NewDevice(idx uint) (device *Device, err error) {
 	}()
 
 	assert(C.nvmlDeviceGetHandleByIndex(C.uint(idx), &dev))
-	assert(C.nvmlDeviceGetName(dev, &name[0], szName))
+	assert(C.nvmlDeviceGetName(dev, &model[0], szModel))
 	assert(C.nvmlDeviceGetUUID(dev, &uuid[0], szUUID))
 	assert(C.nvmlDeviceGetPciInfo(dev, &pci))
 	assert(C.nvmlDeviceGetMinorNumber(dev, &minor))
 	assert(C.nvmlDeviceGetBAR1MemoryInfo(dev, &bar1))
 	assert(C.nvmlDeviceGetPowerManagementLimit(dev, &power))
-	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_GRAPHICS, &clock[0]))
-	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_SM, &clock[1]))
-	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_MEM, &clock[2]))
+	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_SM, &clock[0]))
+	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_MEM, &clock[1]))
 	assert(C.nvmlDeviceGetMaxPcieLinkGeneration(dev, &pciel[0]))
 	assert(C.nvmlDeviceGetMaxPcieLinkWidth(dev, &pciel[1]))
 	assert(C.nvmlDeviceGetCpuAffinity(dev, C.uint(len(mask)), (*C.ulong)(&mask[0])))
@@ -214,7 +212,7 @@ func NewDevice(idx uint) (device *Device, err error) {
 
 	device = &Device{
 		handle:      dev,
-		Name:        C.GoString(&name[0]),
+		Model:       C.GoString(&model[0]),
 		UUID:        C.GoString(&uuid[0]),
 		Path:        fmt.Sprintf("/dev/nvidia%d", uint(minor)),
 		Power:       uint(power / 1000),
@@ -225,9 +223,8 @@ func NewDevice(idx uint) (device *Device, err error) {
 			Bandwidth: pcieGenToBandwidth[int(pciel[0])] * uint(pciel[1]) / 1000,
 		},
 		Clocks: ClockInfo{
-			Graphics: uint(clock[0]),
-			SM:       uint(clock[1]),
-			Memory:   uint(clock[2]),
+			Core:   uint(clock[0]),
+			Memory: uint(clock[1]),
 		},
 	}
 	return
@@ -242,7 +239,7 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 		decoder    [2]C.uint
 		mem        C.nvmlMemory_t
 		ecc        [3]C.ulonglong
-		clock      [3]C.uint
+		clock      [2]C.uint
 		bar1       C.nvmlBAR1Memory_t
 		throughput [2]C.uint
 		procname   [szProcName]C.char
@@ -262,9 +259,8 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 	assert(C.nvmlDeviceGetEncoderUtilization(d.handle, &encoder[0], &encoder[1]))
 	assert(C.nvmlDeviceGetDecoderUtilization(d.handle, &decoder[0], &decoder[1]))
 	assert(C.nvmlDeviceGetMemoryInfo(d.handle, &mem))
-	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_GRAPHICS, &clock[0]))
-	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_SM, &clock[1]))
-	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_MEM, &clock[2]))
+	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_SM, &clock[0]))
+	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_MEM, &clock[1]))
 	assert(C.nvmlDeviceGetBAR1MemoryInfo(d.handle, &bar1))
 	assert(C.nvmlDeviceGetComputeRunningProcesses(d.handle, &nprocs, &procs[0]))
 
@@ -280,9 +276,8 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 			GlobalUsed: uint64(mem.used / (1024 * 1024)),
 		},
 		Clocks: ClockInfo{
-			Graphics: uint(clock[0]),
-			SM:       uint(clock[1]),
-			Memory:   uint(clock[2]),
+			Core:   uint(clock[0]),
+			Memory: uint(clock[1]),
 		},
 		PCI: PCIStatusInfo{
 			BAR1Used: uint64(bar1.bar1Used / (1024 * 1024)),
