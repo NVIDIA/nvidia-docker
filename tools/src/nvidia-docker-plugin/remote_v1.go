@@ -195,7 +195,7 @@ func dockerCLIVolumes(wr io.Writer, names []string) error {
 
 	if len(names) == 1 && (names[0] == "*" || names[0] == "") {
 		for _, v := range Volumes {
-			vols = append(vols, fmt.Sprintf("%s:%s", v.Name, v.Mountpoint))
+			vols = append(vols, fmt.Sprintf("%s:%s:ro", v.Name, v.Mountpoint))
 		}
 	} else {
 		for _, n := range names {
@@ -203,7 +203,7 @@ func dockerCLIVolumes(wr io.Writer, names []string) error {
 			if !ok {
 				return fmt.Errorf("invalid volume: %s", n)
 			}
-			vols = append(vols, fmt.Sprintf("%s:%s", v.Name, v.Mountpoint))
+			vols = append(vols, fmt.Sprintf("%s:%s:ro", v.Name, v.Mountpoint))
 		}
 	}
 	t := template.Must(template.New("").Parse(tpl))

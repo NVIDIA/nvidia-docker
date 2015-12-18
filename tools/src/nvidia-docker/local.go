@@ -107,10 +107,10 @@ func volumesArgs(vols []string) ([]string, error) {
 				// Check if the volume exists locally otherwise fallback to using the plugin
 				n := fmt.Sprintf("%s_%s", pluginName, v)
 				if _, err := docker.InspectVolume(n); err == nil {
-					args = append(args, fmt.Sprintf("--volume=%s:%s", n, vol.Mountpoint))
+					args = append(args, fmt.Sprintf("--volume=%s:%s:ro", n, vol.Mountpoint))
 				} else {
 					args = append(args, fmt.Sprintf("--volume-driver=%s", pluginName))
-					args = append(args, fmt.Sprintf("--volume=%s:%s", v, vol.Mountpoint))
+					args = append(args, fmt.Sprintf("--volume=%s:%s:ro", v, vol.Mountpoint))
 				}
 				break
 			}
