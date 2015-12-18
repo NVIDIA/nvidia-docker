@@ -1,7 +1,6 @@
 # Copyright (c) 2015, NVIDIA CORPORATION. All rights reserved.
 
-MAKE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-BIN_DIR  := $(MAKE_DIR)/bin
+BIN_DIR  := $(CURDIR)/bin
 USER_ID  := $(shell id -u)
 
 IMAGE  := nvdocker-build
@@ -14,7 +13,7 @@ PLUGIN := $(BIN_DIR)/nvidia-docker-plugin
 all : $(BIN_DIR)
 
 $(BIN_DIR) :
-	@docker build --build-arg UID=$(USER_ID) -t $(IMAGE) -f Dockerfile.build $(MAKE_DIR)
+	@docker build --build-arg UID=$(USER_ID) -t $(IMAGE) -f Dockerfile.build $(CURDIR)
 	@mkdir -p $(BIN_DIR)
 	@docker run --rm -v $(BIN_DIR):/go/bin $(IMAGE)
 
