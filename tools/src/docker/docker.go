@@ -29,7 +29,12 @@ func docker(command string, arg ...string) ([]byte, error) {
 	b, err := cmd.Output()
 	if err != nil {
 		b = bytes.TrimSpace(buf.Bytes())
-		return nil, fmt.Errorf("%s", b)
+		b = bytes.TrimPrefix(b, []byte("Error: "))
+		if len(b) > 0 {
+			return nil, fmt.Errorf("%s", b)
+		} else {
+			return nil, fmt.Errorf("failed to run docker command")
+		}
 	}
 	return b, nil
 }
