@@ -6,8 +6,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
+	"strings"
 	"syscall"
 )
 
@@ -99,11 +101,18 @@ func InspectVolume(name string) (string, error) {
 }
 
 func Docker(arg ...string) error {
+	var env []string
+
 	cmd, err := exec.LookPath(dockerCmd[0])
 	if err != nil {
 		return err
 	}
 	args := append(dockerCmd, arg...)
 
-	return syscall.Exec(cmd, args, nil)
+	for _, e := range os.Environ() {
+		if strings.HasPrefix(e, "DOCKER_") {
+			env = append(env, e)
+		}
+	}
+	return syscall.Exec(cmd, args, env)
 }
