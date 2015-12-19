@@ -53,6 +53,7 @@ func GenerateDockerArgs(image string) []string {
 
 func main() {
 	var option string
+	var n int
 
 	args := os.Args[1:]
 	defer exit()
@@ -63,7 +64,8 @@ func main() {
 	command, i, err := docker.ParseArgs(args)
 	assert(err)
 	if command != "" {
-		option, i, err = docker.ParseArgs(args[i+1:], command)
+		option, n, err = docker.ParseArgs(args[i+1:], command)
+		i += n + 1
 		assert(err)
 	}
 	switch command {
