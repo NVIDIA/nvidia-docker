@@ -202,7 +202,7 @@ check_prerequisites
 parse_docker_args "$*"; ret=$?
 
 DOCKER_ARGS=""
-CMD="$( eval echo \$$ret )"
+CMD="$( eval echo \${$ret} )"
 
 i=0; while [ $i -lt $ret ]; do
     DOCKER_ARGS="$DOCKER_ARGS $1"
@@ -214,7 +214,7 @@ case $CMD in
     run|create)
         parse_docker_args "$*" $CMD; ret=$?
         if [ $ret -gt 0 ]; then
-            image="$( eval echo \$$ret )"
+            image="$( eval echo \${$ret} )"
             setup $image
         fi
     ;;
