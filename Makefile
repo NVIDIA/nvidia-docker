@@ -5,8 +5,10 @@ DOCKER_BIN ?= docker
 # CUDA versions
 ifeq ($(OS), ubuntu)
 	CUDA_VERSIONS := 7.5 7.0 6.5
-else ifeq ($(OS), centos)
+else ifeq ($(OS), centos-7)
         CUDA_VERSIONS := 7.5 7.0
+else ifeq ($(OS), centos-6)
+        CUDA_VERSIONS := 7.5
 else
 $(error unsupported OS: $(OS))
 endif
