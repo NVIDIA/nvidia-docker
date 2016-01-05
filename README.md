@@ -64,6 +64,28 @@ docker build -t cuda:7.0-cudnn2-devel ubuntu/cuda/7.0/devel/cudnn2
 docker tag cuda:7.0-cudnn2-devel cuda:cudnn-devel
 ```
 
+#### DIGITS
+
+A DIGITS image can be built using the Makefile:
+```sh
+make digits
+```
+
+To run a DIGITS container, you must use the `nvidia-docker` wrapper script:
+```sh
+GPU=0,1 ./nvidia-docker run --name digits -d -p 34448:34448 digits
+```
+
+If you want to use a dataset stored in a host directory, you will need to import it inside the container using a volume:
+```sh
+GPU=0,1 ./nvidia-docker run --name digits -d -p 34448:34448 -v /home/felix/mnist:/data/mnist digits
+```
+
+Finally, if you want to share jobs between multiple DIGITS containers, you can use a named volume:
+```sh
+GPU=0,1 ./nvidia-docker run --name digits -d -p 34448:34448 -v digits-jobs:/usr/share/digits/digits/jobs digits
+```
+
 ### NVIDIA Docker wrapper
 
 The ```nvidia-docker``` script is a drop-in replacement for ```docker``` CLI. In addition, it takes care of setting up the NVIDIA host driver environment inside Docker containers for proper execution.
