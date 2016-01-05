@@ -84,8 +84,11 @@ cudnn-runtime: $(CUDNN_RUNTIME_LATEST)
 all-cudnn: $(CUDNN_VERSIONS) cudnn cudnn-devel cudnn-runtime
 
 # caffe-nv images
-caffe: $(OS)/caffe/Dockerfile
+caffe: 7.0-cudnn4-runtime $(OS)/caffe/Dockerfile
 	$(DOCKER_BIN) build -t caffe $(OS)/caffe
+
+digits: caffe $(OS)/digits/Dockerfile
+	$(DOCKER_BIN) build -t digits $(OS)/digits
 
 push: all-cuda all-cudnn
 	if [ -z "$(USERNAME)" ]; then \
