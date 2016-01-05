@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"net/url"
 	"os"
 	"regexp"
@@ -26,39 +27,71 @@ func LoadEnvironment() {
 	docker.SetCommand(cmd...)
 }
 
-func getHost() (host *url.URL) {
+func parseAddr(addr string) (host, sport, hport string) {
+	re := regexp.MustCompile("^(\\[[0-9a-f.:]+\\]|[0-9A-Za-z.\\-_]+)?(:\\d+)?:(\\d+)?$")
+
+	host, sport, hport = "localhost", "22", "3476"
+	if addr == "" {
+		return
+	}
+	m := re.FindStringSubmatch(addr)
+	if m == nil {
+		return "", "", ""
+	}
+	if m[1] != "" {
+		host = m[1]
+	}
+	if m[2] != "" {
+		sport = m[2][1:]
+	}
+	if m[3] != "" {
+		hport = m[3]
+	}
+	return
+}
+
+func getHost() (u *url.URL) {
+	var dhost bool
 	var err error
 
-	re := regexp.MustCompile("^([0-9A-Za-z.:\\-\\[\\]]+)(:\\d+)$")
-
-	if h := os.Getenv(envNVHost); h != "" {
-		host, err = url.Parse(h)
-		if err != nil {
-			return nil
-		}
-	} else {
-		host, err = url.Parse(os.Getenv(envDockerHost))
-		if err != nil {
-			return nil
-		}
-		if host.Scheme == "tcp" {
-			host.Scheme = "ssh"
-			host.Host = re.ReplaceAllString(host.Host, "$1:3476")
-		}
+	env := os.Getenv(envNVHost)
+	if env == "" {
+		env = os.Getenv(envDockerHost)
+		dhost = true
 	}
-	if re.MatchString(host.Host) {
-		switch host.Scheme {
-		case "ssh":
-			m := re.FindStringSubmatch(host.Host)
-			host.Host = m[1]
-			if !re.MatchString(host.Host) {
-				host.Host += ":22"
-			}
-			host.Opaque = "localhost" + m[2]
-			return
-		case "http":
-			return
+	if env == "" {
+		return nil
+	}
+
+	if ok, _ := regexp.MatchString("^(unix|tcp|http|ssh)://", env); !ok {
+		env = "tcp://" + env
+	}
+	u, err = url.Parse(env)
+	if err != nil {
+		return nil
+	}
+	host, sport, hport := parseAddr(u.Host)
+	if host == "" {
+		return nil
+	}
+
+	switch u.Scheme {
+	case "tcp":
+		u.Scheme = "http"
+		fallthrough
+	case "http":
+		if dhost {
+			hport = "3476"
 		}
+		u.Host = fmt.Sprintf("%s:%s", host, hport)
+		return
+	case "ssh":
+		u.Host = fmt.Sprintf("%s:%s", host, sport)
+		u.Opaque = fmt.Sprintf("localhost:%s", hport)
+		if u.User == nil {
+			u.User = url.UserPassword(os.Getenv("USER"), "")
+		}
+		return
 	}
 	return nil
 }
