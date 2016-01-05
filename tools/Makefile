@@ -21,6 +21,9 @@ install: all
 	install -D -T -m 755 $(DOCKER) $(PREFIX)/$(notdir $(DOCKER))
 	install -D -T -m 755 $(PLUGIN) $(PREFIX)/$(notdir $(PLUGIN))
 
+uninstall:
+	$(RM) $(PREFIX)/$(notdir $(DOCKER)) $(PREFIX)/$(notdir $(PLUGIN))
+
 clean :
 	-@docker rmi -f $(IMAGE) golang 2> /dev/null
 	@rm -rf $(BIN_DIR)
