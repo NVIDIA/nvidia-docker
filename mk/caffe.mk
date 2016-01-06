@@ -4,6 +4,7 @@ NV_DOCKER ?= docker
 
 # Building Docker images in parallel will duplicate identical layers.
 .NOTPARALLEL:
+.PHONY: all latest
 
 all: latest
 

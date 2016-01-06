@@ -16,6 +16,9 @@ clean:
 install:
 	make -C $(CURDIR)/tools install
 
+uninstall:
+	make -C $(CURDIR)/tools uninstall
+
 cuda: $(CURDIR)/$(OS)/cuda
 	make -C $(CURDIR)/$(OS)/cuda
 

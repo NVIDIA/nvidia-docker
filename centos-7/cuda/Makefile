@@ -3,6 +3,6 @@
 CUDA_VERSIONS := 7.5 \
                  7.0
 
-all: all-cuda
+all-override: all-cuda
 
 include ../../mk/cuda.mk

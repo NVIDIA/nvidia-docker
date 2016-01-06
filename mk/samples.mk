@@ -4,10 +4,11 @@ NV_DOCKER ?= docker
 
 # Building Docker images in parallel will duplicate identical layers.
 .NOTPARALLEL:
+.PHONY: all
 
 #################### NVIDIA Samples ####################
 
 all:
 	for name in ${CUDA_SAMPLES}; do \
-	    docker build -t sample:$$name $$name ; \
+	    $(NV_DOCKER) build -t sample:$$name $$name ; \
 	done
