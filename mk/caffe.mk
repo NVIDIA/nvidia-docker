@@ -10,4 +10,5 @@ all: latest
 #################### NVIDIA Caffe ####################
 
 latest: $(CURDIR)/Dockerfile
+	make -C $(CURDIR)/../cuda 7.0-cudnn4-runtime
 	$(NV_DOCKER) build -t caffe $(CURDIR)
