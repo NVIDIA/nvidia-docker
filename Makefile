@@ -5,7 +5,7 @@ NV_DOCKER ?= docker
 OS ?= ubuntu
 USERNAME ?= nvidia
 
-.PHONY: tools clean install cuda caffe push pull
+.PHONY: tools clean install cuda caffe digits push pull
 
 tools:
 	make -C $(CURDIR)/tools
@@ -22,6 +22,9 @@ cuda: $(CURDIR)/$(OS)/cuda
 caffe: $(CURDIR)/$(OS)/caffe
 	make -C $(CURDIR)/$(OS)/caffe
 
+digits: $(CURDIR)/$(OS)/digits
+	make -C $(CURDIR)/$(OS)/digits
+
 # Tag all images with the Docker Hub username as a prefix, push them and untag everything.
 dockerhub_push = \
 $(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{} && \
@@ -37,7 +40,9 @@ $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$2}' | \
 push: cuda caffe
 	$(call dockerhub_push,cuda)
 	$(call dockerhub_push,caffe)
+	$(call dockerhub_push,digits)
 
 pull:
 	$(call dockerhub_pull,cuda)
 	$(call dockerhub_pull,caffe)
+	$(call dockerhub_pull,digits)
