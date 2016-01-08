@@ -9,12 +9,12 @@ ifeq ($(WITH_PUSH_SUFFIX), 1)
 	PUSH_SUFFIX := -$(subst -,,$(OS))
 endif
 
-.PHONY: tools clean install cuda caffe digits samples push pull
+.PHONY: tools clean install cuda caffe digits samples clean-images push pull
 
 tools:
 	make -C $(CURDIR)/tools
 
-clean:
+clean: clean-images
 	make -C $(CURDIR)/tools clean
 
 install:
@@ -35,6 +35,14 @@ digits: $(CURDIR)/$(OS)/digits
 samples: $(CURDIR)/samples
 	make -C $(CURDIR)/$(OS)/cuda latest
 	make -C $(CURDIR)/samples/$(OS)
+
+rm_images = \
+$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi
+
+clean-images:
+	$(call rm_images,cuda)
+	$(call rm_images,caffe)
+	$(call rm_images,digits)
 
 # Tag all images with the Docker Hub username as a prefix, push them and untag everything.
 dockerhub_push = \
