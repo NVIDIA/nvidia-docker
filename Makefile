@@ -2,8 +2,12 @@
 
 NV_DOCKER ?= docker
 
-OS ?= ubuntu
+OS ?= ubuntu-14.04
 USERNAME ?= nvidia
+WITH_PUSH_SUFFIX ?= 0
+ifeq ($(WITH_PUSH_SUFFIX), 1)
+	PUSH_SUFFIX := -$(subst -,,$(OS))
+endif
 
 .PHONY: tools clean install cuda caffe digits samples push pull
 
@@ -34,7 +38,7 @@ samples: $(CURDIR)/samples
 
 # Tag all images with the Docker Hub username as a prefix, push them and untag everything.
 dockerhub_push = \
-$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{} && \
+$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{}$(PUSH_SUFFIX) && \
 $(NV_DOCKER) push $(USERNAME)/$(1) && \
 $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs $(NV_DOCKER) rmi
 
