@@ -39,8 +39,8 @@ samples: $(CURDIR)/samples
 # Tag all images with the Docker Hub username as a prefix, push them and untag everything.
 dockerhub_push = \
 $(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{}$(PUSH_SUFFIX) && \
-$(NV_DOCKER) push $(USERNAME)/$(1) && \
-$(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs $(NV_DOCKER) rmi
+($(NV_DOCKER) push $(USERNAME)/$(1) || true) && \
+$(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi
 
 # Download all images from the Docker Hub and retag them to remove the prefix.
 dockerhub_pull = \
