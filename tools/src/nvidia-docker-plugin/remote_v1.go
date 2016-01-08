@@ -189,13 +189,17 @@ func dockerCLIDevices(wr io.Writer, ids []string) error {
 }
 
 func dockerCLIVolumes(wr io.Writer, names []string) error {
-	const tpl = "--volume-driver=nvidia{{range .}} --volume={{.}}{{end}}"
+	var tpl = fmt.Sprintf("--volume-driver=%s{{range .}} --volume={{.}}{{end}}", nvidia.DockerPlugin)
 
 	vols := make([]string, 0, len(Volumes))
 
+	drv, err := nvidia.GetDriverVersion()
+	if err != nil {
+		return err
+	}
 	if len(names) == 1 && (names[0] == "*" || names[0] == "") {
 		for _, v := range Volumes {
-			vols = append(vols, fmt.Sprintf("%s:%s:ro", v.Name, v.Mountpoint))
+			vols = append(vols, fmt.Sprintf("%s_%s:%s:ro", v.Name, drv, v.Mountpoint))
 		}
 	} else {
 		for _, n := range names {
@@ -203,7 +207,7 @@ func dockerCLIVolumes(wr io.Writer, names []string) error {
 			if !ok {
 				return fmt.Errorf("invalid volume: %s", n)
 			}
-			vols = append(vols, fmt.Sprintf("%s:%s:ro", v.Name, v.Mountpoint))
+			vols = append(vols, fmt.Sprintf("%s_%s:%s:ro", v.Name, drv, v.Mountpoint))
 		}
 	}
 	t := template.Must(template.New("").Parse(tpl))

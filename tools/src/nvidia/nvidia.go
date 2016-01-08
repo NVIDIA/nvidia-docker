@@ -10,6 +10,8 @@ import (
 	"nvml"
 )
 
+const DockerPlugin = "nvidia-docker"
+
 func Init() error {
 	if err := os.Unsetenv("CUDA_VISIBLE_DEVICES"); err != nil {
 		return err

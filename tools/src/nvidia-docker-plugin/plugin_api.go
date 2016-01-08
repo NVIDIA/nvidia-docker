@@ -10,10 +10,11 @@ import (
 	"path"
 
 	"graceful"
+	"nvidia"
 )
 
 const (
-	socketName   = "nvidia.sock"
+	socketName   = nvidia.DockerPlugin + ".sock"
 	acceptHeader = "application/vnd.docker.plugins.v1.1+json"
 )
 

@@ -40,15 +40,16 @@ type VolumeInfo struct {
 type Volume struct {
 	*VolumeInfo
 
-	Path string
-	dirs []volumeDir
+	Path    string
+	Version string
+	dirs    []volumeDir
 }
 
 type VolumeMap map[string]*Volume
 
 var Volumes = []VolumeInfo{
 	{
-		"driver",
+		"nvidia_driver",
 		"/usr/local/nvidia",
 		components{
 			"binaries": {
@@ -140,6 +141,7 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 
 func (v *Volume) CreateAt(path string) error {
 	v.Path = path
+	v.Version = ""
 	return v.Create()
 }
 
@@ -154,7 +156,7 @@ func (v *Volume) Create() (err error) {
 	}()
 
 	for _, d := range v.dirs {
-		dir := path.Join(v.Path, d.name)
+		dir := path.Join(v.Path, v.Version, d.name)
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return err
 		}
@@ -194,8 +196,12 @@ func (v *Volume) Create() (err error) {
 	return nil
 }
 
-func (v *Volume) Remove() error {
-	return os.RemoveAll(v.Path)
+func (v *Volume) Remove(version ...string) error {
+	vv := v.Version
+	if len(version) == 1 {
+		vv = version[0]
+	}
+	return os.RemoveAll(path.Join(v.Path, vv))
 }
 
 func which(bins ...string) ([]string, error) {
@@ -224,6 +230,10 @@ func which(bins ...string) ([]string, error) {
 }
 
 func LookupVolumes(prefix string) (vols VolumeMap, err error) {
+	drv, err := GetDriverVersion()
+	if err != nil {
+		return nil, err
+	}
 	cache, err := ldcache.Open()
 	if err != nil {
 		return nil, err
@@ -240,6 +250,7 @@ func LookupVolumes(prefix string) (vols VolumeMap, err error) {
 		vol := &Volume{
 			VolumeInfo: &Volumes[i],
 			Path:       path.Join(prefix, Volumes[i].Name),
+			Version:    drv,
 		}
 
 		for t, c := range vol.Components {

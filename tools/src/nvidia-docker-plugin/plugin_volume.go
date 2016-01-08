@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"path"
+	"regexp"
 )
 
 type pluginVolume struct{}
@@ -27,14 +29,29 @@ func errVolumeUnknown(vol string) *string {
 	return &s
 }
 
+func parseVolumeName(volume string) (string, string) {
+	re := regexp.MustCompile("^([a-zA-Z0-9_.-]+)_([0-9.]+)$")
+	if m := re.FindStringSubmatch(volume); len(m) == 3 {
+		return m[1], m[2]
+	}
+	return "", ""
+}
+
 func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 	var q struct{ Name string }
 	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received create request for volume '%s'\n", q.Name)
-	if v, ok := Volumes[q.Name]; ok {
-		assert(v.Create())
+
+	name, version := parseVolumeName(q.Name)
+	if v, ok := Volumes[name]; ok {
+		if v.Version != version {
+			r.Err = new(string)
+			*r.Err = "Invalid volume version: " + version
+		} else {
+			assert(v.Create())
+		}
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
 	}
@@ -47,8 +64,10 @@ func (p *pluginVolume) remove(resp http.ResponseWriter, req *http.Request) {
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received remove request for volume '%s'\n", q.Name)
-	if v, ok := Volumes[q.Name]; ok {
-		assert(v.Remove())
+
+	name, version := parseVolumeName(q.Name)
+	if v, ok := Volumes[name]; ok {
+		assert(v.Remove(version))
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
 	}
@@ -60,8 +79,11 @@ func (p *pluginVolume) mount(resp http.ResponseWriter, req *http.Request) {
 	var r struct{ Mountpoint, Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
-	if v, ok := Volumes[q.Name]; ok {
-		r.Mountpoint = &v.Path
+
+	name, version := parseVolumeName(q.Name)
+	if v, ok := Volumes[name]; ok {
+		p := path.Join(v.Path, version)
+		r.Mountpoint = &p
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
 	}
@@ -73,7 +95,9 @@ func (p *pluginVolume) unmount(resp http.ResponseWriter, req *http.Request) {
 	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
-	if _, ok := Volumes[q.Name]; !ok {
+
+	name, _ := parseVolumeName(q.Name)
+	if _, ok := Volumes[name]; !ok {
 		r.Err = errVolumeUnknown(q.Name)
 	}
 	assert(json.NewEncoder(resp).Encode(r))

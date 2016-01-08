@@ -33,7 +33,6 @@ func GenerateRemoteArgs(image string, vols []string) ([]string, error) {
 
 	c := httpClient(Host)
 
-	// FIXME add filters to only fetch the CUDA version
 	r, err := c.Get(endpointInfo)
 	if err != nil {
 		return nil, err
