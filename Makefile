@@ -1,114 +1,68 @@
 # Copyright (c) 2015-2016, NVIDIA CORPORATION. All rights reserved.
-OS ?= ubuntu
-DOCKER_BIN ?= docker
 
-# CUDA versions
-ifeq ($(OS), ubuntu)
-	CUDA_VERSIONS := 7.5 7.0 6.5
-else ifeq ($(OS), centos-7)
-        CUDA_VERSIONS := 7.5 7.0
-else ifeq ($(OS), centos-6)
-        CUDA_VERSIONS := 7.5
-else
-$(error unsupported OS: $(OS))
+NV_DOCKER ?= docker
+
+OS ?= ubuntu-14.04
+USERNAME ?= nvidia
+WITH_PUSH_SUFFIX ?= 0
+ifeq ($(WITH_PUSH_SUFFIX), 1)
+	PUSH_SUFFIX := -$(subst -,,$(OS))
 endif
-CUDA_LATEST := $(word 1, $(CUDA_VERSIONS))
 
-# cuDNN versions
-ifeq ($(OS), ubuntu)
-	CUDNN_VERSIONS := 7.5-cudnn4-devel 7.5-cudnn4-runtime \
-			  7.5-cudnn3-devel 7.5-cudnn3-runtime \
-			  7.0-cudnn4-devel 7.0-cudnn4-runtime \
-			  7.0-cudnn3-devel 7.0-cudnn3-runtime \
-			  7.0-cudnn2-devel 7.0-cudnn2-runtime
-endif
-CUDNN_DEVEL_LATEST := $(word 1, $(CUDNN_VERSIONS))
-CUDNN_RUNTIME_LATEST := $(word 2, $(CUDNN_VERSIONS))
-
-# Building Docker images in parallel will duplicate identical layers.
 .NOTPARALLEL:
+.PHONY: tools clean install cuda caffe digits samples clean-images push pull
 
-# By default, build only cuda:latest
-default: latest
+tools:
+	make -C $(CURDIR)/tools
 
-# CUDA images
-latest: devel
-	$(DOCKER_BIN) tag -f cuda:$< cuda
+clean: clean-images
+	make -C $(CURDIR)/tools clean
 
-devel: $(CUDA_LATEST)
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+install:
+	make -C $(CURDIR)/tools install
 
-runtime: $(CUDA_LATEST)-runtime
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+uninstall:
+	make -C $(CURDIR)/tools uninstall
 
-%: %-devel $(OS)/cuda/%
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+cuda: $(CURDIR)/$(OS)/cuda
+	make -C $(CURDIR)/$(OS)/cuda
 
-%-devel: %-runtime $(OS)/cuda/%/devel/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/devel
+caffe: $(CURDIR)/$(OS)/caffe
+	make -C $(CURDIR)/$(OS)/caffe
 
-%-runtime: $(OS)/cuda/%/runtime/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/runtime
+digits: $(CURDIR)/$(OS)/digits
+	make -C $(CURDIR)/$(OS)/digits
 
-all-cuda: $(CUDA_VERSIONS) latest devel runtime
+samples: $(CURDIR)/samples
+	make -C $(CURDIR)/$(OS)/cuda latest
+	make -C $(CURDIR)/samples/$(OS)
 
-# cuDNN images
-cudnn: cudnn-devel
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+rm_images = \
+$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi
 
-cudnn-devel: $(CUDNN_DEVEL_LATEST)
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+clean-images:
+	$(call rm_images,cuda)
+	$(call rm_images,caffe)
+	$(call rm_images,digits)
 
-cudnn-runtime: $(CUDNN_RUNTIME_LATEST)
-	$(DOCKER_BIN) tag -f cuda:$< cuda:$@
+# Tag all images with the Docker Hub username as a prefix, push them and untag everything.
+dockerhub_push = \
+$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{}$(PUSH_SUFFIX) && \
+($(NV_DOCKER) push $(USERNAME)/$(1) || true) && \
+$(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi
 
-# Special rules for specific cuDNN versions
-%-cudnn2-devel: %-devel $(OS)/cuda/%/devel/cudnn2/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/devel/cudnn2
+# Download all images from the Docker Hub and retag them to remove the prefix.
+dockerhub_pull = \
+$(NV_DOCKER) pull --all-tags $(USERNAME)/$(1) && \
+$(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$2}' | \
+  xargs -I{} sh -c '$(NV_DOCKER) tag -f $(USERNAME)/$(1):{} $(1):{} ; $(NV_DOCKER) rmi $(USERNAME)/$(1):{}'
 
-%-cudnn2-runtime: %-runtime $(OS)/cuda/%/runtime/cudnn2/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/runtime/cudnn2
-
-%-cudnn3-devel: %-devel $(OS)/cuda/%/devel/cudnn3/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/devel/cudnn3
-
-%-cudnn3-runtime: %-runtime $(OS)/cuda/%/runtime/cudnn3/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/runtime/cudnn3
-
-%-cudnn4-devel: %-devel $(OS)/cuda/%/devel/cudnn4/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/devel/cudnn4
-
-%-cudnn4-runtime: %-runtime $(OS)/cuda/%/runtime/cudnn4/Dockerfile
-	$(DOCKER_BIN) build -t cuda:$@ $(OS)/cuda/$*/runtime/cudnn4
-
-all-cudnn: $(CUDNN_VERSIONS) cudnn cudnn-devel cudnn-runtime
-
-# caffe-nv images
-caffe: 7.0-cudnn4-runtime $(OS)/caffe/Dockerfile
-	$(DOCKER_BIN) build -t caffe $(OS)/caffe
-
-digits: caffe $(OS)/digits/Dockerfile
-	$(DOCKER_BIN) build -t digits $(OS)/digits
-
-push: all-cuda all-cudnn
-	if [ -z "$(USERNAME)" ]; then \
-		echo "Error: USERNAME not set"; \
-		exit 1; \
-	fi; \
-        # Retag all images with the username as a prefix.
-	$(DOCKER_BIN) images | awk '$$1 == "cuda" { print $$2 }' | xargs -I {} $(DOCKER_BIN) tag -f cuda:{} $(USERNAME)/cuda:{}
-	$(DOCKER_BIN) push $(USERNAME)/cuda
-	$(DOCKER_BIN) images | awk '$$1 == "$(USERNAME)/cuda" { print $$2 }' | xargs -I {} $(DOCKER_BIN) rmi $(USERNAME)/cuda:{}
+push:
+	$(call dockerhub_push,cuda)
+	$(call dockerhub_push,caffe)
+	$(call dockerhub_push,digits)
 
 pull:
-	if [ -z "$(USERNAME)" ]; then \
-		echo "Error: USERNAME not set"; \
-		exit 1; \
-	fi; \
-        # Download all images from the Docker Hub and retag them to remove the prefix.
-	$(DOCKER_BIN) pull --all-tags $(USERNAME)/cuda
-	$(DOCKER_BIN) images | awk '$$1 == "$(USERNAME)/cuda" { print $$2 }' | \
-		xargs -I {} sh -c '$(DOCKER_BIN) tag -f $(USERNAME)/cuda:{} cuda:{} ; $(DOCKER_BIN) rmi $(USERNAME)/cuda:{}'
-
-clean:
-	$(DOCKER_BIN) rmi -f `$(DOCKER_BIN) images -q --filter "label=com.nvidia.cuda.version"`
+	$(call dockerhub_pull,cuda)
+	$(call dockerhub_pull,caffe)
+	$(call dockerhub_pull,digits)
