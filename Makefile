@@ -9,6 +9,7 @@ ifeq ($(WITH_PUSH_SUFFIX), 1)
 	PUSH_SUFFIX := -$(subst -,,$(OS))
 endif
 
+.NOTPARALLEL:
 .PHONY: tools clean install cuda caffe digits samples clean-images push pull
 
 tools:
