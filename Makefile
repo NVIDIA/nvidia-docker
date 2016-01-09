@@ -57,7 +57,7 @@ $(NV_DOCKER) pull --all-tags $(USERNAME)/$(1) && \
 $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$2}' | \
   xargs -I{} sh -c '$(NV_DOCKER) tag -f $(USERNAME)/$(1):{} $(1):{} ; $(NV_DOCKER) rmi $(USERNAME)/$(1):{}'
 
-push: cuda caffe digits
+push:
 	$(call dockerhub_push,cuda)
 	$(call dockerhub_push,caffe)
 	$(call dockerhub_push,digits)
