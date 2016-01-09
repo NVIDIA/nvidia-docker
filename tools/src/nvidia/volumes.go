@@ -204,6 +204,15 @@ func (v *Volume) Remove(version ...string) error {
 	return os.RemoveAll(path.Join(v.Path, vv))
 }
 
+func (v *Volume) Exists() (bool, error) {
+	p := path.Join(v.Path, v.Version)
+	_, err := os.Stat(p)
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
+}
+
 func which(bins ...string) ([]string, error) {
 	paths := make([]string, 0, len(bins))
 

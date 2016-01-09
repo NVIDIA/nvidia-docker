@@ -50,7 +50,11 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 			r.Err = new(string)
 			*r.Err = "Invalid volume version: " + version
 		} else {
-			assert(v.Create())
+			ok, err := v.Exists()
+			assert(err)
+			if !ok {
+				assert(v.Create())
+			}
 		}
 	} else {
 		r.Err = errVolumeUnknown(q.Name)
