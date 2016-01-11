@@ -10,11 +10,11 @@ PREFIX := /usr/bin
 DOCKER := $(BIN_DIR)/nvidia-docker
 PLUGIN := $(BIN_DIR)/nvidia-docker-plugin
 
-.PHONY: all install clean
+.PHONY: all build install clean
 
-all : $(BIN_DIR)
+all: build
 
-$(BIN_DIR) :
+build:
 	@$(NV_DOCKER) build --build-arg UID=$(USER_ID) -t $(IMAGE) -f Dockerfile.build $(CURDIR)
 	@mkdir -p $(BIN_DIR)
 	@$(NV_DOCKER) run --rm -v $(BIN_DIR):/go/bin $(IMAGE)
@@ -26,6 +26,6 @@ install: all
 uninstall:
 	$(RM) $(PREFIX)/$(notdir $(DOCKER)) $(PREFIX)/$(notdir $(PLUGIN))
 
-clean :
+clean:
 	-@$(NV_DOCKER) rmi -f $(IMAGE) golang 2> /dev/null
 	@rm -rf $(BIN_DIR)

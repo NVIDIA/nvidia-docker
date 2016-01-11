@@ -87,6 +87,11 @@ func CreateVolume(name string) error {
 	return err
 }
 
+func RemoveVolume(name string) error {
+	_, err := docker("volume", "rm", name)
+	return err
+}
+
 func InspectVolume(name string) (string, error) {
 	var vol []struct{ Name, Driver, Mountpoint string }
 

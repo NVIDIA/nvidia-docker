@@ -4,8 +4,6 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"strconv"
 
 	"docker"
@@ -24,35 +22,27 @@ func CreateLocalVolumes() error {
 
 	for _, v := range vols {
 		n := fmt.Sprintf("%s_%s", v.Name, drv)
+		if _, err := docker.InspectVolume(n); err == nil {
+			if err = docker.RemoveVolume(n); err != nil {
+				return fmt.Errorf("cannot remove %s: volume is in use", n)
+			}
+		}
+
 		if err := docker.CreateVolume(n); err != nil {
 			return err
 		}
 		path, err := docker.InspectVolume(n)
 		if err != nil {
-			return err
-		}
-		if err := volumeEmpty(n, path); err != nil {
+			docker.RemoveVolume(n)
 			return err
 		}
 		if err := v.CreateAt(path); err != nil {
+			docker.RemoveVolume(n)
 			return err
 		}
 		fmt.Println(n)
 	}
 	return nil
-}
-
-func volumeEmpty(vol, path string) error {
-	f, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	if _, err = f.Readdirnames(1); err == io.EOF {
-		return nil
-	}
-	return fmt.Errorf("volume %s already exists and is not empty", vol)
 }
 
 func GenerateLocalArgs(image string, vols []string) ([]string, error) {
