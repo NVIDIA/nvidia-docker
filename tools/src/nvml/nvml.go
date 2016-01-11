@@ -339,3 +339,16 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 	}
 	return
 }
+
+func GetDevicePath(idx uint) (path string, err error) {
+	var dev C.nvmlDevice_t
+	var minor C.uint
+
+	err = nvmlErr(C.nvmlDeviceGetHandleByIndex(C.uint(idx), &dev))
+	if err != nil {
+		return
+	}
+	err = nvmlErr(C.nvmlDeviceGetMinorNumber(dev, &minor))
+	path = fmt.Sprintf("/dev/nvidia%d", uint(minor))
+	return
+}

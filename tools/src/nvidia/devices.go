@@ -94,3 +94,22 @@ func LookupDevices() (devs []Device, err error) {
 	sort.Sort(&deviceSorter{devs})
 	return
 }
+
+func LookupDevicePaths() ([]string, error) {
+	var i uint
+
+	n, err := nvml.GetDeviceCount()
+	if err != nil {
+		return nil, err
+	}
+	paths := make([]string, 0, n)
+
+	for i = 0; i < n; i++ {
+		p, err := nvml.GetDevicePath(i)
+		if err != nil {
+			return nil, err
+		}
+		paths = append(paths, p)
+	}
+	return paths, nil
+}

@@ -78,15 +78,14 @@ func GenerateLocalArgs(image string, vols []string) ([]string, error) {
 func devicesArgs() ([]string, error) {
 	args := []string{"--device=/dev/nvidiactl", "--device=/dev/nvidia-uvm"}
 
-	// FIXME avoid looking up every devices
-	devs, err := nvidia.LookupDevices()
+	devs, err := nvidia.LookupDevicePaths()
 	if err != nil {
 		return nil, err
 	}
 
 	if len(GPU) == 0 {
 		for i := range devs {
-			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
+			args = append(args, fmt.Sprintf("--device=%s", devs[i]))
 		}
 	} else {
 		for _, id := range GPU {
@@ -94,7 +93,7 @@ func devicesArgs() ([]string, error) {
 			if err != nil || i < 0 || i >= len(devs) {
 				return nil, fmt.Errorf("invalid device: %s", id)
 			}
-			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
+			args = append(args, fmt.Sprintf("--device=%s", devs[i]))
 		}
 	}
 	return args, nil
