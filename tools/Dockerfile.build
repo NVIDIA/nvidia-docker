@@ -26,7 +26,7 @@ ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"
 ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64 -L /usr/src/gdk/nvml/lib -ldl -lrt"
 
 ARG UID
-RUN useradd --uid $UID build
+RUN useradd -o --uid $UID build
 USER build
 
 CMD go get -v -ldflags="-s" nvidia-docker nvidia-docker-plugin
