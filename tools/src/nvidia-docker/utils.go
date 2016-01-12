@@ -15,6 +15,16 @@ const (
 )
 
 func VolumesNeeded(image string) ([]string, error) {
+	ok, err := docker.ImageExists(image)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		if err = docker.ImagePull(image); err != nil {
+			return nil, err
+		}
+	}
+
 	label, err := docker.Label(image, labelVolumesNeeded)
 	if err != nil {
 		return nil, err

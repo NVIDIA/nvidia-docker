@@ -13,7 +13,7 @@ A good place to start is to understand [why NVIDIA Docker](https://github.com/NV
 
 # Quick start
 
-Assuming the NVIDIA drivers and Docker are properly installed (see [[installation]]):
+Assuming the NVIDIA drivers and Docker are properly installed (see [installation](https://github.com/NVIDIA/nvidia-docker/wiki/Installation)):
 
 ```sh
 git clone https://github.com/NVIDIA/nvidia-docker
@@ -23,7 +23,6 @@ sudo make install
 sudo nvidia-docker volume setup
 
 # Run nvidia-smi
-nvidia-docker pull nvidia/cuda
 nvidia-docker run nvidia/cuda nvidia-smi
 ```
 

@@ -21,14 +21,19 @@ func SetCommand(cmd ...string) {
 	}
 }
 
-func docker(command string, arg ...string) ([]byte, error) {
+func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	var buf bytes.Buffer
 
 	args := append(append(dockerCmd[1:], command), arg...)
 	cmd := exec.Command(dockerCmd[0], args...)
 	cmd.Stderr = &buf
 
-	b, err := cmd.Output()
+	if stdout {
+		cmd.Stdout = os.Stdout
+		err = cmd.Run()
+	} else {
+		b, err = cmd.Output()
+	}
 	if err != nil {
 		b = bytes.TrimSpace(buf.Bytes())
 		b = bytes.TrimPrefix(b, []byte("Error: "))
@@ -47,7 +52,7 @@ func ParseArgs(args []string, cmd ...string) (string, int, error) {
 	re := regexp.MustCompile("(?m)^\\s*(-[^=]+)=[^{true}{false}].*$")
 	flags := make(map[string]void)
 
-	b, err := docker("help", cmd...)
+	b, err := docker(false, "help", cmd...)
 	if err != nil {
 		return "", -1, err
 	}
@@ -75,7 +80,7 @@ func ParseArgs(args []string, cmd ...string) (string, int, error) {
 func Label(image, label string) (string, error) {
 	format := fmt.Sprintf(`--format='{{index .Config.Labels "%s"}}'`, label)
 
-	b, err := docker("inspect", format, image)
+	b, err := docker(false, "inspect", format, image)
 	if err != nil {
 		return "", err
 	}
@@ -83,19 +88,19 @@ func Label(image, label string) (string, error) {
 }
 
 func CreateVolume(name string) error {
-	_, err := docker("volume", "create", "--name", name)
+	_, err := docker(false, "volume", "create", "--name", name)
 	return err
 }
 
 func RemoveVolume(name string) error {
-	_, err := docker("volume", "rm", name)
+	_, err := docker(false, "volume", "rm", name)
 	return err
 }
 
 func InspectVolume(name string) (string, error) {
 	var vol []struct{ Name, Driver, Mountpoint string }
 
-	b, err := docker("volume", "inspect", name)
+	b, err := docker(false, "volume", "inspect", name)
 	if err != nil {
 		return "", err
 	}
@@ -103,6 +108,19 @@ func InspectVolume(name string) (string, error) {
 		return "", err
 	}
 	return vol[0].Mountpoint, nil
+}
+
+func ImageExists(image string) (bool, error) {
+	b, err := docker(false, "images", "-q", image)
+	if err != nil || len(b) == 0 {
+		return false, err
+	}
+	return true, nil
+}
+
+func ImagePull(image string) error {
+	_, err := docker(true, "pull", image)
+	return err
 }
 
 func Docker(arg ...string) error {
