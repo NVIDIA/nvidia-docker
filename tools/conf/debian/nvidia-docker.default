@@ -1,0 +1,2 @@
+# NVIDIA Docker plugin daemon options
+NVIDIA_DOCKER_PLUGIN_OPTS="-s /var/lib/nvidia-docker"

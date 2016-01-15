@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+#export DH_VERBOSE=1
+
+fill = find debian -regex 'debian/#PACKAGE#\.\w+' -type f | \
+       xargs sed -i 's;\#$(1)\#;$(2);g'
+
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+
+override_dh_prep: fill_templates
+	dh_prep
+
+fill_templates:
+	$(call fill,PREFIX,$(PREFIX))
+
+%:
+	dh $@

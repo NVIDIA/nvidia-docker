@@ -1,0 +1,16 @@
+Source: #PACKAGE#
+Section: devel
+Priority: optional
+Maintainer: #USERNAME# <#EMAIL#>
+Build-Depends: #BUILD_DEPS#
+Standards-Version: #POLICY#
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Vcs-Git: https://github.com/NVIDIA/nvidia-docker
+Vcs-Browser: https://github.com/NVIDIA/nvidia-docker
+
+Package: #PACKAGE#
+Architecture: amd64
+Depends: ${misc:Depends}, ${shlibs:Depends}, adduser, docker-engine (>= 1.9.0)
+Description: NVIDIA Docker container tools
+ NVIDIA Docker provides utilities to extend the Docker CLI allowing users
+ to build and run GPU applications as lightweight containers.

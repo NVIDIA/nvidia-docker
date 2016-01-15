@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+NVIDIA_DOCKER_USER=#PACKAGE#
+NVIDIA_DOCKER_ROOT=/var/lib/nvidia-docker
+NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
+
+case "$1" in
+    configure)
+        adduser --system --home "$NVIDIA_DOCKER_ROOT" "$NVIDIA_DOCKER_USER"
+        setcap cap_fowner+pe "$NVIDIA_DOCKER_PLUGIN"
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,41 @@
+description "NVIDIA Docker plugin"
+
+start on (local-filesystems and net-device-up)
+stop on runlevel [!2345]
+
+respawn
+respawn limit 5 10
+
+kill timeout 20
+
+script
+    NVIDIA_DOCKER_PLUGIN_OPTS=
+    if [ -f /etc/default/$UPSTART_JOB ]; then
+        . /etc/default/$UPSTART_JOB
+    fi
+
+    NVIDIA_DOCKER_USER=#PACKAGE#
+    NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
+    exec start-stop-daemon -S -u "$NVIDIA_DOCKER_USER" -c "$NVIDIA_DOCKER_USER" \
+                           -a "$NVIDIA_DOCKER_PLUGIN" -- $NVIDIA_DOCKER_PLUGIN_OPTS
+end script
+
+post-start script
+    NVIDIA_DOCKER_PLUGIN_OPTS=
+    if [ -f /etc/default/$UPSTART_JOB ]; then
+        . /etc/default/$UPSTART_JOB
+    fi
+
+    SOCK_OPT=$( echo $NVIDIA_DOCKER_PLUGIN_OPTS | grep -oP -- '-s\s+\K\S+' )
+    if [ -n "$SOCK_OPT" ]; then
+        NVIDIA_DOCKER_PLUGIN_SOCK=$SOCK_OPT/nvidia-docker.sock
+        DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
+        mkdir -p $( dirname "$DOCKER_PLUGIN_SPEC" )
+        echo "unix://$NVIDIA_DOCKER_PLUGIN_SOCK" > "$DOCKER_PLUGIN_SPEC"
+    fi
+end script
+
+post-stop script
+    DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
+    rm -f "$DOCKER_PLUGIN_SPEC"
+end script
