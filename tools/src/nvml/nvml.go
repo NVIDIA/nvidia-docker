@@ -184,7 +184,7 @@ func NewDevice(idx uint) (device *Device, err error) {
 		power C.uint
 		clock [2]C.uint
 		pciel [2]C.uint
-		mask  cpuMask
+		cpus  cpuSet
 	)
 
 	defer func() {
@@ -204,8 +204,8 @@ func NewDevice(idx uint) (device *Device, err error) {
 	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_MEM, &clock[1]))
 	assert(C.nvmlDeviceGetMaxPcieLinkGeneration(dev, &pciel[0]))
 	assert(C.nvmlDeviceGetMaxPcieLinkWidth(dev, &pciel[1]))
-	assert(C.nvmlDeviceGetCpuAffinity(dev, C.uint(len(mask)), (*C.ulong)(&mask[0])))
-	cpu, err := mask.cpuNode()
+	assert(C.nvmlDeviceGetCpuAffinity(dev, C.uint(len(cpus)), (*C.ulong)(&cpus[0])))
+	node, err := getCPUNode(cpus)
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +216,7 @@ func NewDevice(idx uint) (device *Device, err error) {
 		UUID:        C.GoString(&uuid[0]),
 		Path:        fmt.Sprintf("/dev/nvidia%d", uint(minor)),
 		Power:       uint(power / 1000),
-		CPUAffinity: cpu,
+		CPUAffinity: node,
 		PCI: PCIInfo{
 			BusID:     C.GoString(&pci.busId[0]),
 			BAR1:      uint64(bar1.bar1Total / (1024 * 1024)),
