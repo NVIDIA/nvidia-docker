@@ -110,10 +110,12 @@ func InspectVolume(name string) (string, error) {
 }
 
 func ImageExists(image string) (bool, error) {
-	b, err := docker(false, "images", "-q", image)
-	if err != nil || len(b) == 0 {
-		return false, err
+	_, err := docker(false, "inspect", "--type=image", image)
+	if err != nil {
+		// We can't know whether the image was missing or if the daemon was unreachable.
+		return false, nil
 	}
+
 	return true, nil
 }
 
