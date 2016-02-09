@@ -36,7 +36,7 @@ func CreateLocalVolumes() error {
 			docker.RemoveVolume(n)
 			return err
 		}
-		if err := v.CreateAt(path); err != nil {
+		if err := v.CreateAt(path, nvidia.LinkOrCopyStrategy{}); err != nil {
 			docker.RemoveVolume(n)
 			return err
 		}

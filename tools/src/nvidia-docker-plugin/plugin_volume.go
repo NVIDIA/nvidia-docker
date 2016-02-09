@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"nvidia"
 	"path"
 	"regexp"
 )
@@ -53,7 +54,7 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 			ok, err := v.Exists()
 			assert(err)
 			if !ok {
-				assert(v.Create())
+				assert(v.Create(nvidia.LinkStrategy{}))
 			}
 		}
 	} else {

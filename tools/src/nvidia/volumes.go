@@ -47,6 +47,57 @@ type Volume struct {
 
 type VolumeMap map[string]*Volume
 
+type FileCloneStrategy interface {
+	Clone(src, dst string) error
+}
+
+type LinkStrategy struct {}
+
+func (s LinkStrategy) Clone(src, dst string) error {
+	return os.Link(src, dst)
+}
+
+type LinkOrCopyStrategy struct {}
+
+func (s LinkOrCopyStrategy) Clone(src, dst string) error {
+	// Prefer hard link, fallback to copy
+	err := os.Link(src, dst)
+	if err != nil {
+		err = Copy(src, dst)
+	}
+	return err
+}
+
+func Copy(src, dst string) error {
+	s, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer s.Close()
+
+	fi, err := s.Stat()
+	if err != nil {
+		return err
+	}
+
+	d, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+
+	if _, err := io.Copy(d, s); err != nil {
+		d.Close()
+		return err
+	}
+
+	if err := d.Chmod(fi.Mode()); err != nil {
+		d.Close()
+		return err
+	}
+
+	return d.Close()
+}
+
 var Volumes = []VolumeInfo{
 	{
 		"nvidia_driver",
@@ -139,13 +190,13 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 	return false, nil
 }
 
-func (v *Volume) CreateAt(path string) error {
+func (v *Volume) CreateAt(path string, s FileCloneStrategy) error {
 	v.Path = path
 	v.Version = ""
-	return v.Create()
+	return v.Create(s)
 }
 
-func (v *Volume) Create() (err error) {
+func (v *Volume) Create(s FileCloneStrategy) (err error) {
 	if err = os.MkdirAll(v.Path, 0755); err != nil {
 		return
 	}
@@ -176,7 +227,7 @@ func (v *Volume) Create() (err error) {
 			}
 
 			l := path.Join(dir, path.Base(f))
-			if err := os.Link(f, l); err != nil {
+			if err := s.Clone(f, l); err != nil {
 				return err
 			}
 			soname, err := obj.DynString(elf.DT_SONAME)
