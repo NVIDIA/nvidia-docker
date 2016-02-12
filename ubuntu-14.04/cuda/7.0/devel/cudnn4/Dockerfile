@@ -7,5 +7,5 @@ ENV CUDNN_VERSION 4
 LABEL com.nvidia.cudnn.version="4"
 
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-            libcudnn4-dev=4.0.4 && \
+            libcudnn4-dev=4.0.7 && \
     rm -rf /var/lib/apt/lists/*
