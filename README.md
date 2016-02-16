@@ -17,6 +17,7 @@ Assuming the NVIDIA drivers and Docker are properly installed (see [installation
 
 ```sh
 git clone https://github.com/NVIDIA/nvidia-docker
+cd nvidia-docker
 
 # Initial setup
 sudo make install
