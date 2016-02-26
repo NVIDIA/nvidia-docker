@@ -4,7 +4,6 @@ ENV DIGITS_VERSION 3.0
 LABEL com.nvidia.digits.version="3.0"
 
 # Install build essential
-ENV DIGITS_PKG_VERSION 3.0.0~rc.3-1
 RUN yum update -y && yum install -y \
 	graphviz 
 

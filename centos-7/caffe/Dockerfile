@@ -3,7 +3,10 @@ FROM cuda:7.0-cudnn4-devel
 ENV CAFFE_VERSION 0.14
 LABEL com.nvidia.caffe.version="0.14"
 
-ENV CAFFE_PKG_VERSION 0.14.0~rc.3-1
+# Install fpm and rpmrebuild
+RUN yum install -y epel-release
+RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 
 # Install build essential
 RUN yum update -y && yum install -y \
@@ -13,7 +16,7 @@ RUN yum update -y && yum install -y \
 	rm -rf /var/cache/yum/*
 
 RUN yum update -y && yum install -y \
-	wget git cmake openblas-devel && \
+	wget git cmake make automake openblas-devel && \
 	rm -rf /var/cache/yum/*
 
 # Get source code
