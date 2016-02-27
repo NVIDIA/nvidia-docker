@@ -63,7 +63,7 @@ func main() {
 
 	command, i, err := docker.ParseArgs(args)
 	assert(err)
-	if command != "" {
+	if command == "create" || command == "run" || command == "volume" {
 		option, n, err = docker.ParseArgs(args[i+1:], command)
 		i += n + 1
 		assert(err)
