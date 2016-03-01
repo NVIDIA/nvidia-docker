@@ -56,6 +56,7 @@ var booleanFlags = map[string]map[string][]string{
 		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
 			"-oom-kill-disable", "P", "-publish-all", "-privileged",
 			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+		"volume": []string{},
 	},
 	"1.10": {
 		"daemon": []string{"D", "-debug", "-disable-legacy-registry", "-icc",
@@ -66,6 +67,7 @@ var booleanFlags = map[string]map[string][]string{
 		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
 			"-oom-kill-disable", "P", "-publish-all", "-privileged",
 			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+		"volume": []string{},
 	},
 }
 
