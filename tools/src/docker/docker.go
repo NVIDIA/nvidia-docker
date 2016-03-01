@@ -5,10 +5,11 @@ package docker
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
-	"regexp"
+	"strings"
 	"syscall"
 )
 
@@ -45,33 +46,77 @@ func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	return b, nil
 }
 
+var booleanFlags = map[string]map[string][]string{
+	"1.9": {
+		"daemon": []string{"D", "-debug", "-disable-legacy-registry", "-icc",
+			"-ip-forward", "-ip-masq", "-iptables", "-ipv6", "-selinux-enabled",
+			"-tls", "-tlsverify", "-userland-proxy"},
+		"create": []string{"i", "-interactive", "-oom-kill-disable", "P",
+			"-publish-all", "-privileged", "-read-only", "t", "-tty"},
+		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
+			"-oom-kill-disable", "P", "-publish-all", "-privileged",
+			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+	},
+	"1.10": {
+		"daemon": []string{"D", "-debug", "-disable-legacy-registry", "-icc",
+			"-ip-forward", "-ip-masq", "-iptables", "-ipv6", "-selinux-enabled",
+			"-tls", "-tlsverify", "-userland-proxy"},
+		"create": []string{"i", "-interactive", "-oom-kill-disable", "P",
+			"-publish-all", "-privileged", "-read-only", "t", "-tty"},
+		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
+			"-oom-kill-disable", "P", "-publish-all", "-privileged",
+			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+	},
+}
+
 func ParseArgs(args []string, cmd ...string) (string, int, error) {
-	type void struct{}
-
-	re := regexp.MustCompile("(?m)^\\s*(-[^=]+)=[^{true}{false}].*$")
-	flags := make(map[string]void)
-
-	b, err := docker(false, "help", cmd...)
+	if len(cmd) == 0 {
+		cmd = append(cmd, "daemon")
+	}
+	version, err := ClientVersion()
 	if err != nil {
 		return "", -1, err
 	}
+	vmaj := version[:strings.LastIndex(version, ".")]
 
-	// Build the set of Docker flags taking an option using "docker help"
-	for _, m := range re.FindAllSubmatch(b, -1) {
-		for _, f := range bytes.Split(m[1], []byte(", ")) {
-			flags[string(f)] = void{}
-		}
+	cmdBooleanFlags, ok := booleanFlags[vmaj][cmd[0]]
+	if !ok {
+		return "", -1, errors.New("unsupported Docker version")
 	}
+
+	// Build the set of boolean Docker options for this command
+	type void struct{}
+	flags := make(map[string]void)
+	for _, f := range cmdBooleanFlags {
+		flags[f] = void{}
+	}
+
 	for i := 0; i < len(args); i++ {
-		if args[i][:1] == "-" {
-			// Skip the flags and their options
-			if _, ok := flags[args[i]]; ok {
-				i++
-			}
+		arg := args[i]
+		if arg[0] != '-' || arg == "-" {
+			return args[i], i, nil
+		}
+		// Skip if current flag is in the form --option=value
+		// Note: doesn't handle weird commands like `nvidia-docker run -vit=XYZ /tmp:/bar ubuntu`
+		if strings.Contains(arg, "=") {
 			continue
 		}
-		// Return the first arg that is not a flag
-		return args[i], i, nil
+
+		arg = arg[1:]
+		if arg[0] == '-' {
+			// Long option: skip next argument if option is not boolean
+			if _, ok := flags[arg]; !ok {
+				i++
+			}
+		} else {
+			// Short options: skip next argument if any option is not boolean
+			for _, f := range arg {
+				if _, ok := flags[string(f)]; !ok {
+					i++
+					break
+				}
+			}
+		}
 	}
 	return "", -1, nil
 }
@@ -122,6 +167,19 @@ func ImageExists(image string) (bool, error) {
 func ImagePull(image string) error {
 	_, err := docker(true, "pull", image)
 	return err
+}
+
+func ClientVersion() (string, error) {
+	b, err := docker(false, "version", "--format", "{{.Client.Version}}")
+	if err != nil {
+		return "", err
+	}
+	version := string(b)
+	var v1, v2, v3 int
+	if _, err := fmt.Sscanf(version, "%d.%d.%d", &v1, &v2, &v3); err != nil {
+		return "", err
+	}
+	return version, nil
 }
 
 func Docker(arg ...string) error {
