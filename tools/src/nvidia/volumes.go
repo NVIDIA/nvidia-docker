@@ -51,13 +51,13 @@ type FileCloneStrategy interface {
 	Clone(src, dst string) error
 }
 
-type LinkStrategy struct {}
+type LinkStrategy struct{}
 
 func (s LinkStrategy) Clone(src, dst string) error {
 	return os.Link(src, dst)
 }
 
-type LinkOrCopyStrategy struct {}
+type LinkOrCopyStrategy struct{}
 
 func (s LinkOrCopyStrategy) Clone(src, dst string) error {
 	// Prefer hard link, fallback to copy
