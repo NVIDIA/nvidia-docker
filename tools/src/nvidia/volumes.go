@@ -114,40 +114,54 @@ var Volumes = []VolumeInfo{
 				"nvidia-smi",              // System management interface
 			},
 			"libraries": {
+				// ------- X11 -------
+
 				//"libnvidia-cfg.so",  // GPU configuration (used by nvidia-xconfig)
 				//"libnvidia-gtk2.so", // GTK2 (used by nvidia-settings)
 				//"libnvidia-gtk3.so", // GTK3 (used by nvidia-settings)
-				//"libnvidia-wfb.so",  // Wrapped software rendering
+				//"libnvidia-wfb.so",  // Wrapped software rendering module for X server
+				//"libglx.so",         // GLX extension module for X server
 
-				"libnvidia-ml.so", // Management library
-				"libcuda.so",      // CUDA runtime
+				// ----- Compute -----
 
-				//"libvdpau.so",       // VDPAU ICD loader
-				//"libvdpau_trace.so", // VDPAU debug trace
+				"libnvidia-ml.so",              // Management library
+				"libcuda.so",                   // CUDA driver library
+				"libnvidia-ptxjitcompiler.so",  // PTX-SASS JIT compiler (used by libcuda)
+				"libnvidia-fatbinaryloader.so", // fatbin loader (used by libcuda)
+				"libnvidia-opencl.so",          // NVIDIA OpenCL ICD
+				"libnvidia-compiler.so",        // NVVM-PTX compiler for OpenCL (used by libnvidia-opencl)
+				//"libOpenCL.so",               // OpenCL ICD loader
+
+				// ------ Video ------
+
 				"libvdpau_nvidia.so",  // NVIDIA VDPAU ICD
 				"libnvidia-encode.so", // Video encoder
 				"libnvcuvid.so",       // Video decoder
+				"libnvidia-fbc.so",    // Framebuffer capture
+				"libnvidia-ifr.so",    // OpenGL framebuffer capture
 
-				"libnvidia-fbc.so", // Framebuffer capture
-				"libnvidia-ifr.so", // OpenGL framebuffer capture
+				// ----- Graphic -----
 
-				//"libOpenCL.so",        // OpenCL ICD loader
-				"libnvidia-opencl.so",   // NVIDIA OpenCL ICD
-				"libnvidia-compiler.so", // PTX compiler (used by libnvidia-opencl)
+				// XXX In an ideal world we would only mount nvidia_* vendor specific libraries and
+				// install ICD loaders inside the container. However, for backward compatibility reason
+				// we need to mount everything. This will hopefully change once GLVND is well established.
 
-				//"libglx.so",         // GLX extension module for X server
-				"libGL.so",            // OpenGL / GLX
-				"libnvidia-glcore.so", // OpenGL core (used by libGL and libglx)
-				"libnvidia-tls.so",    // Thread local storage (used by libGL and libglx)
+				"libGL.so",         // OpenGL/GLX legacy _or_ compatibility wrapper (GLVND)
+				"libGLX.so",        // GLX ICD loader (GLVND)
+				"libOpenGL.so",     // OpenGL ICD loader (GLVND)
+				"libGLESv1_CM.so",  // OpenGL ES v1 common profile legacy _or_ ICD loader (GLVND)
+				"libGLESv2.so",     // OpenGL ES v2 legacy _or_ ICD loader (GLVND)
+				"libEGL.so",        // EGL ICD loader
+				"libGLdispatch.so", // OpenGL dispatch (GLVND) (used by libOpenGL, libEGL and libGLES*)
 
-				//"libOpenGL.so",       // OpenGL ICD loader
-				//"libEGL.so",          // EGL ICD loader
-				//"libGLdispatch.so",   // OpenGL dispatch (used by libOpenGL and libEGL)
-				"libEGL_nvidia.so",     // NVIDIA EGL ICD
-				"libGLESv1_CM.so",      // OpenGL ES v1 common profile
-				"libGLESv2.so",         // OpenGL ES v2
-				"libnvidia-eglcore.so", // EGL core (used by libGLES and libEGL_nvidia)
-				"libnvidia-glsi.so",    // OpenGL system interaction (used by libEGL_nvidia)
+				"libGLX_nvidia.so",       // OpenGL/GLX ICD (GLVND)
+				"libEGL_nvidia.so",       // EGL ICD (GLVND)
+				"libGLESv2_nvidia.so",    // OpenGL ES v2 ICD (GLVND)
+				"libGLESv1_CM_nvidia.so", // OpenGL ES v1 common profile ICD (GLVND)
+				"libnvidia-eglcore.so",   // EGL core (used by libGLES* or libGLES*_nvidia and libEGL_nvidia)
+				"libnvidia-glcore.so",    // OpenGL core (used by libGL or libGLX_nvidia)
+				"libnvidia-tls.so",       // Thread local storage (used by libGL or libGLX_nvidia)
+				"libnvidia-glsi.so",      // OpenGL system interaction (used by libEGL_nvidia)
 			},
 		},
 	},
@@ -156,6 +170,7 @@ var Volumes = []VolumeInfo{
 func blacklisted(file string, obj *elf.File) (bool, error) {
 	lib := regexp.MustCompile("^.*/lib([\\w-]+)\\.so[\\d.]*$")
 	glcore := regexp.MustCompile("libnvidia-e?glcore.so")
+	gldispatch := regexp.MustCompile(`libGLdispatch\.so`)
 
 	if m := lib.FindStringSubmatch(file); m != nil {
 		switch m[1] {
@@ -171,7 +186,7 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 				return false, err
 			}
 			for _, d := range deps {
-				if glcore.MatchString(d) {
+				if glcore.MatchString(d) || gldispatch.MatchString(d) {
 					return false, nil
 				}
 			}
@@ -240,6 +255,15 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 				if err := os.Symlink(f, l); err != nil &&
 					!os.IsExist(err.(*os.LinkError).Err) {
 					return err
+				}
+				// XXX GLVND requires this symlink for indirect GLX support
+				// It won't be needed once we have an indirect GLX vendor neutral library.
+				if strings.HasPrefix(soname[0], "libGLX_nvidia") {
+					l = strings.Replace(l, "GLX_nvidia", "GLX_indirect", 1)
+					if err := os.Symlink(f, l); err != nil &&
+						!os.IsExist(err.(*os.LinkError).Err) {
+						return err
+					}
 				}
 			}
 		}
