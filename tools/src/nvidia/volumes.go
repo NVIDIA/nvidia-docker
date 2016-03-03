@@ -168,8 +168,8 @@ var Volumes = []VolumeInfo{
 }
 
 func blacklisted(file string, obj *elf.File) (bool, error) {
-	lib := regexp.MustCompile("^.*/lib([\\w-]+)\\.so[\\d.]*$")
-	glcore := regexp.MustCompile("libnvidia-e?glcore.so")
+	lib := regexp.MustCompile(`^.*/lib([\w-]+)\.so[\d.]*$`)
+	glcore := regexp.MustCompile(`libnvidia-e?glcore\.so`)
 	gldispatch := regexp.MustCompile(`libGLdispatch\.so`)
 
 	if m := lib.FindStringSubmatch(file); m != nil {

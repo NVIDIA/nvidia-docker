@@ -28,7 +28,7 @@ func LoadEnvironment() {
 }
 
 func parseAddr(addr string) (host, sport, hport string) {
-	re := regexp.MustCompile("^(\\[[0-9a-f.:]+\\]|[0-9A-Za-z.\\-_]+)?(:\\d+)?:(\\d+)?$")
+	re := regexp.MustCompile(`^(\[[0-9a-f.:]+\]|[0-9A-Za-z.\-_]+)?(:\d+)?:(\d+)?$`)
 
 	host, sport, hport = "localhost", "22", "3476"
 	if addr == "" {
