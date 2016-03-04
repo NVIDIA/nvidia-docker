@@ -3,8 +3,6 @@
 package nvidia
 
 import (
-	"sort"
-
 	"cuda"
 	"nvml"
 )
@@ -30,22 +28,6 @@ func (d *Device) Status() (*DeviceStatus, error) {
 	}
 
 	return &DeviceStatus{(*NVMLDevStatus)(s)}, nil
-}
-
-type deviceSorter struct {
-	devs []Device
-}
-
-func (s *deviceSorter) Len() int {
-	return len(s.devs)
-}
-
-func (s *deviceSorter) Swap(i, j int) {
-	s.devs[i], s.devs[j] = s.devs[j], s.devs[i]
-}
-
-func (s *deviceSorter) Less(i, j int) bool {
-	return s.devs[i].PCI.BusID < s.devs[j].PCI.BusID
 }
 
 func LookupDevices() (devs []Device, err error) {
@@ -91,7 +73,6 @@ func LookupDevices() (devs []Device, err error) {
 			}
 		}
 	}
-	sort.Sort(&deviceSorter{devs})
 	return
 }
 
