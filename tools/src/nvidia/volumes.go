@@ -8,6 +8,7 @@ import (
 	"debug/elf"
 	"encoding/binary"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -252,16 +253,14 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 			if len(soname) > 0 {
 				f = path.Join(v.Mountpoint, d.name, path.Base(f))
 				l = path.Join(dir, soname[0])
-				if err := os.Symlink(f, l); err != nil &&
-					!os.IsExist(err.(*os.LinkError).Err) {
+				if err := os.Symlink(f, l); err != nil && !os.IsExist(err) {
 					return err
 				}
 				// XXX GLVND requires this symlink for indirect GLX support
 				// It won't be needed once we have an indirect GLX vendor neutral library.
 				if strings.HasPrefix(soname[0], "libGLX_nvidia") {
 					l = strings.Replace(l, "GLX_nvidia", "GLX_indirect", 1)
-					if err := os.Symlink(f, l); err != nil &&
-						!os.IsExist(err.(*os.LinkError).Err) {
+					if err := os.Symlink(f, l); err != nil && !os.IsExist(err) {
 						return err
 					}
 				}
@@ -286,6 +285,21 @@ func (v *Volume) Exists() (bool, error) {
 		return false, nil
 	}
 	return true, err
+}
+
+func (v *Volume) ListVersions() ([]string, error) {
+	dirs, err := ioutil.ReadDir(v.Path)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	versions := make([]string, len(dirs))
+	for i := range dirs {
+		versions[i] = dirs[i].Name()
+	}
+	return versions, nil
 }
 
 func which(bins ...string) ([]string, error) {

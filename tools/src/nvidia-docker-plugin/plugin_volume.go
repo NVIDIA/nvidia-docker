@@ -4,11 +4,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
-	"nvidia"
 	"path"
 	"regexp"
+
+	"nvidia"
 )
 
 type pluginVolume struct{}
@@ -23,10 +25,22 @@ func (p *pluginVolume) register(api *PluginAPI) {
 	api.Handle("POST", prefix+".Mount", p.mount)
 	api.Handle("POST", prefix+".Unmount", p.unmount)
 	api.Handle("POST", prefix+".Path", p.path)
+	api.Handle("POST", prefix+".Get", p.get)
+	api.Handle("POST", prefix+".List", p.list)
 }
 
 func errVolumeUnknown(vol string) *string {
 	s := "No such volume: " + vol
+	return &s
+}
+
+func errVolumeNotFound(vol string) *string {
+	s := "Volume not found: " + vol
+	return &s
+}
+
+func errVolumeVersion(version string) *string {
+	s := "Invalid volume version: " + version
 	return &s
 }
 
@@ -48,8 +62,7 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 	name, version := parseVolumeName(q.Name)
 	if v, ok := Volumes[name]; ok {
 		if v.Version != version {
-			r.Err = new(string)
-			*r.Err = "Invalid volume version: " + version
+			r.Err = errVolumeVersion(version)
 		} else {
 			ok, err := v.Exists()
 			assert(err)
@@ -84,6 +97,7 @@ func (p *pluginVolume) mount(resp http.ResponseWriter, req *http.Request) {
 	var r struct{ Mountpoint, Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
+	log.Printf("Received mount request for volume '%s'\n", q.Name)
 
 	name, version := parseVolumeName(q.Name)
 	if v, ok := Volumes[name]; ok {
@@ -100,6 +114,7 @@ func (p *pluginVolume) unmount(resp http.ResponseWriter, req *http.Request) {
 	var r struct{ Err *string }
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
+	log.Printf("Received unmount request for volume '%s'\n", q.Name)
 
 	name, _ := parseVolumeName(q.Name)
 	if _, ok := Volumes[name]; !ok {
@@ -110,4 +125,54 @@ func (p *pluginVolume) unmount(resp http.ResponseWriter, req *http.Request) {
 
 func (p *pluginVolume) path(resp http.ResponseWriter, req *http.Request) {
 	p.mount(resp, req)
+}
+
+func (p *pluginVolume) get(resp http.ResponseWriter, req *http.Request) {
+	type Volume struct{ Name, Mountpoint string }
+
+	var q struct{ Name string }
+	var r struct {
+		Volume *Volume
+		Err    *string
+	}
+
+	assert(json.NewDecoder(req.Body).Decode(&q))
+
+	name, version := parseVolumeName(q.Name)
+	if v, ok := Volumes[name]; ok {
+		ok, err := v.Exists()
+		assert(err)
+		if !ok {
+			r.Err = errVolumeNotFound(q.Name)
+		} else {
+			r.Volume = &Volume{
+				Name:       q.Name,
+				Mountpoint: path.Join(v.Path, version),
+			}
+		}
+	} else {
+		r.Err = errVolumeUnknown(q.Name)
+	}
+	assert(json.NewEncoder(resp).Encode(r))
+}
+
+func (p *pluginVolume) list(resp http.ResponseWriter, req *http.Request) {
+	type Volume struct{ Name, Mountpoint string }
+
+	var r struct {
+		Volumes []Volume
+		Err     *string
+	}
+
+	for _, vol := range Volumes {
+		versions, err := vol.ListVersions()
+		assert(err)
+		for _, v := range versions {
+			r.Volumes = append(r.Volumes, Volume{
+				Name:       fmt.Sprintf("%s_%s", vol.Name, v),
+				Mountpoint: path.Join(vol.Path, v),
+			})
+		}
+	}
+	assert(json.NewEncoder(resp).Encode(r))
 }

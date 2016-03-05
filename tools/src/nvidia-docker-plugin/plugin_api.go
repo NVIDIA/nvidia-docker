@@ -13,10 +13,7 @@ import (
 	"nvidia"
 )
 
-const (
-	socketName   = nvidia.DockerPlugin + ".sock"
-	acceptHeader = "application/vnd.docker.plugins.v1.1+json"
-)
+const socketName = nvidia.DockerPlugin + ".sock"
 
 type plugin interface {
 	implement() string
@@ -31,10 +28,13 @@ type PluginAPI struct {
 
 func accept(handler http.Handler) http.Handler {
 	f := func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Accept") != acceptHeader {
+		h := r.Header.Get("Accept")
+		if h != "application/vnd.docker.plugins.v1.1+json" &&
+			h != "application/vnd.docker.plugins.v1.2+json" {
 			w.WriteHeader(http.StatusNotAcceptable)
 			return
 		}
+		w.Header().Set("Content-Type", "application/vnd.docker.plugins.v1+json")
 		handler.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(f)
@@ -64,7 +64,7 @@ func (a *PluginAPI) register(plugins ...plugin) {
 func (a *PluginAPI) activate(resp http.ResponseWriter, req *http.Request) {
 	r := struct{ Implements []string }{}
 
-	log.Println("Received handshake request")
+	log.Println("Received activate request")
 	r.Implements = make([]string, len(a.plugins))
 	for i, p := range a.plugins {
 		r.Implements[i] = p.implement()
