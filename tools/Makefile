@@ -13,9 +13,12 @@ USER_ID     := $(shell id -u)
 DOCKER_BIN := $(BIN_DIR)/nvidia-docker
 PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 
-PKG_VERSION := nvidia-docker_1.0.0~beta
-PKG_DIR     := $(DIST_DIR)/$(subst _,-,$(PKG_VERSION))
-PKG_ARCH    := amd64
+PKG_NAME     := nvidia-docker
+PKG_VERSION  := 1.0.0~beta.2
+PKG_REV      := 1
+PKG_ARCH     := amd64
+PKG_DIR      := $(DIST_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_FILENAME := $(PKG_NAME)_$(PKG_VERSION)_$(PKG_ARCH)
 
 .PHONY: all build install uninstall clean distclean tarball deb
 
@@ -42,14 +45,16 @@ distclean:
 	@rm -rf $(DIST_DIR)
 
 tarball: build distclean
-	mkdir -p $(DIST_DIR)
-	tar --transform='s;.*/;nvidia-docker/;' -caf $(DIST_DIR)/$(PKG_VERSION)_$(PKG_ARCH).tar.xz $(BIN_DIR)/*
+	@mkdir -p $(DIST_DIR)
+	tar --transform='s;.*/;nvidia-docker/;' -caf $(DIST_DIR)/$(PKG_FILENAME).tar.xz $(BIN_DIR)/*
 
 deb: export DEBFULLNAME=NVIDIA CORPORATION
 deb: export DEBEMAIL=digits@nvidia.com
 
 deb: build distclean
-	mkdir -p $(PKG_DIR)
-	cp -r $(BIN_DIR) $(PKG_DIR)
-	cd $(PKG_DIR) && dh_make -y -s -c bsd -p $(PKG_VERSION) -d -t $(CONF_DIR)/debian --createorig
+	@mkdir -p $(PKG_DIR)
+	@cp -r $(BIN_DIR) $(PKG_DIR)
+	@-read -p "Update changelog? " yn; [ "$$yn" = "y" ] && \
+	dch -c $(CONF_DIR)/debian/changelog -v $(PKG_VERSION)-$(PKG_REV) --no-auto-nmu
+	cd $(PKG_DIR) && dh_make -y -s -c bsd -d -t $(CONF_DIR)/debian --createorig
 	cd $(PKG_DIR) && debuild -e PREFIX=$(PREFIX) -i -us -uc -b
