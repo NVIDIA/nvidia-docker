@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/exec"
 
-	"cuda"
-	"nvml"
+	"github.com/NVIDIA/nvidia-docker/tools/src/cuda"
+	"github.com/NVIDIA/nvidia-docker/tools/src/nvml"
 )
 
 const DockerPlugin = "nvidia-docker"

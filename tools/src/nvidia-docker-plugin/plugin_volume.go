@@ -10,7 +10,7 @@ import (
 	"path"
 	"regexp"
 
-	"nvidia"
+	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
 )
 
 type pluginVolume struct{}

@@ -16,7 +16,7 @@ import (
 	"regexp"
 	"strings"
 
-	"ldcache"
+	"github.com/NVIDIA/nvidia-docker/tools/src/ldcache"
 )
 
 const (

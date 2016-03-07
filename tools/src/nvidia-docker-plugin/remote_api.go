@@ -5,7 +5,7 @@ package main
 import (
 	"net/http"
 
-	"graceful"
+	"github.com/NVIDIA/nvidia-docker/tools/src/graceful"
 )
 
 type restapi interface {

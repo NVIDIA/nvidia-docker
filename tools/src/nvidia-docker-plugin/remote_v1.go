@@ -15,7 +15,7 @@ import (
 	"text/tabwriter"
 	"text/template"
 
-	"nvidia"
+	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
 )
 
 type remoteV10 struct{}

@@ -3,8 +3,8 @@
 package nvidia
 
 import (
-	"cuda"
-	"nvml"
+	"github.com/NVIDIA/nvidia-docker/tools/src/cuda"
+	"github.com/NVIDIA/nvidia-docker/tools/src/nvml"
 )
 
 type NVMLDev nvml.Device

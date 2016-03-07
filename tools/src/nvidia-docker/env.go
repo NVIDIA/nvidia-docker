@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"docker"
+	"github.com/NVIDIA/nvidia-docker/tools/src/docker"
 )
 
 const (

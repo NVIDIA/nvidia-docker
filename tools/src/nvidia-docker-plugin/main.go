@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"nvidia"
+	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
 )
 
 var (
