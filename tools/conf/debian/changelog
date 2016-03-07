@@ -1,5 +1,15 @@
-#PACKAGE# (#VERSION#-1) UNRELEASED; urgency=low
+nvidia-docker (1.0.0~beta.2-1) trusty; urgency=low
+
+  * Support for Docker 1.10 (Closes: #46)
+  * Support for Docker plugin API v1.2
+  * Support for 361 drivers
+  * Add copy strategy for cross-device volumes (Closes: #47)
+
+ -- NVIDIA CORPORATION <digits@nvidia.com>  Mon, 07 Mar 2016 11:41:21 -0800
+
+nvidia-docker (1.0.0~beta-1) trusty; urgency=low
 
   * Initial release (Closes: #33)
 
- -- #USERNAME# <#EMAIL#>  #DATE#
+ -- NVIDIA CORPORATION <digits@nvidia.com>  Mon, 08 Feb 2016 11:17:52 -0800
+
