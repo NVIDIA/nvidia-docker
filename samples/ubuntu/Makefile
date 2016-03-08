@@ -3,6 +3,7 @@
 CUDA_SAMPLES := bandwidthTest \
                 deviceQuery \
                 matrixMulCUBLAS \
+                nbody \
                 vectorAdd \
                 nvidia-smi
 
