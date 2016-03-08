@@ -177,6 +177,8 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 		switch m[1] {
 
 		// Blacklist EGL/OpenGL libraries issued by other vendors
+		case "EGL":
+			fallthrough
 		case "GLESv1_CM":
 			fallthrough
 		case "GLESv2":
