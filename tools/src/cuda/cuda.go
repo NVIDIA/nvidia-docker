@@ -8,7 +8,6 @@ package cuda
 import "C"
 
 import (
-	"errors"
 	"fmt"
 	"unsafe"
 )
@@ -36,7 +35,7 @@ func cudaErr(ret C.cudaError_t) error {
 		return nil
 	}
 	err := C.GoString(C.cudaGetErrorString(ret))
-	return errors.New(err)
+	return fmt.Errorf("cuda: %v", err)
 }
 
 var archToFamily = map[string]string{

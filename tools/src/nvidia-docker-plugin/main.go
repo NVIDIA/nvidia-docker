@@ -6,6 +6,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"runtime/debug"
 
 	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
 )
@@ -29,14 +30,18 @@ func init() {
 
 func assert(err error) {
 	if err != nil {
-		log.Panicln("Error:", err)
+		panic(err)
 	}
 }
 
 func exit() {
 	code := 0
-	if recover() != nil {
+	if r := recover(); r != nil {
 		code = 1
+		log.Printf("Error: %v", r)
+		if os.Getenv("NV_DEBUG") != "" {
+			debug.PrintStack()
+		}
 	}
 	os.Exit(code)
 }

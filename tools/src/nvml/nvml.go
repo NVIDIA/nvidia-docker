@@ -136,13 +136,13 @@ func nvmlErr(ret C.nvmlReturn_t) error {
 
 func assert(ret C.nvmlReturn_t) {
 	if err := nvmlErr(ret); err != nil {
-		panic(err)
+		panic(fmt.Errorf("nvml: %v", err))
 	}
 }
 
 func Init() error {
 	if err := C.nvmlInit_dl(); err != nil {
-		return errors.New(C.GoString(err))
+		return fmt.Errorf("nvml init: %s", C.GoString(err))
 	}
 	return nvmlErr(C.nvmlInit())
 }
