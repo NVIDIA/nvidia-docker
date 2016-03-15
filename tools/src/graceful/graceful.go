@@ -5,6 +5,7 @@ package graceful
 import (
 	"net"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -65,6 +66,9 @@ func (s *HTTPServer) Handle(method, route string, handler http.HandlerFunc) {
 }
 
 func (s *HTTPServer) Serve() <-chan struct{} {
+	if s.network == "unix" {
+		os.Remove(s.server.Addr)
+	}
 	l, err := net.Listen(s.network, s.server.Addr)
 	if err != nil {
 		s.Lock()
