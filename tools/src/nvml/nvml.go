@@ -61,7 +61,7 @@ func (t P2PLinkType) String() string {
 }
 
 type ClockInfo struct {
-	Core   uint
+	Cores  uint
 	Memory uint
 }
 
@@ -86,6 +86,7 @@ type Device struct {
 
 type UtilizationInfo struct {
 	GPU     uint
+	Memory  uint
 	Encoder uint
 	Decoder uint
 }
@@ -112,8 +113,9 @@ type MemoryInfo struct {
 }
 
 type ProcessInfo struct {
-	PID  uint
-	Name string
+	PID        uint
+	Name       string
+	MemoryUsed uint64
 }
 
 type DeviceStatus struct {
@@ -220,10 +222,10 @@ func NewDevice(idx uint) (device *Device, err error) {
 		PCI: PCIInfo{
 			BusID:     C.GoString(&pci.busId[0]),
 			BAR1:      uint64(bar1.bar1Total / (1024 * 1024)),
-			Bandwidth: pcieGenToBandwidth[int(pciel[0])] * uint(pciel[1]) / 1000,
+			Bandwidth: pcieGenToBandwidth[int(pciel[0])] * uint(pciel[1]),
 		},
 		Clocks: ClockInfo{
-			Core:   uint(clock[0]),
+			Cores:  uint(clock[0]),
 			Memory: uint(clock[1]),
 		},
 	}
@@ -269,6 +271,7 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 		Temperature: uint(temp),
 		Utilization: UtilizationInfo{
 			GPU:     uint(usage.gpu),
+			Memory:  uint(usage.memory),
 			Encoder: uint(encoder[0]),
 			Decoder: uint(decoder[0]),
 		},
@@ -276,7 +279,7 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 			GlobalUsed: uint64(mem.used / (1024 * 1024)),
 		},
 		Clocks: ClockInfo{
-			Core:   uint(clock[0]),
+			Cores:  uint(clock[0]),
 			Memory: uint(clock[1]),
 		},
 		PCI: PCIStatusInfo{
@@ -299,7 +302,7 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 	if r != C.NVML_ERROR_NOT_SUPPORTED { // only supported on Maxwell or newer
 		assert(r)
 		assert(C.nvmlDeviceGetPcieThroughput(d.handle, C.NVML_PCIE_UTIL_TX_BYTES, &throughput[1]))
-		status.PCI.Throughput = PCIThroughputInfo{uint(throughput[0]), uint(throughput[1])}
+		status.PCI.Throughput = PCIThroughputInfo{uint(throughput[0]) / 1000, uint(throughput[1]) / 1000}
 	}
 
 	status.Processes = make([]ProcessInfo, nprocs)
@@ -307,6 +310,7 @@ func (d *Device) Status() (status *DeviceStatus, err error) {
 		status.Processes[i].PID = uint(procs[i].pid)
 		assert(C.nvmlSystemGetProcessName(procs[i].pid, &procname[0], szProcName))
 		status.Processes[i].Name = C.GoString(&procname[0])
+		status.Processes[i].MemoryUsed = uint64(procs[i].usedGpuMemory) / (1024 * 1024)
 	}
 	return
 }

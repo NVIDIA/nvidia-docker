@@ -39,16 +39,16 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	  PCI
 	    Bus ID:  	{{.PCI.BusID}}
 	    BAR1:  	{{.PCI.BAR1}} MiB
-	    Bandwidth:  	{{.PCI.Bandwidth}} GB/s
+	    Bandwidth:  	{{.PCI.Bandwidth}} MB/s
 	  Memory
 	    ECC:  	{{.Memory.ECC}}
 	    Global:  	{{.Memory.Global}} MiB
 	    Constant:  	{{.Memory.Constant}} KiB
 	    L1 / Shared:  	{{.Memory.Shared}} KiB
 	    L2 Cache:  	{{.Memory.L2Cache}} KiB
-	    Bandwidth:  	{{.Memory.Bandwidth}} GB/s
+	    Bandwidth:  	{{.Memory.Bandwidth}} MB/s
 	  Clocks
-	    Core:  	{{.Clocks.Core}} MHz
+	    Cores:  	{{.Clocks.Cores}} MHz
 	    Memory:  	{{.Clocks.Memory}} MHz
 	  P2P Available{{if len .Topology | eq 0}}:  	None{{else}}{{range .Topology}}
 	    {{.BusID}} - {{(.Link.String)}}{{end}}{{end}}
@@ -98,6 +98,7 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	  Temperature:  	{{$s.Temperature}} °C
 	  Utilization
 	    GPU:  	{{$s.Utilization.GPU}} %
+	    Memory:  	{{$s.Utilization.Memory}} %
 	    Encoder:  	{{$s.Utilization.Encoder}} %
 	    Decoder:  	{{$s.Utilization.Decoder}} %
 	  Memory
@@ -109,14 +110,16 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	  PCI
 	    BAR1:  	{{$s.PCI.BAR1Used}} / {{.PCI.BAR1}} MiB
 	    Throughput{{if not $s.PCI.Throughput}}:  	N/A{{else}}
-	      RX:  	{{$s.PCI.Throughput.RX}} KB/s
-	      TX:  	{{$s.PCI.Throughput.TX}} KB/s{{end}}
+	      RX:  	{{$s.PCI.Throughput.RX}} MB/s
+	      TX:  	{{$s.PCI.Throughput.TX}} MB/s{{end}}
 	  Clocks
-	    Core:  	{{$s.Clocks.Core}} MHz
+	    Cores:  	{{$s.Clocks.Cores}} MHz
 	    Memory:  	{{$s.Clocks.Memory}} MHz
 	  Processes{{if len $s.Processes | eq 0}}:  	None{{else}}{{range $s.Processes}}
-	    {{.PID}} - {{.Name}}{{end}}{{end}}
-	{{end}}
+	    - PID:  	{{.PID}}
+	      Name:  	{{.Name}}
+	      Memory:  	{{.MemoryUsed}} MiB{{end}}{{end}}
+	 {{end}}
 	`
 	t := template.Must(template.New("").Parse(tpl))
 	w := tabwriter.NewWriter(resp, 0, 4, 0, ' ', 0)

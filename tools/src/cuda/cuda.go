@@ -104,7 +104,7 @@ func NewDevice(busID string) (*Device, error) {
 			Shared:    uint(prop.sharedMemPerMultiprocessor / 1024),
 			Constant:  uint(prop.totalConstMem / 1024),
 			L2Cache:   uint(prop.l2CacheSize / 1024),
-			Bandwidth: 2 * uint((prop.memoryClockRate/1000)*(prop.memoryBusWidth/8)) / 1000,
+			Bandwidth: 2 * uint((prop.memoryClockRate/1000)*(prop.memoryBusWidth/8)),
 		},
 	}, nil
 }
