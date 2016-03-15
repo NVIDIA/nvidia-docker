@@ -66,7 +66,10 @@ func GenerateLocalArgs(image string, vols []string) ([]string, error) {
 }
 
 func devicesArgs() ([]string, error) {
-	args := []string{"--device=/dev/nvidiactl", "--device=/dev/nvidia-uvm"}
+	var args []string
+
+	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceCtl))
+	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceUVM))
 
 	devs, err := nvidia.LookupDevicePaths()
 	if err != nil {

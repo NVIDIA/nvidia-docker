@@ -169,7 +169,7 @@ func (r *remoteV10) dockerCLI(resp http.ResponseWriter, req *http.Request) {
 }
 
 func dockerCLIDevices(wr io.Writer, ids []string) error {
-	const tpl = "--device=/dev/nvidiactl --device=/dev/nvidia-uvm{{range .}} --device={{.}}{{end}}"
+	var tpl = fmt.Sprintf("--device=%s --device=%s{{range .}} --device={{.}}{{end}}", nvidia.DeviceCtl, nvidia.DeviceUVM)
 
 	devs := make([]string, 0, len(Devices))
 

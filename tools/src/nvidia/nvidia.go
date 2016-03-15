@@ -10,7 +10,11 @@ import (
 	"github.com/NVIDIA/nvidia-docker/tools/src/nvml"
 )
 
-const DockerPlugin = "nvidia-docker"
+const (
+	DockerPlugin = "nvidia-docker"
+	DeviceCtl    = "/dev/nvidiactl"
+	DeviceUVM    = "/dev/nvidia-uvm"
+)
 
 func Init() error {
 	if err := os.Unsetenv("CUDA_VISIBLE_DEVICES"); err != nil {
@@ -24,7 +28,7 @@ func Shutdown() error {
 }
 
 func LoadUVM() error {
-	if _, err := os.Stat("/dev/nvidia-uvm"); err == nil {
+	if _, err := os.Stat(DeviceUVM); err == nil {
 		return nil
 	}
 	return exec.Command("nvidia-modprobe", "-u", "-c=0").Run()
