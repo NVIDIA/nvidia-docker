@@ -19,14 +19,17 @@ RUN wget -O gdk.run -q http://developer.download.nvidia.com/compute/cuda/7.5/Pro
     echo "$NVIDIA_GDK_SUM  gdk.run" | sha256sum -c --strict - && \
     chmod +x gdk.run && ./gdk.run --silent && rm gdk.run
 
-COPY src /go/src
 VOLUME /go/bin
+WORKDIR /go/src/github.com/NVIDIA/nvidia-docker/tools/src
+COPY src .
 
 ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"
 ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64 -L /usr/src/gdk/nvml/lib -ldl -lrt"
+
+RUN go get -v -ldflags="-s" ./...
 
 ARG UID
 RUN useradd --non-unique --uid $UID build
 USER build
 
-CMD go get -v -ldflags="-s" nvidia-docker nvidia-docker-plugin
+CMD go install -v -ldflags="-s" ./...

@@ -27,7 +27,7 @@ all: build
 build:
 	@$(NV_DOCKER) build --build-arg UID=$(USER_ID) -t $(BUILD_IMAGE) -f Dockerfile.build $(CURDIR)
 	@mkdir -p $(BIN_DIR)
-	@$(NV_DOCKER) run --rm -v $(BIN_DIR):/go/bin $(BUILD_IMAGE)
+	@$(NV_DOCKER) run --rm --net=host -v $(BIN_DIR):/go/bin $(BUILD_IMAGE)
 
 install: all
 	install -D -T -m 755 $(DOCKER_BIN) $(PREFIX)/$(notdir $(DOCKER_BIN))
