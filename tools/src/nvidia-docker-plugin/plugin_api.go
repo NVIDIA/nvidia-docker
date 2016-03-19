@@ -31,6 +31,7 @@ func accept(handler http.Handler) http.Handler {
 		h := r.Header.Get("Accept")
 		if h != "application/vnd.docker.plugins.v1.1+json" &&
 			h != "application/vnd.docker.plugins.v1.2+json" {
+			log.Println("Unsupported plugin API", h)
 			w.WriteHeader(http.StatusNotAcceptable)
 			return
 		}

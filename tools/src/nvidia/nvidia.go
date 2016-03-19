@@ -3,6 +3,7 @@
 package nvidia
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 
@@ -31,7 +32,10 @@ func LoadUVM() error {
 	if _, err := os.Stat(DeviceUVM); err == nil {
 		return nil
 	}
-	return exec.Command("nvidia-modprobe", "-u", "-c=0").Run()
+	if exec.Command("nvidia-modprobe", "-u", "-c=0").Run() != nil {
+		return errors.New("Could not load UVM kernel module")
+	}
+	return nil
 }
 
 func GetDriverVersion() (string, error) {

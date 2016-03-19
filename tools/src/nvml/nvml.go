@@ -133,25 +133,25 @@ func nvmlErr(ret C.nvmlReturn_t) error {
 		return nil
 	}
 	err := C.GoString(C.nvmlErrorString(ret))
-	return errors.New(err)
+	return fmt.Errorf("nvml: %v", err)
 }
 
 func assert(ret C.nvmlReturn_t) {
 	if err := nvmlErr(ret); err != nil {
-		panic(fmt.Errorf("nvml: %v", err))
+		panic(err)
 	}
 }
 
 func Init() error {
-	if err := C.nvmlInit_dl(); err != nil {
-		return fmt.Errorf("nvml init: %s", C.GoString(err))
+	r := C.nvmlInit_dl()
+	if r == C.NVML_ERROR_LIBRARY_NOT_FOUND {
+		return errors.New("Could not load NVML library")
 	}
-	return nvmlErr(C.nvmlInit())
+	return nvmlErr(r)
 }
 
 func Shutdown() error {
-	C.nvmlShutdown_dl()
-	return nvmlErr(C.nvmlShutdown())
+	return nvmlErr(C.nvmlShutdown_dl())
 }
 
 func GetDeviceCount() (uint, error) {

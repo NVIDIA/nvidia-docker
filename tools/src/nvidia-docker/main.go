@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"runtime"
 	"runtime/debug"
 
 	"github.com/NVIDIA/nvidia-docker/tools/src/docker"
@@ -24,20 +25,21 @@ func init() {
 
 func assert(err error) {
 	if err != nil {
-		panic(err)
+		log.Panicln("Error:", err)
 	}
 }
 
 func exit() {
-	code := 0
-	if r := recover(); r != nil {
-		code = 1
-		log.Printf("Error: %v", r)
-		if os.Getenv("NV_DEBUG") != "" {
-			debug.PrintStack()
+	if err := recover(); err != nil {
+		if _, ok := err.(runtime.Error); ok {
+			log.Println(err)
 		}
+		if os.Getenv("NV_DEBUG") != "" {
+			log.Printf("%s", debug.Stack())
+		}
+		os.Exit(1)
 	}
-	os.Exit(code)
+	os.Exit(0)
 }
 
 func GenerateDockerArgs(image string) []string {

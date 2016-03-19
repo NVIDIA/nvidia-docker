@@ -5,27 +5,35 @@
 
 #include "nvml_dl.h"
 
-#define DLSYM(x, sym)                         \
-do {                                          \
-    x = dlsym(handle, #sym);                  \
-    if (dlerror() != NULL) {                  \
-        return NVML_ERROR_FUNCTION_NOT_FOUND; \
-    }                                         \
+#define DLSYM(x, sym)                           \
+do {                                            \
+    dlerror();				        \
+    x = dlsym(handle, #sym);                    \
+    if (dlerror() != NULL) {                    \
+        return (NVML_ERROR_FUNCTION_NOT_FOUND); \
+    }                                           \
 } while (0)
 
 typedef nvmlReturn_t (*nvmlSym_t)();
 
 static void *handle;
 
-char *NVML_DL(nvmlInit)(void)
+nvmlReturn_t NVML_DL(nvmlInit)(void)
 {
     handle = dlopen(NULL, RTLD_NOW);
-    return (handle ? NULL : dlerror());
+    if (handle == NULL) {
+	return (NVML_ERROR_LIBRARY_NOT_FOUND);
+    }
+    return (nvmlInit());
 }
 
-void NVML_DL(nvmlShutdown)(void)
+nvmlReturn_t NVML_DL(nvmlShutdown)(void)
 {
-    dlclose(handle);
+    nvmlReturn_t r = nvmlShutdown();
+    if (r != NVML_SUCCESS) {
+	return (r);
+    }
+    return (dlclose(handle) ? NVML_ERROR_UNKNOWN : NVML_SUCCESS);
 }
 
 nvmlReturn_t NVML_DL(nvmlDeviceGetTopologyCommonAncestor)(
@@ -34,5 +42,5 @@ nvmlReturn_t NVML_DL(nvmlDeviceGetTopologyCommonAncestor)(
     nvmlSym_t sym;
 
     DLSYM(sym, nvmlDeviceGetTopologyCommonAncestor);
-    return (*sym)(dev1, dev2, info);
+    return ((*sym)(dev1, dev2, info));
 }
