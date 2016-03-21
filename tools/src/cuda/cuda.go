@@ -15,7 +15,7 @@ import (
 type MemoryInfo struct {
 	ECC       bool
 	Global    uint
-	Shared    uint // includes L1 cache
+	Shared    uint
 	Constant  uint
 	L2Cache   uint
 	Bandwidth uint

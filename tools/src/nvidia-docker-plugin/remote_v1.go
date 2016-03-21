@@ -44,7 +44,7 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	    ECC:  	{{.Memory.ECC}}
 	    Global:  	{{.Memory.Global}} MiB
 	    Constant:  	{{.Memory.Constant}} KiB
-	    L1 / Shared:  	{{.Memory.Shared}} KiB
+	    Shared:  	{{.Memory.Shared}} KiB
 	    L2 Cache:  	{{.Memory.L2Cache}} KiB
 	    Bandwidth:  	{{.Memory.Bandwidth}} MB/s
 	  Clocks
