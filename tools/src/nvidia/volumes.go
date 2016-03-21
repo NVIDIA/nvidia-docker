@@ -155,14 +155,15 @@ var Volumes = []VolumeInfo{
 				"libEGL.so",        // EGL ICD loader
 				"libGLdispatch.so", // OpenGL dispatch (GLVND) (used by libOpenGL, libEGL and libGLES*)
 
-				"libGLX_nvidia.so",       // OpenGL/GLX ICD (GLVND)
-				"libEGL_nvidia.so",       // EGL ICD (GLVND)
-				"libGLESv2_nvidia.so",    // OpenGL ES v2 ICD (GLVND)
-				"libGLESv1_CM_nvidia.so", // OpenGL ES v1 common profile ICD (GLVND)
-				"libnvidia-eglcore.so",   // EGL core (used by libGLES* or libGLES*_nvidia and libEGL_nvidia)
-				"libnvidia-glcore.so",    // OpenGL core (used by libGL or libGLX_nvidia)
-				"libnvidia-tls.so",       // Thread local storage (used by libGL or libGLX_nvidia)
-				"libnvidia-glsi.so",      // OpenGL system interaction (used by libEGL_nvidia)
+				"libGLX_nvidia.so",         // OpenGL/GLX ICD (GLVND)
+				"libEGL_nvidia.so",         // EGL ICD (GLVND)
+				"libGLESv2_nvidia.so",      // OpenGL ES v2 ICD (GLVND)
+				"libGLESv1_CM_nvidia.so",   // OpenGL ES v1 common profile ICD (GLVND)
+				"libnvidia-eglcore.so",     // EGL core (used by libGLES* or libGLES*_nvidia and libEGL_nvidia)
+				"libnvidia-egl-wayland.so", // EGL wayland extensions (used by libEGL_nvidia)
+				"libnvidia-glcore.so",      // OpenGL core (used by libGL or libGLX_nvidia)
+				"libnvidia-tls.so",         // Thread local storage (used by libGL or libGLX_nvidia)
+				"libnvidia-glsi.so",        // OpenGL system interaction (used by libEGL_nvidia)
 			},
 		},
 	},
