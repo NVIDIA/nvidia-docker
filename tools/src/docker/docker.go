@@ -46,34 +46,37 @@ func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	return b, nil
 }
 
+// List of boolean options: https://github.com/docker/docker/blob/v1.10.3/contrib/completion/bash/docker
 var booleanFlags = map[string]map[string][]string{
 	"1.9": {
-		"daemon": []string{"D", "-debug", "-disable-legacy-registry", "-icc",
-			"-ip-forward", "-ip-masq", "-iptables", "-ipv6", "-selinux-enabled",
-			"-tls", "-tlsverify", "-userland-proxy"},
-		"create": []string{"i", "-interactive", "-oom-kill-disable", "P",
-			"-publish-all", "-privileged", "-read-only", "t", "-tty"},
-		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
-			"-oom-kill-disable", "P", "-publish-all", "-privileged",
-			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
+		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
+			"-disable-legacy-registry", "-help", "-icc", "-ip-forward",
+			"-ip-masq", "-iptables", "-ipv6", "-selinux-enabled", "-userland-proxy"},
+		"create": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
+		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
+			"-detach", "d", "-rm", "-sig-proxy"},
 		"volume": []string{},
 	},
 	"1.10": {
-		"daemon": []string{"D", "-debug", "-disable-legacy-registry", "-icc",
-			"-ip-forward", "-ip-masq", "-iptables", "-ipv6", "-selinux-enabled",
-			"-tls", "-tlsverify", "-userland-proxy"},
-		"create": []string{"i", "-interactive", "-oom-kill-disable", "P",
-			"-publish-all", "-privileged", "-read-only", "t", "-tty"},
-		"run": []string{"d", "-detach", "-disable-content-trust", "i", "-interactive",
-			"-oom-kill-disable", "P", "-publish-all", "-privileged",
-			"-read-only", "-rm", "-sig-proxy", "t", "-tty"},
+		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
+		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
+			"-disable-legacy-registry", "-help", "-icc", "-ip-forward",
+			"-ip-masq", "-iptables", "-ipv6", "-selinux-enabled", "-userland-proxy"},
+		"create": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
+		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
+			"-detach", "d", "-rm", "-sig-proxy"},
 		"volume": []string{},
 	},
 }
 
 func ParseArgs(args []string, cmd ...string) (string, int, error) {
 	if len(cmd) == 0 {
-		cmd = append(cmd, "daemon")
+		cmd = append(cmd, "")
 	}
 	version, err := ClientVersion()
 	if err != nil {
