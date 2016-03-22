@@ -20,7 +20,7 @@ static void *handle;
 
 nvmlReturn_t NVML_DL(nvmlInit)(void)
 {
-    handle = dlopen(NULL, RTLD_NOW);
+    handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (handle == NULL) {
 	return (NVML_ERROR_LIBRARY_NOT_FOUND);
     }

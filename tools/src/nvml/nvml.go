@@ -2,7 +2,7 @@
 
 package nvml
 
-// #cgo LDFLAGS: -lnvidia-ml
+// #cgo LDFLAGS: -ldl -Wl,--unresolved-symbols=ignore-in-object-files
 // #include "nvml_dl.h"
 import "C"
 

@@ -42,55 +42,48 @@ func exit() {
 	os.Exit(0)
 }
 
-func GenerateDockerArgs(image string) []string {
-	vols, err := VolumesNeeded(image)
-	assert(err)
-	if vols == nil {
-		return nil
-	}
-	if Host != nil {
-		args, err := GenerateRemoteArgs(image, vols)
-		assert(err)
-		return args
-	}
-	args, err := GenerateLocalArgs(image, vols)
-	assert(err)
-	return args
-}
-
 func main() {
-	var option string
-	var n int
-
 	args := os.Args[1:]
 	defer exit()
 
-	assert(nvidia.Init())
-	defer func() { assert(nvidia.Shutdown()) }()
-
-	command, i, err := docker.ParseArgs(args)
+	command, off, err := docker.ParseArgs(args)
 	assert(err)
-	if command == "create" || command == "run" || command == "volume" {
-		option, n, err = docker.ParseArgs(args[i+1:], command)
-		i += n + 1
-		assert(err)
-	}
-	switch command {
-	case "create":
-		fallthrough
-	case "run":
-		if option != "" {
-			a := GenerateDockerArgs(option)
-			args = append(args[:i], append(a, args[i:]...)...)
-		}
-	case "volume":
-		if option == "setup" {
-			assert(CreateLocalVolumes())
-			return
-		}
-	default:
+
+	if command != "create" && command != "run" && command != "volume" {
+		assert(docker.Docker(args...))
 	}
 
-	assert(nvidia.LoadUVM())
+	opt, i, err := docker.ParseArgs(args[off+1:], command)
+	assert(err)
+	off += i + 1
+
+	if command == "volume" && opt == "setup" {
+		assert(nvidia.Init())
+		assert(CreateLocalVolumes())
+		assert(nvidia.Shutdown())
+		return
+	}
+
+	if (command == "create" || command == "run") && opt != "" {
+		vols, err := VolumesNeeded(opt)
+		assert(err)
+
+		if vols != nil {
+			var nargs []string
+			var err error
+
+			if Host != nil {
+				nargs, err = GenerateRemoteArgs(opt, vols)
+			} else {
+				assert(nvidia.Init())
+				assert(nvidia.LoadUVM())
+				nargs, err = GenerateLocalArgs(opt, vols)
+				nvidia.Shutdown()
+			}
+			assert(err)
+			args = append(args[:off], append(nargs, args[off:]...)...)
+		}
+	}
+
 	assert(docker.Docker(args...))
 }

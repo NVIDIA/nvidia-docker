@@ -2,7 +2,7 @@
 
 package cuda
 
-// #cgo LDFLAGS: -lcudart_static
+// #cgo LDFLAGS: -lcudart_static -ldl -lrt
 // #include <stdlib.h>
 // #include <cuda_runtime_api.h>
 import "C"

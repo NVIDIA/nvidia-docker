@@ -24,7 +24,7 @@ WORKDIR /go/src/github.com/NVIDIA/nvidia-docker/tools/src
 COPY src .
 
 ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"
-ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64 -L /usr/src/gdk/nvml/lib -ldl -lrt"
+ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64"
 
 RUN go get -v -ldflags="-s" ./...
 
