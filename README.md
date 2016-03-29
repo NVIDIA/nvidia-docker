@@ -13,18 +13,44 @@ A good place to start is to understand [why NVIDIA Docker](https://github.com/NV
 
 # Quick start
 
-Assuming the NVIDIA drivers and Docker are properly installed (see [installation](https://github.com/NVIDIA/nvidia-docker/wiki/Installation)):
+Assuming the NVIDIA drivers and Docker are properly installed (see [installation](https://github.com/NVIDIA/nvidia-docker/wiki/Installation)), there are two ways to install NVIDIA Docker:
 
+### Plugin install (Recommended)
+
+##### _Ubuntu distributions_
 ```sh
-git clone https://github.com/NVIDIA/nvidia-docker
-cd nvidia-docker
+# Install nvidia-docker and nvidia-docker-plugin
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-beta.3/nvidia-docker_1.0.0.beta.3-1_amd64.deb
+sudo dpkg -i /tmp/nvidia-docker_1.0.0.beta.3-1_amd64.deb && rm /tmp/nvidia-docker*.deb
 
-# Initial setup
-sudo make install
+# Test nvidia-smi
+nvidia-docker run --rm nvidia/cuda nvidia-smi
+```
+
+##### _Other distributions_
+```sh
+# Install nvidia-docker and nvidia-docker-plugin
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-beta.3/nvidia-docker_1.0.0.beta.3_amd64.tar.xz
+sudo tar --strip-components=1 -C /usr/bin -xvf /tmp/nvidia-docker_1.0.0.beta.3_amd64.tar.xz && rm /tmp/nvidia-docker*.tar.xz
+
+# Run nvidia-docker-plugin
+sudo -b nohup nvidia-docker-plugin > /tmp/nvidia-docker.log
+
+# Test nvidia-smi
+nvidia-docker run --rm nvidia/cuda nvidia-smi
+```
+
+### Standalone install
+```sh
+# Install nvidia-docker and nvidia-docker-plugin
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-beta.3/nvidia-docker_1.0.0.beta.3_amd64.tar.xz
+sudo tar --strip-components=1 -C /usr/bin -xvf /tmp/nvidia-docker_1.0.0~beta.3_amd64.tar.xz && rm /tmp/nvidia-docker*.tar.xz
+
+# One-time setup
 sudo nvidia-docker volume setup
 
-# Run nvidia-smi
-nvidia-docker run nvidia/cuda nvidia-smi
+# Test nvidia-smi
+nvidia-docker run --rm nvidia/cuda nvidia-smi
 ```
 
 # Issues and Contributing
