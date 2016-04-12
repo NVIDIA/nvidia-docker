@@ -9,6 +9,9 @@ import "C"
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -186,7 +189,6 @@ func NewDevice(idx uint) (device *Device, err error) {
 		power C.uint
 		clock [2]C.uint
 		pciel [2]C.uint
-		cpus  cpuSet
 	)
 
 	defer func() {
@@ -206,10 +208,18 @@ func NewDevice(idx uint) (device *Device, err error) {
 	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_MEM, &clock[1]))
 	assert(C.nvmlDeviceGetMaxPcieLinkGeneration(dev, &pciel[0]))
 	assert(C.nvmlDeviceGetMaxPcieLinkWidth(dev, &pciel[1]))
-	assert(C.nvmlDeviceGetCpuAffinity(dev, C.uint(len(cpus)), (*C.ulong)(&cpus[0])))
-	node, err := getCPUNode(cpus)
+
+	busID := C.GoString(&pci.busId[0])
+	b, err := ioutil.ReadFile(fmt.Sprintf("/sys/bus/pci/devices/%s/numa_node", strings.ToLower(busID)))
+	if err != nil || len(b) == 0 {
+		return nil, ErrCPUAffinity
+	}
+	node, err := strconv.ParseInt(string(b[:len(b)-1]), 10, 8)
 	if err != nil {
-		return nil, err
+		return nil, ErrCPUAffinity
+	}
+	if node < 0 {
+		node = 0 // XXX report node 0 instead of NUMA_NO_NODE
 	}
 
 	device = &Device{
@@ -218,9 +228,9 @@ func NewDevice(idx uint) (device *Device, err error) {
 		UUID:        C.GoString(&uuid[0]),
 		Path:        fmt.Sprintf("/dev/nvidia%d", uint(minor)),
 		Power:       uint(power / 1000),
-		CPUAffinity: node,
+		CPUAffinity: uint(node),
 		PCI: PCIInfo{
-			BusID:     C.GoString(&pci.busId[0]),
+			BusID:     busID,
 			BAR1:      uint64(bar1.bar1Total / (1024 * 1024)),
 			Bandwidth: pcieGenToBandwidth[int(pciel[0])] * uint(pciel[1]),
 		},
