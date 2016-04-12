@@ -3,6 +3,7 @@ description "NVIDIA Docker plugin"
 start on (local-filesystems and net-device-up)
 stop on runlevel [!2345]
 
+normal exit 0 KILL TERM
 respawn
 respawn limit 5 10
 
