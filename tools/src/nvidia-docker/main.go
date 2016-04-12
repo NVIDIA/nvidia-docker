@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -14,8 +15,9 @@ import (
 )
 
 var (
-	Host *url.URL
-	GPU  []string
+	Version string
+	Host    *url.URL
+	GPU     []string
 )
 
 func init() {
@@ -50,6 +52,9 @@ func main() {
 	assert(err)
 
 	if command != "create" && command != "run" && command != "volume" {
+		if command == "version" {
+			fmt.Printf("NVIDIA Docker: %s\n\n", Version)
+		}
 		assert(docker.Docker(args...))
 	}
 
