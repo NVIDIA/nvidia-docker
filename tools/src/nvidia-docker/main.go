@@ -75,8 +75,8 @@ func main() {
 			if Host != nil {
 				nargs, err = GenerateRemoteArgs(opt, vols)
 			} else {
-				assert(nvidia.Init())
 				assert(nvidia.LoadUVM())
+				assert(nvidia.Init())
 				nargs, err = GenerateLocalArgs(opt, vols)
 				nvidia.Shutdown()
 			}

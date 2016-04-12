@@ -54,12 +54,12 @@ func main() {
 	flag.Parse()
 	defer exit()
 
+	log.Println("Loading NVIDIA unified memory")
+	assert(nvidia.LoadUVM())
+
 	log.Println("Loading NVIDIA management library")
 	assert(nvidia.Init())
 	defer func() { assert(nvidia.Shutdown()) }()
-
-	log.Println("Loading NVIDIA unified memory")
-	assert(nvidia.LoadUVM())
 
 	log.Println("Discovering GPU devices")
 	Devices, err = nvidia.LookupDevices()
