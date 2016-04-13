@@ -46,7 +46,7 @@ func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	return b, nil
 }
 
-// List of boolean options: https://github.com/docker/docker/blob/v1.10.3/contrib/completion/bash/docker
+// List of boolean options: https://github.com/docker/docker/blob/v1.11.0/contrib/completion/bash/docker
 var booleanFlags = map[string]map[string][]string{
 	"1.9": {
 		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
@@ -65,6 +65,18 @@ var booleanFlags = map[string]map[string][]string{
 		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
 			"-disable-legacy-registry", "-help", "-icc", "-ip-forward",
 			"-ip-masq", "-iptables", "-ipv6", "-selinux-enabled", "-userland-proxy"},
+		"create": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
+		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
+			"-detach", "d", "-rm", "-sig-proxy"},
+		"volume": []string{},
+	},
+	"1.11": {
+		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
+		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
+			"-disable-legacy-registry", "-help", "-icc", "-ip-forward",
+			"-ip-masq", "-iptables", "-ipv6", "-raw-logs", "-selinux-enabled", "-userland-proxy"},
 		"create": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
 		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
