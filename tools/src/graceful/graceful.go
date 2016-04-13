@@ -28,7 +28,7 @@ func recovery(handler http.Handler) http.Handler {
 	f := func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if recover() != nil {
-				w.WriteHeader(http.StatusInternalServerError)
+				http.Error(w, "internal error, check logs for details", http.StatusInternalServerError)
 			}
 		}()
 		handler.ServeHTTP(w, r)

@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +12,13 @@ import (
 	"regexp"
 
 	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
+)
+
+var (
+	ErrVolumeBadFormat   = errors.New("bad volume format")
+	ErrVolumeUnsupported = errors.New("unsupported volume")
+	ErrVolumeNotFound    = errors.New("no such volume")
+	ErrVolumeVersion     = errors.New("invalid volume version")
 )
 
 type pluginVolume struct{}
@@ -29,27 +37,22 @@ func (p *pluginVolume) register(api *PluginAPI) {
 	api.Handle("POST", prefix+".List", p.list)
 }
 
-func errVolumeUnknown(vol string) *string {
-	s := "No such volume: " + vol
+func fmtError(err error, vol string) *string {
+	s := fmt.Sprintf("%v: %s", err, vol)
 	return &s
 }
 
-func errVolumeNotFound(vol string) *string {
-	s := "Volume not found: " + vol
-	return &s
-}
-
-func errVolumeVersion(version string) *string {
-	s := "Invalid volume version: " + version
-	return &s
-}
-
-func parseVolumeName(volume string) (string, string) {
+func getVolume(name string) (*nvidia.Volume, string, error) {
 	re := regexp.MustCompile("^([a-zA-Z0-9_.-]+)_([0-9.]+)$")
-	if m := re.FindStringSubmatch(volume); len(m) == 3 {
-		return m[1], m[2]
+	m := re.FindStringSubmatch(name)
+	if len(m) != 3 {
+		return nil, "", ErrVolumeBadFormat
 	}
-	return "", ""
+	volume, version := Volumes[m[1]], m[2]
+	if volume == nil {
+		return nil, "", ErrVolumeUnsupported
+	}
+	return volume, version, nil
 }
 
 func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
@@ -59,19 +62,22 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received create request for volume '%s'\n", q.Name)
 
-	name, version := parseVolumeName(q.Name)
-	if v, ok := Volumes[name]; ok {
-		if v.Version != version {
-			r.Err = errVolumeVersion(version)
-		} else {
-			ok, err := v.Exists()
-			assert(err)
-			if !ok {
-				assert(v.Create(nvidia.LinkStrategy{}))
-			}
-		}
-	} else {
-		r.Err = errVolumeUnknown(q.Name)
+	volume, version, err := getVolume(q.Name)
+	if err != nil {
+		r.Err = fmtError(err, q.Name)
+		assert(json.NewEncoder(resp).Encode(r))
+		return
+	}
+	// The volume version requested needs to match the volume version in cache
+	if version != volume.Version {
+		r.Err = fmtError(ErrVolumeVersion, q.Name)
+		assert(json.NewEncoder(resp).Encode(r))
+		return
+	}
+	ok, err := volume.Exists()
+	assert(err)
+	if !ok {
+		assert(volume.Create(nvidia.LinkStrategy{}))
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }
@@ -83,11 +89,11 @@ func (p *pluginVolume) remove(resp http.ResponseWriter, req *http.Request) {
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received remove request for volume '%s'\n", q.Name)
 
-	name, version := parseVolumeName(q.Name)
-	if v, ok := Volumes[name]; ok {
-		assert(v.Remove(version))
+	volume, version, err := getVolume(q.Name)
+	if err != nil {
+		r.Err = fmtError(err, q.Name)
 	} else {
-		r.Err = errVolumeUnknown(q.Name)
+		assert(volume.Remove(version))
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }
@@ -99,12 +105,19 @@ func (p *pluginVolume) mount(resp http.ResponseWriter, req *http.Request) {
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received mount request for volume '%s'\n", q.Name)
 
-	name, version := parseVolumeName(q.Name)
-	if v, ok := Volumes[name]; ok {
-		p := path.Join(v.Path, version)
-		r.Mountpoint = &p
+	volume, version, err := getVolume(q.Name)
+	if err != nil {
+		r.Err = fmtError(err, q.Name)
+		assert(json.NewEncoder(resp).Encode(r))
+		return
+	}
+	ok, err := volume.Exists(version)
+	assert(err)
+	if !ok {
+		r.Err = fmtError(ErrVolumeNotFound, q.Name)
 	} else {
-		r.Err = errVolumeUnknown(q.Name)
+		p := path.Join(volume.Path, version)
+		r.Mountpoint = &p
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }
@@ -116,9 +129,9 @@ func (p *pluginVolume) unmount(resp http.ResponseWriter, req *http.Request) {
 	assert(json.NewDecoder(req.Body).Decode(&q))
 	log.Printf("Received unmount request for volume '%s'\n", q.Name)
 
-	name, _ := parseVolumeName(q.Name)
-	if _, ok := Volumes[name]; !ok {
-		r.Err = errVolumeUnknown(q.Name)
+	_, _, err := getVolume(q.Name)
+	if err != nil {
+		r.Err = fmtError(err, q.Name)
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }
@@ -138,20 +151,21 @@ func (p *pluginVolume) get(resp http.ResponseWriter, req *http.Request) {
 
 	assert(json.NewDecoder(req.Body).Decode(&q))
 
-	name, version := parseVolumeName(q.Name)
-	if v, ok := Volumes[name]; ok {
-		ok, err := v.Exists()
-		assert(err)
-		if !ok {
-			r.Err = errVolumeNotFound(q.Name)
-		} else {
-			r.Volume = &Volume{
-				Name:       q.Name,
-				Mountpoint: path.Join(v.Path, version),
-			}
-		}
+	volume, version, err := getVolume(q.Name)
+	if err != nil {
+		r.Err = fmtError(err, q.Name)
+		assert(json.NewEncoder(resp).Encode(r))
+		return
+	}
+	ok, err := volume.Exists(version)
+	assert(err)
+	if !ok {
+		r.Err = fmtError(ErrVolumeNotFound, q.Name)
 	} else {
-		r.Err = errVolumeUnknown(q.Name)
+		r.Volume = &Volume{
+			Name:       q.Name,
+			Mountpoint: path.Join(volume.Path, version),
+		}
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }

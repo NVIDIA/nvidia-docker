@@ -281,9 +281,12 @@ func (v *Volume) Remove(version ...string) error {
 	return os.RemoveAll(path.Join(v.Path, vv))
 }
 
-func (v *Volume) Exists() (bool, error) {
-	p := path.Join(v.Path, v.Version)
-	_, err := os.Stat(p)
+func (v *Volume) Exists(version ...string) (bool, error) {
+	vv := v.Version
+	if len(version) == 1 {
+		vv = version[0]
+	}
+	_, err := os.Stat(path.Join(v.Path, vv))
 	if os.IsNotExist(err) {
 		return false, nil
 	}
