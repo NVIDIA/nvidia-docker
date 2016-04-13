@@ -3,12 +3,10 @@
 set -e
 
 NVIDIA_DOCKER_USER=#PACKAGE#
-NVIDIA_DOCKER_ROOT=/var/lib/nvidia-docker
 
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         deluser --quiet --system "$NVIDIA_DOCKER_USER"
-        rm -rf "$NVIDIA_DOCKER_ROOT"
     ;;
 
     *)

@@ -8,7 +8,8 @@ NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
 
 case "$1" in
     configure)
-        adduser --system --home "$NVIDIA_DOCKER_ROOT" "$NVIDIA_DOCKER_USER"
+        adduser --system --no-create-home --home "$NVIDIA_DOCKER_ROOT" "$NVIDIA_DOCKER_USER"
+        chown "$NVIDIA_DOCKER_USER": "$NVIDIA_DOCKER_ROOT"
         setcap cap_fowner+pe "$NVIDIA_DOCKER_PLUGIN"
     ;;
 
