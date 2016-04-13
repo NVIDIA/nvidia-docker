@@ -9,34 +9,34 @@ respawn limit 5 10
 
 kill timeout 20
 
+env NVIDIA_DOCKER_USER=#PACKAGE#
+env NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
+env NVIDIA_DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
+
 script
-    NVIDIA_DOCKER_PLUGIN_OPTS=
     if [ -f /etc/default/$UPSTART_JOB ]; then
         . /etc/default/$UPSTART_JOB
     fi
+    OPTS="$NVIDIA_DOCKER_PLUGIN_OPTS"
 
-    NVIDIA_DOCKER_USER=#PACKAGE#
-    NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
     exec start-stop-daemon -S -u "$NVIDIA_DOCKER_USER" -c "$NVIDIA_DOCKER_USER" \
-                           -a "$NVIDIA_DOCKER_PLUGIN" -- $NVIDIA_DOCKER_PLUGIN_OPTS
+                           -a "$NVIDIA_DOCKER_PLUGIN" -- $OPTS
 end script
 
 post-start script
-    NVIDIA_DOCKER_PLUGIN_OPTS=
     if [ -f /etc/default/$UPSTART_JOB ]; then
         . /etc/default/$UPSTART_JOB
     fi
+    OPTS="$NVIDIA_DOCKER_PLUGIN_OPTS"
+    SOCK_DIR=$( echo $OPTS | grep -oP -- '-s\s+\K\S+' )
+    SOCK_FILE=unix://$SOCK_DIR/nvidia-docker.sock
 
-    SOCK_OPT=$( echo $NVIDIA_DOCKER_PLUGIN_OPTS | grep -oP -- '-s\s+\K\S+' )
-    if [ -n "$SOCK_OPT" ]; then
-        NVIDIA_DOCKER_PLUGIN_SOCK=$SOCK_OPT/nvidia-docker.sock
-        DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
-        mkdir -p $( dirname "$DOCKER_PLUGIN_SPEC" )
-        echo "unix://$NVIDIA_DOCKER_PLUGIN_SOCK" > "$DOCKER_PLUGIN_SPEC"
+    if [ -n "$SOCK_DIR" ]; then
+        mkdir -p $( dirname "$NVIDIA_DOCKER_PLUGIN_SPEC" )
+        echo "$SOCK_FILE" > "$NVIDIA_DOCKER_PLUGIN_SPEC"
     fi
 end script
 
 post-stop script
-    DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
-    rm -f "$DOCKER_PLUGIN_SPEC"
+    rm -f "$NVIDIA_DOCKER_PLUGIN_SPEC"
 end script
