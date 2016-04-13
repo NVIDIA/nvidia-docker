@@ -18,6 +18,9 @@ const (
 )
 
 func Init() error {
+	if err := os.Setenv("CUDA_CACHE_DISABLE", "1"); err != nil {
+		return err
+	}
 	if err := os.Unsetenv("CUDA_VISIBLE_DEVICES"); err != nil {
 		return err
 	}
