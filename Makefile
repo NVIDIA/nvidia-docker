@@ -24,6 +24,9 @@ install:
 uninstall:
 	make -C $(CURDIR)/tools uninstall
 
+deb:
+	make -C $(CURDIR)/tools deb
+
 cuda: $(CURDIR)/$(OS)/cuda
 	make -C $(CURDIR)/$(OS)/cuda
 
