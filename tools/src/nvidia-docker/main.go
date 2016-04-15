@@ -22,7 +22,6 @@ var (
 
 func init() {
 	log.SetPrefix(os.Args[0] + " | ")
-	LoadEnvironment()
 }
 
 func assert(err error) {
@@ -47,6 +46,8 @@ func exit() {
 func main() {
 	args := os.Args[1:]
 	defer exit()
+
+	assert(LoadEnvironment())
 
 	command, off, err := docker.ParseArgs(args)
 	assert(err)

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -84,10 +85,14 @@ func httpClient(addr *url.URL) *http.Client {
 }
 
 func sshAuths(addr *url.URL) (methods []ssh.AuthMethod) {
-	c, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
-	if err == nil {
-		auth := ssh.PublicKeysCallback(agent.NewClient(c).Signers)
-		methods = append(methods, auth)
+	if sock := os.Getenv("SSH_AUTH_SOCK"); sock != "" {
+		c, err := net.Dial("unix", sock)
+		if err != nil {
+			log.Println("Warning: failed to contact the local SSH agent")
+		} else {
+			auth := ssh.PublicKeysCallback(agent.NewClient(c).Signers)
+			methods = append(methods, auth)
+		}
 	}
 	auth := ssh.PasswordCallback(func() (string, error) {
 		fmt.Printf("%s@%s password: ", addr.User.Username(), addr.Host)

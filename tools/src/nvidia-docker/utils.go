@@ -53,7 +53,7 @@ func cudaSupported(image, version string) error {
 		return err
 	}
 	if lmaj > vmaj || (lmaj == vmaj && lmin > vmin) {
-		return fmt.Errorf("unsupported CUDA version: %s < %s", label, version)
+		return fmt.Errorf("unsupported CUDA version: driver %s < image %s", version, label)
 	}
 	return nil
 }

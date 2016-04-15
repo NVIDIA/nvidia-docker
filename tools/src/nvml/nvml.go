@@ -7,6 +7,7 @@ package nvml
 import "C"
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -211,12 +212,12 @@ func NewDevice(idx uint) (device *Device, err error) {
 
 	busID := C.GoString(&pci.busId[0])
 	b, err := ioutil.ReadFile(fmt.Sprintf("/sys/bus/pci/devices/%s/numa_node", strings.ToLower(busID)))
-	if err != nil || len(b) == 0 {
-		return nil, ErrCPUAffinity
-	}
-	node, err := strconv.ParseInt(string(b[:len(b)-1]), 10, 8)
 	if err != nil {
-		return nil, ErrCPUAffinity
+		return nil, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
+	}
+	node, err := strconv.ParseInt(string(bytes.TrimSpace(b)), 10, 8)
+	if err != nil {
+		return nil, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
 	}
 	if node < 0 {
 		node = 0 // XXX report node 0 instead of NUMA_NO_NODE

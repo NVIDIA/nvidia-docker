@@ -3,7 +3,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"regexp"
@@ -19,12 +21,18 @@ const (
 	envNVGPU      = "NV_GPU"
 )
 
-func LoadEnvironment() {
-	Host = getHost()
-	GPU = getGPU()
+var ErrInvalidURI = errors.New("invalid remote host URI")
 
+func LoadEnvironment() (err error) {
+	Host, err = getHost()
+	if err != nil {
+		return
+	}
+
+	GPU = getGPU()
 	cmd := getDocker()
 	docker.SetCommand(cmd...)
+	return
 }
 
 func parseAddr(addr string) (host, sport, hport string) {
@@ -50,50 +58,56 @@ func parseAddr(addr string) (host, sport, hport string) {
 	return
 }
 
-func getHost() (u *url.URL) {
-	var dhost bool
-	var err error
+func getHost() (*url.URL, error) {
+	var env string
 
-	env := os.Getenv(envNVHost)
-	if env == "" {
-		env = os.Getenv(envDockerHost)
-		dhost = true
-	}
-	if env == "" {
-		return nil
+	nvhost := os.Getenv(envNVHost)
+	dhost := os.Getenv(envDockerHost)
+
+	if nvhost != "" {
+		env = nvhost
+	} else if dhost != "" {
+		env = dhost
+	} else {
+		return nil, nil
 	}
 
-	if ok, _ := regexp.MatchString("^(unix|tcp|http|ssh)://", env); !ok {
+	if nvhost != "" && dhost == "" {
+		log.Printf("Warning: %s is set but %s is not\n", envNVHost, envDockerHost)
+	}
+
+	if ok, _ := regexp.MatchString("^[a-z0-9+.-]+://", env); !ok {
 		env = "tcp://" + env
 	}
-	u, err = url.Parse(env)
+	uri, err := url.Parse(env)
 	if err != nil {
-		return nil
+		return nil, ErrInvalidURI
 	}
-	host, sport, hport := parseAddr(u.Host)
+	host, sport, hport := parseAddr(uri.Host)
 	if host == "" {
-		return nil
+		return nil, ErrInvalidURI
 	}
 
-	switch u.Scheme {
+	switch uri.Scheme {
 	case "tcp":
-		u.Scheme = "http"
+		uri.Scheme = "http"
 		fallthrough
 	case "http":
-		if dhost {
+		if nvhost == "" && dhost != "" {
 			hport = "3476"
 		}
-		u.Host = fmt.Sprintf("%s:%s", host, hport)
-		return
+		uri.Host = fmt.Sprintf("%s:%s", host, hport)
+		return uri, nil
 	case "ssh":
-		u.Host = fmt.Sprintf("%s:%s", host, sport)
-		u.Opaque = fmt.Sprintf("localhost:%s", hport)
-		if u.User == nil {
-			u.User = url.UserPassword(os.Getenv("USER"), "")
+		uri.Host = fmt.Sprintf("%s:%s", host, sport)
+		uri.Opaque = fmt.Sprintf("localhost:%s", hport)
+		if uri.User == nil {
+			uri.User = url.UserPassword(os.Getenv("USER"), "")
 		}
-		return
+		return uri, nil
 	}
-	return nil
+
+	return nil, ErrInvalidURI
 }
 
 func getGPU() []string {

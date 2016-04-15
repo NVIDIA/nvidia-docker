@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"debug/elf"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -233,13 +234,13 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 		for _, f := range d.files {
 			obj, err := elf.Open(f)
 			if err != nil {
-				return err
+				return fmt.Errorf("%s: %v", f, err)
 			}
 			defer obj.Close()
 
 			ok, err := blacklisted(f, obj)
 			if err != nil {
-				return err
+				return fmt.Errorf("%s: %v", f, err)
 			}
 			if ok {
 				continue
@@ -251,7 +252,7 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 			}
 			soname, err := obj.DynString(elf.DT_SONAME)
 			if err != nil {
-				return err
+				return fmt.Errorf("%s: %v", f, err)
 			}
 			if len(soname) > 0 {
 				f = path.Join(v.Mountpoint, d.name, path.Base(f))
