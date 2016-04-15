@@ -6,6 +6,8 @@ RUN yum install -y \
         cuda-misc-headers-$CUDA_PKG_VERSION \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
         cuda-license-$CUDA_PKG_VERSION \
+        cuda-nvrtc-dev-$CUDA_PKG_VERSION \
+        cuda-cusolver-dev-$CUDA_PKG_VERSION \
         cuda-cublas-dev-$CUDA_PKG_VERSION \
         cuda-cufft-dev-$CUDA_PKG_VERSION \
         cuda-curand-dev-$CUDA_PKG_VERSION \
