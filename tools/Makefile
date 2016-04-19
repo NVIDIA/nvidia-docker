@@ -55,6 +55,7 @@ distclean:
 tarball: build distclean
 	@mkdir -p $(DIST_DIR)
 	tar --transform='s;.*/;nvidia-docker/;' -caf $(DIST_DIR)/$(PKG_FILE).tar.xz $(BIN_DIR)/*
+	@printf "\nFind tarball at $(DIST_DIR)\n\n"
 
 deb: export DEBFULLNAME=NVIDIA CORPORATION
 deb: export DEBEMAIL=digits@nvidia.com
@@ -66,3 +67,4 @@ deb: build distclean
 	dch -c $(CONF_DIR)/debian/changelog -v $(PKG_VERS)-$(PKG_REV) --no-auto-nmu
 	cd $(PKG_DIR) && dh_make -y -s -c bsd -d -t $(CONF_DIR)/debian --createorig
 	cd $(PKG_DIR) && debuild -e PREFIX=$(PREFIX) -i -us -uc -b
+	@printf "\nFind packages at $(DIST_DIR)\n\n"
