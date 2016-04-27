@@ -28,29 +28,29 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 	Supported CUDA version:  	{{cudaVersion}}
 	{{range $i, $e := .}}
 	Device #{{$i}}
-	  Model:  	{{.Model}}
+	  Model:  	{{or .Model "N/A"}}
 	  UUID:  	{{.UUID}}
 	  Path:  	{{.Path}}
-	  Family: 	{{.Family}}
-	  Arch:  	{{.Arch}}
-	  Cores:  	{{.Cores}}
-	  Power:  	{{.Power}} W
-	  CPU Affinity:  	NUMA node{{.CPUAffinity}}
+	  Family: 	{{or .Family "N/A"}}
+	  Arch:  	{{or .Arch "N/A"}}
+	  Cores:  	{{or .Cores "N/A"}}
+	  Power:  	{{if .Power}}{{.Power}} W{{else}}N/A{{end}}
+	  CPU Affinity:  	{{if .CPUAffinity}}NUMA node{{.CPUAffinity}}{{else}}N/A{{end}}
 	  PCI
 	    Bus ID:  	{{.PCI.BusID}}
-	    BAR1:  	{{.PCI.BAR1}} MiB
-	    Bandwidth:  	{{.PCI.Bandwidth}} MB/s
+	    BAR1:  	{{if .PCI.BAR1}}{{.PCI.BAR1}} MiB{{else}}N/A{{end}}
+	    Bandwidth:  	{{if .PCI.Bandwidth}}{{.PCI.Bandwidth}} MB/s{{else}}N/A{{end}}
 	  Memory
-	    ECC:  	{{.Memory.ECC}}
-	    Global:  	{{.Memory.Global}} MiB
-	    Constant:  	{{.Memory.Constant}} KiB
-	    Shared:  	{{.Memory.Shared}} KiB
-	    L2 Cache:  	{{.Memory.L2Cache}} KiB
-	    Bandwidth:  	{{.Memory.Bandwidth}} MB/s
+	    ECC:  	{{or .Memory.ECC "N/A"}}
+	    Global:  	{{if .Memory.Global}}{{.Memory.Global}} MiB{{else}}N/A{{end}}
+	    Constant:  	{{if .Memory.Constant}}{{.Memory.Constant}} KiB{{else}}N/A{{end}}
+	    Shared:  	{{if .Memory.Shared}}{{.Memory.Shared}} KiB{{else}}N/A{{end}}
+	    L2 Cache:  	{{if .Memory.L2Cache}}{{.Memory.L2Cache}} KiB{{else}}N/A{{end}}
+	    Bandwidth:  	{{if .Memory.Bandwidth}}{{.Memory.Bandwidth}} MB/s{{else}}N/A{{end}}
 	  Clocks
-	    Cores:  	{{.Clocks.Cores}} MHz
-	    Memory:  	{{.Clocks.Memory}} MHz
-	  P2P Available{{if len .Topology | eq 0}}:  	None{{else}}{{range .Topology}}
+	    Cores:  	{{if .Clocks.Cores}}{{.Clocks.Cores}} MHz{{else}}N/A{{end}}
+	    Memory:  	{{if .Clocks.Memory}}{{.Clocks.Memory}} MHz{{else}}N/A{{end}}
+	  P2P Available{{if not .Topology}}:  	None{{else}}{{range .Topology}}
 	    {{.BusID}} - {{(.Link.String)}}{{end}}{{end}}
 	{{end}}
 	`
@@ -94,32 +94,32 @@ func writeInfoJSON(wr io.Writer) {
 func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 	const tpl = `{{range $i, $e := .}}{{$s := (.Status)}}
 	Device #{{$i}}
-	  Power:  	{{$s.Power}} / {{.Power}} W
-	  Temperature:  	{{$s.Temperature}} °C
+	  Power:  	{{if and $s.Power .Power}}{{$s.Power}} / {{.Power}} W{{else}}N/A{{end}}
+	  Temperature:  	{{if $s.Temperature}}{{$s.Temperature}} °C{{else}}N/A{{end}}
 	  Utilization
-	    GPU:  	{{$s.Utilization.GPU}} %
-	    Memory:  	{{$s.Utilization.Memory}} %
-	    Encoder:  	{{$s.Utilization.Encoder}} %
-	    Decoder:  	{{$s.Utilization.Decoder}} %
+	    GPU:  	{{if $s.Utilization.GPU}}{{$s.Utilization.GPU}} %{{else}}N/A{{end}}
+	    Memory:  	{{if $s.Utilization.Memory}}{{$s.Utilization.Memory}} %{{else}}N/A{{end}}
+	    Encoder:  	{{if $s.Utilization.Encoder}}{{$s.Utilization.Encoder}} %{{else}}N/A{{end}}
+	    Decoder:  	{{if $s.Utilization.Decoder}}{{$s.Utilization.Decoder}} %{{else}}N/A{{end}}
 	  Memory
-	    Global:  	{{$s.Memory.GlobalUsed}} / {{.Memory.Global}} MiB
-	    ECC Errors{{if not $s.Memory.ECCErrors}}:  	N/A{{else}}
-	      L1 Cache:  	{{$s.Memory.ECCErrors.L1Cache}}
-	      L2 Cache:  	{{$s.Memory.ECCErrors.L2Cache}}
-	      Global:  	{{$s.Memory.ECCErrors.Global}}{{end}}
+	    Global:  	{{if and $s.Memory.GlobalUsed .Memory.Global}}{{$s.Memory.GlobalUsed}} / {{.Memory.Global}} MiB{{else}}N/A{{end}}
+	    ECC Errors
+	      L1 Cache:  	{{or $s.Memory.ECCErrors.L1Cache "N/A"}}
+	      L2 Cache:  	{{or $s.Memory.ECCErrors.L2Cache "N/A"}}
+	      Global:  	{{or $s.Memory.ECCErrors.Global "N/A"}}
 	  PCI
-	    BAR1:  	{{$s.PCI.BAR1Used}} / {{.PCI.BAR1}} MiB
-	    Throughput{{if not $s.PCI.Throughput}}:  	N/A{{else}}
-	      RX:  	{{$s.PCI.Throughput.RX}} MB/s
-	      TX:  	{{$s.PCI.Throughput.TX}} MB/s{{end}}
+	    BAR1:  	{{if and $s.PCI.BAR1Used .PCI.BAR1}}{{$s.PCI.BAR1Used}} / {{.PCI.BAR1}} MiB{{else}}N/A{{end}}
+	    Throughput
+	      RX:  	{{if $s.PCI.Throughput.RX}}{{$s.PCI.Throughput.RX}} MB/s{{else}}N/A{{end}}
+	      TX:  	{{if $s.PCI.Throughput.TX}}{{$s.PCI.Throughput.TX}} MB/s{{else}}N/A{{end}}
 	  Clocks
-	    Cores:  	{{$s.Clocks.Cores}} MHz
-	    Memory:  	{{$s.Clocks.Memory}} MHz
-	  Processes{{if len $s.Processes | eq 0}}:  	None{{else}}{{range $s.Processes}}
+	    Cores:  	{{if $s.Clocks.Cores}}{{$s.Clocks.Cores}} MHz{{else}}N/A{{end}}
+	    Memory:  	{{if $s.Clocks.Memory}}{{$s.Clocks.Memory}} MHz{{else}}N/A{{end}}
+	  Processes{{if not $s.Processes}}:  	None{{else}}{{range $s.Processes}}
 	    - PID:  	{{.PID}}
 	      Name:  	{{.Name}}
 	      Memory:  	{{.MemoryUsed}} MiB{{end}}{{end}}
-	 {{end}}
+	{{end}}
 	`
 	t := template.Must(template.New("").Parse(tpl))
 	w := tabwriter.NewWriter(resp, 0, 4, 0, ' ', 0)

@@ -2,7 +2,6 @@
 
 package nvml
 
-// #cgo LDFLAGS: -ldl -Wl,--unresolved-symbols=ignore-in-object-files
 // #include "nvml_dl.h"
 import "C"
 
@@ -15,17 +14,10 @@ import (
 	"strings"
 )
 
-const (
-	szDriver   = C.NVML_SYSTEM_DRIVER_VERSION_BUFFER_SIZE
-	szModel    = C.NVML_DEVICE_NAME_BUFFER_SIZE
-	szUUID     = C.NVML_DEVICE_UUID_BUFFER_SIZE
-	szProcs    = 32
-	szProcName = 64
-)
-
 var (
 	ErrCPUAffinity        = errors.New("failed to retrieve CPU affinity")
 	ErrUnsupportedP2PLink = errors.New("unsupported P2P link type")
+	ErrUnsupportedGPU     = errors.New("unsupported GPU device")
 )
 
 type P2PLinkType uint
@@ -61,58 +53,58 @@ func (t P2PLinkType) String() string {
 		return "Same board"
 	case P2PLinkUnknown:
 	}
-	return "???"
+	return "N/A"
 }
 
 type ClockInfo struct {
-	Cores  uint
-	Memory uint
+	Cores  *uint
+	Memory *uint
 }
 
 type PCIInfo struct {
 	BusID     string
-	BAR1      uint64
-	Bandwidth uint
+	BAR1      *uint64
+	Bandwidth *uint
 }
 
 type Device struct {
-	handle C.nvmlDevice_t
+	handle
 
-	Model       string
 	UUID        string
 	Path        string
-	Power       uint
-	CPUAffinity uint
+	Model       *string
+	Power       *uint
+	CPUAffinity *uint
 	PCI         PCIInfo
 	Clocks      ClockInfo
 	Topology    []P2PLink
 }
 
 type UtilizationInfo struct {
-	GPU     uint
-	Memory  uint
-	Encoder uint
-	Decoder uint
+	GPU     *uint
+	Memory  *uint
+	Encoder *uint
+	Decoder *uint
 }
 
 type PCIThroughputInfo struct {
-	RX uint
-	TX uint
+	RX *uint
+	TX *uint
 }
 
 type PCIStatusInfo struct {
-	BAR1Used   uint64
+	BAR1Used   *uint64
 	Throughput PCIThroughputInfo
 }
 
 type ECCErrorsInfo struct {
-	L1Cache uint64
-	L2Cache uint64
-	Global  uint64
+	L1Cache *uint64
+	L2Cache *uint64
+	Global  *uint64
 }
 
 type MemoryInfo struct {
-	GlobalUsed uint64
+	GlobalUsed *uint64
 	ECCErrors  ECCErrorsInfo
 }
 
@@ -123,8 +115,8 @@ type ProcessInfo struct {
 }
 
 type DeviceStatus struct {
-	Power       uint
-	Temperature uint
+	Power       *uint
+	Temperature *uint
 	Utilization UtilizationInfo
 	Memory      MemoryInfo
 	Clocks      ClockInfo
@@ -132,211 +124,211 @@ type DeviceStatus struct {
 	Processes   []ProcessInfo
 }
 
-func nvmlErr(ret C.nvmlReturn_t) error {
-	if ret == C.NVML_SUCCESS {
-		return nil
-	}
-	err := C.GoString(C.nvmlErrorString(ret))
-	return fmt.Errorf("nvml: %v", err)
-}
-
-func assert(ret C.nvmlReturn_t) {
-	if err := nvmlErr(ret); err != nil {
+func assert(err error) {
+	if err != nil {
 		panic(err)
 	}
 }
 
 func Init() error {
-	r := C.nvmlInit_dl()
-	if r == C.NVML_ERROR_LIBRARY_NOT_FOUND {
-		return errors.New("Could not load NVML library")
-	}
-	return nvmlErr(r)
+	return init_()
 }
 
 func Shutdown() error {
-	return nvmlErr(C.nvmlShutdown_dl())
+	return shutdown()
 }
 
 func GetDeviceCount() (uint, error) {
-	var n C.uint
-
-	err := nvmlErr(C.nvmlDeviceGetCount(&n))
-	return uint(n), err
+	return deviceGetCount()
 }
 
 func GetDriverVersion() (string, error) {
-	var driver [szDriver]C.char
-
-	err := nvmlErr(C.nvmlSystemGetDriverVersion(&driver[0], szDriver))
-	return C.GoString(&driver[0]), err
+	return systemGetDriverVersion()
 }
 
-var pcieGenToBandwidth = map[int]uint{
-	1: 250, // MB/s
-	2: 500,
-	3: 985,
-	4: 1969,
+func numaNode(busid string) (uint, error) {
+	b, err := ioutil.ReadFile(fmt.Sprintf("/sys/bus/pci/devices/%s/numa_node", strings.ToLower(busid)))
+	if err != nil {
+		return 0, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
+	}
+	node, err := strconv.ParseInt(string(bytes.TrimSpace(b)), 10, 8)
+	if err != nil {
+		return 0, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
+	}
+	if node < 0 {
+		node = 0 // XXX report node 0 instead of NUMA_NO_NODE
+	}
+	return uint(node), nil
+}
+
+func pciBandwidth(gen, width *uint) *uint {
+	m := map[uint]uint{
+		1: 250, // MB/s
+		2: 500,
+		3: 985,
+		4: 1969,
+	}
+	if gen == nil || width == nil {
+		return nil
+	}
+	bw := m[*gen] * *width
+	return &bw
 }
 
 func NewDevice(idx uint) (device *Device, err error) {
-	var (
-		dev   C.nvmlDevice_t
-		model [szModel]C.char
-		uuid  [szUUID]C.char
-		pci   C.nvmlPciInfo_t
-		minor C.uint
-		bar1  C.nvmlBAR1Memory_t
-		power C.uint
-		clock [2]C.uint
-		pciel [2]C.uint
-	)
-
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
 		}
 	}()
 
-	assert(C.nvmlDeviceGetHandleByIndex(C.uint(idx), &dev))
-	assert(C.nvmlDeviceGetName(dev, &model[0], szModel))
-	assert(C.nvmlDeviceGetUUID(dev, &uuid[0], szUUID))
-	assert(C.nvmlDeviceGetPciInfo(dev, &pci))
-	assert(C.nvmlDeviceGetMinorNumber(dev, &minor))
-	assert(C.nvmlDeviceGetBAR1MemoryInfo(dev, &bar1))
-	assert(C.nvmlDeviceGetPowerManagementLimit(dev, &power))
-	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_SM, &clock[0]))
-	assert(C.nvmlDeviceGetMaxClockInfo(dev, C.NVML_CLOCK_MEM, &clock[1]))
-	assert(C.nvmlDeviceGetMaxPcieLinkGeneration(dev, &pciel[0]))
-	assert(C.nvmlDeviceGetMaxPcieLinkWidth(dev, &pciel[1]))
+	h, err := deviceGetHandleByIndex(idx)
+	assert(err)
+	model, err := h.deviceGetName()
+	assert(err)
+	uuid, err := h.deviceGetUUID()
+	assert(err)
+	minor, err := h.deviceGetMinorNumber()
+	assert(err)
+	power, err := h.deviceGetPowerManagementLimit()
+	assert(err)
+	busid, err := h.deviceGetPciInfo()
+	assert(err)
+	bar1, _, err := h.deviceGetBAR1MemoryInfo()
+	assert(err)
+	pcig, err := h.deviceGetMaxPcieLinkGeneration()
+	assert(err)
+	pciw, err := h.deviceGetMaxPcieLinkWidth()
+	assert(err)
+	ccore, cmem, err := h.deviceGetMaxClockInfo()
+	assert(err)
 
-	busID := C.GoString(&pci.busId[0])
-	b, err := ioutil.ReadFile(fmt.Sprintf("/sys/bus/pci/devices/%s/numa_node", strings.ToLower(busID)))
-	if err != nil {
-		return nil, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
+	if minor == nil || busid == nil || uuid == nil {
+		return nil, ErrUnsupportedGPU
 	}
-	node, err := strconv.ParseInt(string(bytes.TrimSpace(b)), 10, 8)
-	if err != nil {
-		return nil, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
-	}
-	if node < 0 {
-		node = 0 // XXX report node 0 instead of NUMA_NO_NODE
-	}
+	path := fmt.Sprintf("/dev/nvidia%d", *minor)
+	node, err := numaNode(*busid)
+	assert(err)
 
 	device = &Device{
-		handle:      dev,
-		Model:       C.GoString(&model[0]),
-		UUID:        C.GoString(&uuid[0]),
-		Path:        fmt.Sprintf("/dev/nvidia%d", uint(minor)),
-		Power:       uint(power / 1000),
-		CPUAffinity: uint(node),
+		handle:      h,
+		UUID:        *uuid,
+		Path:        path,
+		Model:       model,
+		Power:       power,
+		CPUAffinity: &node,
 		PCI: PCIInfo{
-			BusID:     busID,
-			BAR1:      uint64(bar1.bar1Total / (1024 * 1024)),
-			Bandwidth: pcieGenToBandwidth[int(pciel[0])] * uint(pciel[1]),
+			BusID:     *busid,
+			BAR1:      bar1,
+			Bandwidth: pciBandwidth(pcig, pciw), // MB/s
 		},
 		Clocks: ClockInfo{
-			Cores:  uint(clock[0]),
-			Memory: uint(clock[1]),
+			Cores:  ccore, // MHz
+			Memory: cmem,  // MHz
 		},
+	}
+	if power != nil {
+		*device.Power /= 1000 // W
+	}
+	if bar1 != nil {
+		*device.PCI.BAR1 /= 1024 * 1024 // MiB
 	}
 	return
 }
 
 func (d *Device) Status() (status *DeviceStatus, err error) {
-	var (
-		power      C.uint
-		temp       C.uint
-		usage      C.nvmlUtilization_t
-		encoder    [2]C.uint
-		decoder    [2]C.uint
-		mem        C.nvmlMemory_t
-		ecc        [3]C.ulonglong
-		clock      [2]C.uint
-		bar1       C.nvmlBAR1Memory_t
-		throughput [2]C.uint
-		procname   [szProcName]C.char
-		procs      [szProcs]C.nvmlProcessInfo_t
-		nprocs     = C.uint(szProcs)
-	)
-
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
 		}
 	}()
 
-	assert(C.nvmlDeviceGetPowerUsage(d.handle, &power))
-	assert(C.nvmlDeviceGetTemperature(d.handle, C.NVML_TEMPERATURE_GPU, &temp))
-	assert(C.nvmlDeviceGetUtilizationRates(d.handle, &usage))
-	assert(C.nvmlDeviceGetEncoderUtilization(d.handle, &encoder[0], &encoder[1]))
-	assert(C.nvmlDeviceGetDecoderUtilization(d.handle, &decoder[0], &decoder[1]))
-	assert(C.nvmlDeviceGetMemoryInfo(d.handle, &mem))
-	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_SM, &clock[0]))
-	assert(C.nvmlDeviceGetClockInfo(d.handle, C.NVML_CLOCK_MEM, &clock[1]))
-	assert(C.nvmlDeviceGetBAR1MemoryInfo(d.handle, &bar1))
-	assert(C.nvmlDeviceGetComputeRunningProcesses(d.handle, &nprocs, &procs[0]))
+	power, err := d.deviceGetPowerUsage()
+	assert(err)
+	temp, err := d.deviceGetTemperature()
+	assert(err)
+	ugpu, umem, err := d.deviceGetUtilizationRates()
+	assert(err)
+	uenc, err := d.deviceGetEncoderUtilization()
+	assert(err)
+	udec, err := d.deviceGetDecoderUtilization()
+	assert(err)
+	mem, err := d.deviceGetMemoryInfo()
+	assert(err)
+	ccore, cmem, err := d.deviceGetClockInfo()
+	assert(err)
+	_, bar1, err := d.deviceGetBAR1MemoryInfo()
+	assert(err)
+	pids, pmems, err := d.deviceGetComputeRunningProcesses()
+	assert(err)
+	el1, el2, emem, err := d.deviceGetMemoryErrorCounter()
+	assert(err)
+	pcirx, pcitx, err := d.deviceGetPcieThroughput()
+	assert(err)
 
 	status = &DeviceStatus{
-		Power:       uint(power / 1000),
-		Temperature: uint(temp),
+		Power:       power,
+		Temperature: temp, // °C
 		Utilization: UtilizationInfo{
-			GPU:     uint(usage.gpu),
-			Memory:  uint(usage.memory),
-			Encoder: uint(encoder[0]),
-			Decoder: uint(decoder[0]),
+			GPU:     ugpu, // %
+			Memory:  umem, // %
+			Encoder: uenc, // %
+			Decoder: udec, // %
 		},
 		Memory: MemoryInfo{
-			GlobalUsed: uint64(mem.used / (1024 * 1024)),
+			GlobalUsed: mem,
+			ECCErrors: ECCErrorsInfo{
+				L1Cache: el1,
+				L2Cache: el2,
+				Global:  emem,
+			},
 		},
 		Clocks: ClockInfo{
-			Cores:  uint(clock[0]),
-			Memory: uint(clock[1]),
+			Cores:  ccore, // MHz
+			Memory: cmem,  // MHz
 		},
 		PCI: PCIStatusInfo{
-			BAR1Used: uint64(bar1.bar1Used / (1024 * 1024)),
+			BAR1Used: bar1,
+			Throughput: PCIThroughputInfo{
+				RX: pcirx,
+				TX: pcitx,
+			},
 		},
 	}
-
-	r := C.nvmlDeviceGetMemoryErrorCounter(d.handle, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC,
-		C.NVML_MEMORY_LOCATION_L1_CACHE, &ecc[0])
-	if r != C.NVML_ERROR_NOT_SUPPORTED { // only supported on Tesla cards
-		assert(r)
-		assert(C.nvmlDeviceGetMemoryErrorCounter(d.handle, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC,
-			C.NVML_MEMORY_LOCATION_L2_CACHE, &ecc[1]))
-		assert(C.nvmlDeviceGetMemoryErrorCounter(d.handle, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC,
-			C.NVML_MEMORY_LOCATION_DEVICE_MEMORY, &ecc[2]))
-		status.Memory.ECCErrors = ECCErrorsInfo{uint64(ecc[0]), uint64(ecc[1]), uint64(ecc[2])}
+	if power != nil {
+		*status.Power /= 1000 // W
 	}
-
-	r = C.nvmlDeviceGetPcieThroughput(d.handle, C.NVML_PCIE_UTIL_RX_BYTES, &throughput[0])
-	if r != C.NVML_ERROR_NOT_SUPPORTED { // only supported on Maxwell or newer
-		assert(r)
-		assert(C.nvmlDeviceGetPcieThroughput(d.handle, C.NVML_PCIE_UTIL_TX_BYTES, &throughput[1]))
-		status.PCI.Throughput = PCIThroughputInfo{uint(throughput[0]) / 1000, uint(throughput[1]) / 1000}
+	if mem != nil {
+		*status.Memory.GlobalUsed /= 1024 * 1024 // MiB
 	}
-
-	status.Processes = make([]ProcessInfo, nprocs)
-	for i := range status.Processes {
-		status.Processes[i].PID = uint(procs[i].pid)
-		assert(C.nvmlSystemGetProcessName(procs[i].pid, &procname[0], szProcName))
-		status.Processes[i].Name = C.GoString(&procname[0])
-		status.Processes[i].MemoryUsed = uint64(procs[i].usedGpuMemory) / (1024 * 1024)
+	if bar1 != nil {
+		*status.PCI.BAR1Used /= 1024 * 1024 // MiB
+	}
+	if pcirx != nil {
+		*status.PCI.Throughput.RX /= 1000 // MB/s
+	}
+	if pcitx != nil {
+		*status.PCI.Throughput.TX /= 1000 // MB/s
+	}
+	for i := range pids {
+		name, err := systemGetProcessName(pids[i])
+		assert(err)
+		status.Processes = append(status.Processes, ProcessInfo{
+			PID:        pids[i],
+			Name:       name,
+			MemoryUsed: pmems[i] / (1024 * 1024), // MiB
+		})
 	}
 	return
 }
 
 func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
-	var level C.nvmlGpuTopologyLevel_t
+	level, err := deviceGetTopologyCommonAncestor(dev1.handle, dev2.handle)
+	if err != nil || level == nil {
+		return P2PLinkUnknown, err
+	}
 
-	r := C.nvmlDeviceGetTopologyCommonAncestor_dl(dev1.handle, dev2.handle, &level)
-	if r == C.NVML_ERROR_FUNCTION_NOT_FOUND {
-		return P2PLinkUnknown, nil
-	}
-	if err = nvmlErr(r); err != nil {
-		return
-	}
-	switch level {
+	switch *level {
 	case C.NVML_TOPOLOGY_INTERNAL:
 		link = P2PLinkSameBoard
 	case C.NVML_TOPOLOGY_SINGLE:
@@ -355,15 +347,17 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 	return
 }
 
-func GetDevicePath(idx uint) (path string, err error) {
-	var dev C.nvmlDevice_t
-	var minor C.uint
-
-	err = nvmlErr(C.nvmlDeviceGetHandleByIndex(C.uint(idx), &dev))
+func GetDevicePath(idx uint) (string, error) {
+	h, err := deviceGetHandleByIndex(idx)
 	if err != nil {
-		return
+		return "", err
 	}
-	err = nvmlErr(C.nvmlDeviceGetMinorNumber(dev, &minor))
-	path = fmt.Sprintf("/dev/nvidia%d", uint(minor))
-	return
+	minor, err := h.deviceGetMinorNumber()
+	if err != nil {
+		return "", err
+	}
+	if minor == nil {
+		return "", ErrUnsupportedGPU
+	}
+	return fmt.Sprintf("/dev/nvidia%d", *minor), nil
 }
