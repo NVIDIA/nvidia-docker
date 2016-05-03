@@ -15,5 +15,15 @@ RUN yum install -y \
         cuda-npp-dev-$CUDA_PKG_VERSION \
         cuda-cudart-dev-$CUDA_PKG_VERSION \
         cuda-driver-dev-$CUDA_PKG_VERSION \
-        gcc-c++ && \
+        gcc-c++ \
+        yum-utils && \
     rm -rf /var/cache/yum/*
+
+RUN mkdir /tmp/gpu-deployment-kit && cd /tmp/gpu-deployment-kit && \
+    rpm2cpio $(repoquery --location  gpu-deployment-kit) | cpio -id && \
+    mv usr/include/nvidia/gdk/* /usr/local/cuda/include && \
+    mv usr/src/gdk/nvml/lib/* /usr/local/cuda/lib64/stubs && \
+    rm -rf /tmp/gpu-deployment-kit* && \
+    rm -rf /var/cache/yum/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
