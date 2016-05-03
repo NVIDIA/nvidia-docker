@@ -53,7 +53,7 @@ clean-images:
 
 # Tag all images with the Docker Hub username as a prefix, push them and untag everything.
 dockerhub_push = \
-$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag -f {} $(USERNAME)/{}$(PUSH_SUFFIX) && \
+$(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -I{} $(NV_DOCKER) tag {} $(USERNAME)/{}$(PUSH_SUFFIX) && \
 ($(NV_DOCKER) push $(USERNAME)/$(1) || true) && \
 $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi
 
@@ -61,7 +61,7 @@ $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$1":"$$2}' | xargs 
 dockerhub_pull = \
 $(NV_DOCKER) pull --all-tags $(USERNAME)/$(1) && \
 $(NV_DOCKER) images | awk '$$1 == "$(USERNAME)/$(1)" {print $$2}' | \
-  xargs -I{} sh -c '$(NV_DOCKER) tag -f $(USERNAME)/$(1):{} $(1):{} ; $(NV_DOCKER) rmi $(USERNAME)/$(1):{}'
+  xargs -I{} sh -c '$(NV_DOCKER) tag $(USERNAME)/$(1):{} $(1):{} ; $(NV_DOCKER) rmi $(USERNAME)/$(1):{}'
 
 push:
 	$(call dockerhub_push,cuda)

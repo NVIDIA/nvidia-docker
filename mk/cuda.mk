@@ -20,22 +20,22 @@ all-cudnn: $(addsuffix -runtime, $(CUDNN_VERSIONS)) \
 #################### CUDA ####################
 
 latest: devel
-	$(NV_DOCKER) tag -f cuda:$< cuda
+	$(NV_DOCKER) tag cuda:$< cuda
 
 devel: $(CUDA_LATEST)
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 runtime: $(CUDA_LATEST)-runtime
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 7.5: 7.5-devel $(CURDIR)/7.5
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 7.0: 7.0-devel $(CURDIR)/7.0
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 6.5: 6.5-devel $(CURDIR)/6.5
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 %-devel: %-runtime $(CURDIR)/%/devel/Dockerfile
 	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/devel
@@ -46,13 +46,13 @@ runtime: $(CUDA_LATEST)-runtime
 #################### cuDNN ####################
 
 cudnn: cudnn-devel
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 cudnn-devel: $(CUDNN_LATEST)-devel
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 cudnn-runtime: $(CUDNN_LATEST)-runtime
-	$(NV_DOCKER) tag -f cuda:$< cuda:$@
+	$(NV_DOCKER) tag cuda:$< cuda:$@
 
 %-cudnn2-devel: %-devel $(CURDIR)/%/devel/cudnn2/Dockerfile
 	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/devel/cudnn2
