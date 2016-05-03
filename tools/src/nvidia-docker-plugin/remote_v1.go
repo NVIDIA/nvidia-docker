@@ -68,13 +68,13 @@ func (r *remoteV10) gpuInfo(resp http.ResponseWriter, req *http.Request) {
 func (r *remoteV10) gpuInfoJSON(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
 
-	writeInfoJSON(&body)
+	writeGPUInfoJSON(&body)
 	resp.Header().Set("Content-Type", "application/json")
 	_, err := body.WriteTo(resp)
 	assert(err)
 }
 
-func writeInfoJSON(wr io.Writer) {
+func writeGPUInfoJSON(wr io.Writer) {
 	var err error
 
 	r := struct {
@@ -131,13 +131,13 @@ func (r *remoteV10) gpuStatus(resp http.ResponseWriter, req *http.Request) {
 func (r *remoteV10) gpuStatusJSON(resp http.ResponseWriter, req *http.Request) {
 	var body bytes.Buffer
 
-	writeStatusJSON(&body)
+	writeGPUStatusJSON(&body)
 	resp.Header().Set("Content-Type", "application/json")
 	_, err := body.WriteTo(resp)
 	assert(err)
 }
 
-func writeStatusJSON(wr io.Writer) {
+func writeGPUStatusJSON(wr io.Writer) {
 	status := make([]*nvidia.DeviceStatus, 0, len(Devices))
 
 	for i := range Devices {
@@ -150,27 +150,57 @@ func writeStatusJSON(wr io.Writer) {
 }
 
 func (r *remoteV10) dockerCLI(resp http.ResponseWriter, req *http.Request) {
-	var body bytes.Buffer
+	const tpl = "--volume-driver={{.VolumeDriver}}{{range .Volumes}} --volume={{.}}{{end}}" +
+		"{{range .Devices}} --device={{.}}{{end}}"
 
 	devs := strings.Split(req.FormValue("dev"), " ")
 	vols := strings.Split(req.FormValue("vol"), " ")
 
-	if err := dockerCLIDevices(&body, devs); err != nil {
+	args, err := dockerCLIArgs(devs, vols)
+	if err != nil {
 		http.Error(resp, err.Error(), http.StatusBadRequest)
 		return
 	}
-	body.WriteRune(' ')
-	if err := dockerCLIVolumes(&body, vols); err != nil {
-		http.Error(resp, err.Error(), http.StatusBadRequest)
-		return
-	}
-	_, err := body.WriteTo(resp)
-	assert(err)
+	t := template.Must(template.New("").Parse(tpl))
+	assert(t.Execute(resp, args))
 }
 
-func dockerCLIDevices(wr io.Writer, ids []string) error {
-	var tpl = fmt.Sprintf("--device=%s --device=%s{{range .}} --device={{.}}{{end}}", nvidia.DeviceCtl, nvidia.DeviceUVM)
+func (r *remoteV10) dockerCLIJSON(resp http.ResponseWriter, req *http.Request) {
+	devs := strings.Split(req.FormValue("dev"), " ")
+	vols := strings.Split(req.FormValue("vol"), " ")
 
+	args, err := dockerCLIArgs(devs, vols)
+	if err != nil {
+		http.Error(resp, err.Error(), http.StatusBadRequest)
+		return
+	}
+	resp.Header().Set("Content-Type", "application/json")
+	assert(json.NewEncoder(resp).Encode(args))
+}
+
+type dockerArgs struct {
+	VolumeDriver string
+	Volumes      []string
+	Devices      []string
+}
+
+func dockerCLIArgs(devs, vols []string) (*dockerArgs, error) {
+	devs, err := dockerCLIDevices(devs)
+	if err != nil {
+		return nil, err
+	}
+	vols, err = dockerCLIVolumes(vols)
+	if err != nil {
+		return nil, err
+	}
+	return &dockerArgs{
+		VolumeDriver: nvidia.DockerPlugin,
+		Volumes:      vols,
+		Devices:      append(devs, nvidia.DeviceCtl, nvidia.DeviceUVM),
+	}, nil
+}
+
+func dockerCLIDevices(ids []string) ([]string, error) {
 	devs := make([]string, 0, len(Devices))
 
 	if len(ids) == 1 && (ids[0] == "*" || ids[0] == "") {
@@ -181,24 +211,20 @@ func dockerCLIDevices(wr io.Writer, ids []string) error {
 		for _, id := range ids {
 			i, err := strconv.Atoi(id)
 			if err != nil || i < 0 || i >= len(Devices) {
-				return fmt.Errorf("invalid device: %s", id)
+				return nil, fmt.Errorf("invalid device: %s", id)
 			}
 			devs = append(devs, Devices[i].Path)
 		}
 	}
-	t := template.Must(template.New("").Parse(tpl))
-	assert(t.Execute(wr, devs))
-	return nil
+	return devs, nil
 }
 
-func dockerCLIVolumes(wr io.Writer, names []string) error {
-	var tpl = fmt.Sprintf("--volume-driver=%s{{range .}} --volume={{.}}{{end}}", nvidia.DockerPlugin)
-
+func dockerCLIVolumes(names []string) ([]string, error) {
 	vols := make([]string, 0, len(Volumes))
 
 	drv, err := nvidia.GetDriverVersion()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if len(names) == 1 && (names[0] == "*" || names[0] == "") {
 		for _, v := range Volumes {
@@ -208,14 +234,12 @@ func dockerCLIVolumes(wr io.Writer, names []string) error {
 		for _, n := range names {
 			v, ok := Volumes[n]
 			if !ok {
-				return fmt.Errorf("invalid volume: %s", n)
+				return nil, fmt.Errorf("invalid volume: %s", n)
 			}
 			vols = append(vols, fmt.Sprintf("%s_%s:%s:ro", v.Name, drv, v.Mountpoint))
 		}
 	}
-	t := template.Must(template.New("").Parse(tpl))
-	assert(t.Execute(wr, vols))
-	return nil
+	return vols, nil
 }
 
 func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
@@ -223,7 +247,7 @@ func (r *remoteV10) mesosCLI(resp http.ResponseWriter, req *http.Request) {
 
 	// Generate Mesos attributes
 	var b bytes.Buffer
-	writeInfoJSON(&b)
+	writeGPUInfoJSON(&b)
 	attr := base64Encode(zlibCompress(b.Bytes()))
 
 	// Generate Mesos custom resources

@@ -16,6 +16,7 @@ type restapi interface {
 	gpuStatus(http.ResponseWriter, *http.Request)
 	gpuStatusJSON(http.ResponseWriter, *http.Request)
 	dockerCLI(http.ResponseWriter, *http.Request)
+	dockerCLIJSON(http.ResponseWriter, *http.Request)
 	mesosCLI(http.ResponseWriter, *http.Request)
 }
 
@@ -45,6 +46,7 @@ func (a *RemoteAPI) register(apis ...restapi) {
 		a.Handle("GET", prefix+"/gpu/status", api.gpuStatus)
 		a.Handle("GET", prefix+"/gpu/status/json", api.gpuStatusJSON)
 		a.Handle("GET", prefix+"/docker/cli", api.dockerCLI)
+		a.Handle("GET", prefix+"/docker/cli/json", api.dockerCLIJSON)
 		a.Handle("GET", prefix+"/mesos/cli", api.mesosCLI)
 
 		if i == len(apis)-1 && prefix != "" {
