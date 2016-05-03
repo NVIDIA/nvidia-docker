@@ -1,15 +1,17 @@
 # Copyright (c) 2015-2016, NVIDIA CORPORATION. All rights reserved.
 
 NV_DOCKER ?= docker
-PREFIX    ?= /usr/bin
 
-BIN_DIR  := $(CURDIR)/bin
-CONF_DIR := $(CURDIR)/conf
-DIST_DIR := $(CURDIR)/dist
+prefix      ?= /usr/local
+exec_prefix ?= $(prefix)
+bindir      ?= $(exec_prefix)/bin
 
 BUILD_IMAGE := nvdocker-build
 USER_ID     := $(shell id -u)
 
+BIN_DIR    := $(CURDIR)/bin
+CONF_DIR   := $(CURDIR)/conf
+DIST_DIR   := $(CURDIR)/dist
 DOCKER_BIN := $(BIN_DIR)/nvidia-docker
 PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 
@@ -38,12 +40,12 @@ endif
 	@$(NV_DOCKER) run --rm --net=host -e VERSION=$(PKG_VERS) -v $(BIN_DIR):/go/bin $(BUILD_IMAGE)
 
 install: all
-	install -D -T -m 755 $(DOCKER_BIN) $(PREFIX)/$(notdir $(DOCKER_BIN))
-	install -D -T -m 755 $(PLUGIN_BIN) $(PREFIX)/$(notdir $(PLUGIN_BIN))
+	install -D -T -m 755 $(DOCKER_BIN) $(bindir)/$(notdir $(DOCKER_BIN))
+	install -D -T -m 755 $(PLUGIN_BIN) $(bindir)/$(notdir $(PLUGIN_BIN))
 
 uninstall:
-	$(RM) $(PREFIX)/$(notdir $(DOCKER_BIN))
-	$(RM) $(PREFIX)/$(notdir $(PLUGIN_BIN))
+	$(RM) $(bindir)/$(notdir $(DOCKER_BIN))
+	$(RM) $(bindir)/$(notdir $(PLUGIN_BIN))
 
 clean:
 	-@$(NV_DOCKER) rmi -f $(BUILD_IMAGE) golang 2> /dev/null
@@ -66,5 +68,5 @@ deb: build distclean
 	@-read -p "Update changelog? " yn; [ "$$yn" = "y" ] && \
 	dch -c $(CONF_DIR)/debian/changelog -v $(PKG_VERS)-$(PKG_REV) --no-auto-nmu
 	cd $(PKG_DIR) && dh_make -y -s -c bsd -d -t $(CONF_DIR)/debian --createorig
-	cd $(PKG_DIR) && debuild -e PREFIX=$(PREFIX) -i -us -uc -b
+	cd $(PKG_DIR) && debuild -i -us -uc -b
 	@printf "\nFind packages at $(DIST_DIR)\n\n"

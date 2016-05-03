@@ -4,7 +4,7 @@ set -e
 
 NVIDIA_DOCKER_USER=#PACKAGE#
 NVIDIA_DOCKER_ROOT=/var/lib/nvidia-docker
-NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
+NVIDIA_DOCKER_PLUGIN=/usr/bin/nvidia-docker-plugin
 
 case "$1" in
     configure)

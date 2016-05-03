@@ -10,7 +10,7 @@ respawn limit 5 10
 kill timeout 20
 
 env NVIDIA_DOCKER_USER=#PACKAGE#
-env NVIDIA_DOCKER_PLUGIN=#PREFIX#/nvidia-docker-plugin
+env NVIDIA_DOCKER_PLUGIN=/usr/bin/nvidia-docker-plugin
 env NVIDIA_DOCKER_PLUGIN_SPEC=/etc/docker/plugins/nvidia-docker.spec
 
 script
