@@ -1,3 +1,17 @@
+nvidia-docker (1.0.0~rc-1) trusty; urgency=low
+
+  * Add /docker/cli/json RestAPI endpoint (Closes: #39, #91)
+  * Fix support for Docker 1.9 (Closes: #83)
+  * Handle gracefully devices unsupported by NVML (Closes: #40)
+  * Improve error reporting
+  * Support for Docker 1.11 (Closes: #89, #84, #77, #73)
+  * Add NVIDIA Docker version output
+  * Improve init scripts and add support for systemd
+  * Query CPU affinity through sysfs instead of NVML (Closes: #65)
+  * Load UVM before anything else
+
+ -- NVIDIA CORPORATION <digits@nvidia.com>  Tue, 03 May 2016 17:44:36 -0700
+
 nvidia-docker (1.0.0~beta.3-1) trusty; urgency=low
 
   * Remove driver hard dependency (NVML)

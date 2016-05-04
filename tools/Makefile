@@ -16,7 +16,7 @@ DOCKER_BIN := $(BIN_DIR)/nvidia-docker
 PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 
 PKG_NAME := nvidia-docker
-PKG_VERS := 1.0.0~beta.3
+PKG_VERS := 1.0.0~rc
 PKG_REV  := 1
 PKG_ARCH := amd64
 PKG_DIR  := $(DIST_DIR)/$(PKG_NAME)-$(PKG_VERS)
