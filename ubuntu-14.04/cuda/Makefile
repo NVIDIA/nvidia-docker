@@ -4,7 +4,8 @@ CUDA_VERSIONS := 7.5 \
                  7.0 \
                  6.5
 
-CUDNN_VERSIONS := 7.5-cudnn4 \
+CUDNN_VERSIONS := 7.5-cudnn5 \
+                  7.5-cudnn4 \
                   7.5-cudnn3 \
                   7.0-cudnn4 \
                   7.0-cudnn3 \

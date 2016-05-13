@@ -71,3 +71,9 @@ cudnn-runtime: $(CUDNN_LATEST)-runtime
 
 %-cudnn4-runtime: %-runtime $(CURDIR)/%/runtime/cudnn4/Dockerfile
 	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/runtime/cudnn4
+
+%-cudnn5-devel: %-devel $(CURDIR)/%/devel/cudnn5/Dockerfile
+	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/devel/cudnn5
+
+%-cudnn5-runtime: %-runtime $(CURDIR)/%/runtime/cudnn5/Dockerfile
+	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/runtime/cudnn5
