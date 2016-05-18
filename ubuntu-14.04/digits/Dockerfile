@@ -6,7 +6,7 @@ LABEL com.nvidia.digits.version="3.0"
 
 ENV DIGITS_PKG_VERSION 3.0.0-1
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-            torch7-nv \
+            torch7-nv=0.9.98-1+cuda7.5 \
             graphviz \
             digits=$DIGITS_PKG_VERSION && \
     rm -rf /var/lib/apt/lists/*
