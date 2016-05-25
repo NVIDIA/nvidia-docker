@@ -27,6 +27,9 @@ uninstall:
 deb:
 	make -C $(CURDIR)/tools deb
 
+rpm:
+	make -C $(CURDIR)/tools rpm
+
 tarball:
 	make -C $(CURDIR)/tools tarball
 

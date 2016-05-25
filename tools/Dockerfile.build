@@ -10,8 +10,9 @@ RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/r
     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-    cuda-cudart-dev-6-5=6.5-19 cuda-misc-headers-6-5=6.5-19 \
-    && rm -rf /var/lib/apt/lists/*
+        cuda-cudart-dev-6-5=6.5-19 \
+        cuda-misc-headers-6-5=6.5-19 && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN objcopy --redefine-sym memcpy=memcpy@GLIBC_2.2.5 /usr/local/cuda-6.5/lib64/libcudart_static.a
 
@@ -25,11 +26,19 @@ COPY src .
 
 ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"
 ENV CGO_LDFLAGS "-L /usr/local/cuda-6.5/lib64"
-
 RUN go get -v ./...
 
-ARG UID
-RUN useradd --non-unique --uid $UID build
-USER build
+ARG USER_ID
+RUN useradd --non-unique --uid $USER_ID nvidia
+USER nvidia
+
+ARG CR_NAME
+ARG CR_EMAIL
+ARG PKG_NAME
+ARG PKG_VERS
+ARG PKG_REV
+ARG PKG_ARCH
+
+ENV VERSION $PKG_VERS
 
 CMD go install -v -ldflags="-s -X main.Version=$VERSION" ./...

@@ -9,7 +9,7 @@ Environment="SOCK_DIR=/var/lib/nvidia-docker"
 Environment="SOCK_FILE=unix:///var/lib/nvidia-docker/nvidia-docker.sock"
 Environment="SPEC_FILE=/etc/docker/plugins/nvidia-docker.spec"
 
-User=#PACKAGE#
+User=nvidia-docker
 PermissionsStartOnly=true
 Restart=on-failure
 RestartSec=1

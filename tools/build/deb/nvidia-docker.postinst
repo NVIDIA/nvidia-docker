@@ -8,8 +8,12 @@ NVIDIA_DOCKER_PLUGIN=/usr/bin/nvidia-docker-plugin
 
 case "$1" in
     configure)
-        adduser --system --no-create-home --home "$NVIDIA_DOCKER_ROOT" "$NVIDIA_DOCKER_USER"
-        chown "$NVIDIA_DOCKER_USER": "$NVIDIA_DOCKER_ROOT"
+        echo "Configuring user and permissions ..."
+        if [ -z "$2" ]; then
+            id -u "$NVIDIA_DOCKER_USER" >/dev/null 2>&1 || \
+            useradd -r -M -d "$NVIDIA_DOCKER_ROOT" -s /usr/sbin/nologin -c "NVIDIA Docker plugin" "$NVIDIA_DOCKER_USER"
+            chown "$NVIDIA_DOCKER_USER": "$NVIDIA_DOCKER_ROOT"
+        fi
         setcap cap_fowner+pe "$NVIDIA_DOCKER_PLUGIN"
     ;;
 

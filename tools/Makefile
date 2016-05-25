@@ -6,28 +6,40 @@ prefix      ?= /usr/local
 exec_prefix ?= $(prefix)
 bindir      ?= $(exec_prefix)/bin
 
-BUILD_IMAGE := nvdocker-build
-USER_ID     := $(shell id -u)
-
-BIN_DIR    := $(CURDIR)/bin
-CONF_DIR   := $(CURDIR)/conf
-DIST_DIR   := $(CURDIR)/dist
-DOCKER_BIN := $(BIN_DIR)/nvidia-docker
-PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
-
+CR_NAME  := NVIDIA CORPORATION
+CR_EMAIL := digits@nvidia.com
 PKG_NAME := nvidia-docker
 PKG_VERS := 1.0.0~rc
 PKG_REV  := 1
+ifneq ($(MAKECMDGOALS),rpm)
 PKG_ARCH := amd64
-PKG_DIR  := $(DIST_DIR)/$(PKG_NAME)-$(PKG_VERS)
-PKG_FILE := $(PKG_NAME)_$(PKG_VERS)_$(PKG_ARCH)
+else
+PKG_ARCH := x86_64
+endif
+
+BIN_DIR    := $(CURDIR)/bin
+DIST_DIR   := $(CURDIR)/dist
+BUILD_DIR  := $(CURDIR)/build
+DOCKER_BIN := $(BIN_DIR)/nvidia-docker
+PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 
 DOCKER_VERS      := $(shell $(NV_DOCKER) version -f '{{.Client.Version}}')
 DOCKER_VERS_MAJ  := $(shell echo $(DOCKER_VERS) | cut -d. -f1)
 DOCKER_VERS_MIN  := $(shell echo $(DOCKER_VERS) | cut -d. -f2)
 DOCKER_SUPPORTED := $(shell [ $(DOCKER_VERS_MAJ) -eq 1 -a $(DOCKER_VERS_MIN) -ge 9 ] && echo true)
 
-.PHONY: all build install uninstall clean distclean tarball deb
+DOCKER_RMI       := $(NV_DOCKER) rmi
+DOCKER_RUN       := $(NV_DOCKER) run --rm --net=host
+DOCKER_IMAGES    := $(NV_DOCKER) images -q $(PKG_NAME)
+DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
+                                       --build-arg CR_NAME="$(CR_NAME)" \
+                                       --build-arg CR_EMAIL="$(CR_EMAIL)" \
+                                       --build-arg PKG_NAME="$(PKG_NAME)" \
+                                       --build-arg PKG_VERS="$(PKG_VERS)" \
+                                       --build-arg PKG_REV="$(PKG_REV)" \
+                                       --build-arg PKG_ARCH="$(PKG_ARCH)"
+
+.PHONY: all build install uninstall clean distclean tarball deb rpm
 
 all: build
 
@@ -35,20 +47,21 @@ build:
 ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
-	@$(NV_DOCKER) build --build-arg UID=$(USER_ID) -t $(BUILD_IMAGE) -f Dockerfile.build $(CURDIR)
 	@mkdir -p $(BIN_DIR)
-	@$(NV_DOCKER) run --rm --net=host -e VERSION=$(PKG_VERS) -v $(BIN_DIR):/go/bin $(BUILD_IMAGE)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin $(PKG_NAME):$@
 
-install: all
-	install -D -T -m 755 $(DOCKER_BIN) $(bindir)/$(notdir $(DOCKER_BIN))
-	install -D -T -m 755 $(PLUGIN_BIN) $(bindir)/$(notdir $(PLUGIN_BIN))
+install: build
+	install -D -m 755 -t $(bindir) $(DOCKER_BIN)
+	install -D -m 755 -t $(bindir) $(PLUGIN_BIN)
 
 uninstall:
 	$(RM) $(bindir)/$(notdir $(DOCKER_BIN))
 	$(RM) $(bindir)/$(notdir $(PLUGIN_BIN))
 
 clean:
-	-@$(NV_DOCKER) rmi -f $(BUILD_IMAGE) golang 2> /dev/null
+	-@$(DOCKER_IMAGES) | xargs $(DOCKER_RMI) 2> /dev/null
+	-@$(DOCKER_RMI) golang:1.5 ubuntu:14.04 centos:7 2> /dev/null
 	@rm -rf $(BIN_DIR)
 
 distclean:
@@ -56,17 +69,21 @@ distclean:
 
 tarball: build distclean
 	@mkdir -p $(DIST_DIR)
-	tar --transform='s;.*/;nvidia-docker/;' -caf $(DIST_DIR)/$(PKG_FILE).tar.xz $(BIN_DIR)/*
+	tar --transform='s;.*/;$(PKG_NAME)/;' -caf $(DIST_DIR)/$(PKG_NAME)_$(PKG_VERS)_$(PKG_ARCH).tar.xz $(BIN_DIR)/*
 	@printf "\nFind tarball at $(DIST_DIR)\n\n"
 
-deb: export DEBFULLNAME=NVIDIA CORPORATION
-deb: export DEBEMAIL=digits@nvidia.com
+deb: tarball
+ifneq ($(DOCKER_SUPPORTED),true)
+	$(error Unsupported Docker version)
+endif
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
+	@printf "\nFind packages at $(DIST_DIR)\n\n"
 
-deb: build distclean
-	@mkdir -p $(PKG_DIR)
-	@cp -r $(BIN_DIR) $(PKG_DIR)
-	@-read -p "Update changelog? " yn; [ "$$yn" = "y" ] && \
-	dch -c $(CONF_DIR)/debian/changelog -v $(PKG_VERS)-$(PKG_REV) --no-auto-nmu
-	cd $(PKG_DIR) && dh_make -y -s -c bsd -d -t $(CONF_DIR)/debian --createorig
-	cd $(PKG_DIR) && debuild -i -us -uc -b
+rpm: tarball
+ifneq ($(DOCKER_SUPPORTED),true)
+	$(error Unsupported Docker version)
+endif
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
