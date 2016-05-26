@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -13,10 +14,12 @@ import (
 )
 
 var (
-	ListenAddr  string
-	VolumesPath string
-	SocketPath  string
+	PrintVersion bool
+	ListenAddr   string
+	VolumesPath  string
+	SocketPath   string
 
+	Version string
 	Devices []nvidia.Device
 	Volumes nvidia.VolumeMap
 )
@@ -24,9 +27,10 @@ var (
 func init() {
 	log.SetPrefix(os.Args[0] + " | ")
 
+	flag.BoolVar(&PrintVersion, "v", false, "Show the plugin version information")
 	flag.StringVar(&ListenAddr, "l", "localhost:3476", "Server listen address")
-	flag.StringVar(&VolumesPath, "v", "/var/lib/nvidia-docker/volumes", "Path where to store the volumes")
-	flag.StringVar(&SocketPath, "s", "/run/docker/plugins", "NVIDIA plugin socket path")
+	flag.StringVar(&VolumesPath, "d", "/var/lib/nvidia-docker/volumes", "Path where to store the volumes")
+	flag.StringVar(&SocketPath, "s", "/run/docker/plugins", "Path to the plugin socket")
 }
 
 func assert(err error) {
@@ -53,6 +57,11 @@ func main() {
 
 	flag.Parse()
 	defer exit()
+
+	if PrintVersion {
+		fmt.Printf("NVIDIA Docker plugin: %s\n", Version)
+		return
+	}
 
 	log.Println("Loading NVIDIA unified memory")
 	assert(nvidia.LoadUVM())
