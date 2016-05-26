@@ -210,12 +210,6 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 	return false, nil
 }
 
-func (v *Volume) CreateAt(path string, s FileCloneStrategy) error {
-	v.Path = path
-	v.Version = ""
-	return v.Create(s)
-}
-
 func (v *Volume) Create(s FileCloneStrategy) (err error) {
 	if err = os.MkdirAll(v.Path, 0755); err != nil {
 		return

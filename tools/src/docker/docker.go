@@ -148,17 +148,7 @@ func Label(image, label string) (string, error) {
 	return string(bytes.Trim(b, " \n")), nil
 }
 
-func CreateVolume(name string) error {
-	_, err := docker(false, "volume", "create", "--name", name)
-	return err
-}
-
-func RemoveVolume(name string) error {
-	_, err := docker(false, "volume", "rm", name)
-	return err
-}
-
-func InspectVolume(name string) (string, error) {
+func VolumeInspect(name string) (string, error) {
 	var vol []struct{ Name, Driver, Mountpoint string }
 
 	b, err := docker(false, "volume", "inspect", name)

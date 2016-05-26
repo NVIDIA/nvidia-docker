@@ -63,13 +63,6 @@ func main() {
 	assert(err)
 	off += i + 1
 
-	if command == "volume" && opt == "setup" {
-		assert(nvidia.Init())
-		assert(CreateLocalVolumes())
-		assert(nvidia.Shutdown())
-		return
-	}
-
 	if (command == "create" || command == "run") && opt != "" {
 		vols, err := VolumesNeeded(opt)
 		assert(err)

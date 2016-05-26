@@ -10,41 +10,6 @@ import (
 	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
 )
 
-func CreateLocalVolumes() error {
-	drv, err := nvidia.GetDriverVersion()
-	if err != nil {
-		return err
-	}
-	vols, err := nvidia.LookupVolumes("")
-	if err != nil {
-		return err
-	}
-
-	for _, v := range vols {
-		n := fmt.Sprintf("%s_%s", v.Name, drv)
-		if _, err := docker.InspectVolume(n); err == nil {
-			if err = docker.RemoveVolume(n); err != nil {
-				return fmt.Errorf("cannot remove %s: volume is in use", n)
-			}
-		}
-
-		if err := docker.CreateVolume(n); err != nil {
-			return err
-		}
-		path, err := docker.InspectVolume(n)
-		if err != nil {
-			docker.RemoveVolume(n)
-			return err
-		}
-		if err := v.CreateAt(path, nvidia.LinkOrCopyStrategy{}); err != nil {
-			docker.RemoveVolume(n)
-			return err
-		}
-		fmt.Println(n)
-	}
-	return nil
-}
-
 func GenerateLocalArgs(image string, vols []string) ([]string, error) {
 	cv, err := nvidia.GetCUDAVersion()
 	if err != nil {
@@ -104,7 +69,7 @@ func volumesArgs(vols []string) ([]string, error) {
 			if v == vol.Name {
 				// Check if the volume exists locally otherwise fallback to using the plugin
 				n := fmt.Sprintf("%s_%s", vol.Name, drv)
-				if _, err := docker.InspectVolume(n); err == nil {
+				if _, err := docker.VolumeInspect(n); err == nil {
 					args = append(args, fmt.Sprintf("--volume=%s:%s:ro", n, vol.Mountpoint))
 				} else {
 					args = append(args, fmt.Sprintf("--volume-driver=%s", nvidia.DockerPlugin))
