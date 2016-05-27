@@ -2,6 +2,6 @@
 
 CUDA_VERSIONS := 7.5
 
-all-override: all-cuda
+CUDNN_VERSIONS := 7.5-cudnn5
 
 include ../../mk/cuda.mk
