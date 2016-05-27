@@ -28,6 +28,9 @@ devel: $(CUDA_LATEST)
 runtime: $(CUDA_LATEST)-runtime
 	$(NV_DOCKER) tag cuda:$< cuda:$@
 
+8.0: 8.0-devel $(CURDIR)/8.0
+	$(NV_DOCKER) tag cuda:$< cuda:$@
+
 7.5: 7.5-devel $(CURDIR)/7.5
 	$(NV_DOCKER) tag cuda:$< cuda:$@
 
