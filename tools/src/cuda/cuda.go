@@ -30,6 +30,7 @@ func archFamily(arch string) *string {
 		"2": "Fermi",
 		"3": "Kepler",
 		"5": "Maxwell",
+		"6": "Pascal",
 	}
 
 	f, ok := m[arch[:1]]
@@ -54,6 +55,9 @@ func archSMCores(arch string) *uint {
 		"5.0": 128, // Maxwell Generation (SM 5.0) GM10x class
 		"5.2": 128, // Maxwell Generation (SM 5.2) GM20x class
 		"5.3": 128, // Maxwell Generation (SM 5.3) TX1 class
+		"6.0": 64,  // Pascal Generation (SM 6.0) GP100 class
+		"6.1": 128, // Pascal Generation (SM 6.1) GP10x class
+		"6.2": 128, // Pascal Generation (SM 6.2) GP10x class
 	}
 
 	c, ok := m[arch]
