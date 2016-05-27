@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 	"text/tabwriter"
 	"text/template"
@@ -208,12 +207,12 @@ func dockerCLIDevices(ids []string) ([]string, error) {
 			devs = append(devs, Devices[i].Path)
 		}
 	} else {
-		for _, id := range ids {
-			i, err := strconv.Atoi(id)
-			if err != nil || i < 0 || i >= len(Devices) {
-				return nil, fmt.Errorf("invalid device: %s", id)
-			}
-			devs = append(devs, Devices[i].Path)
+		d, err := nvidia.FilterDevices(Devices, ids)
+		if err != nil {
+			return nil, err
+		}
+		for i := range d {
+			devs = append(devs, d[i].Path)
 		}
 	}
 	return devs, nil

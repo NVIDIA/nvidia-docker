@@ -236,6 +236,38 @@ func NewDevice(idx uint) (device *Device, err error) {
 	return
 }
 
+func NewDeviceLite(idx uint) (device *Device, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	h, err := deviceGetHandleByIndex(idx)
+	assert(err)
+	uuid, err := h.deviceGetUUID()
+	assert(err)
+	minor, err := h.deviceGetMinorNumber()
+	assert(err)
+	busid, err := h.deviceGetPciInfo()
+	assert(err)
+
+	if minor == nil || busid == nil || uuid == nil {
+		return nil, ErrUnsupportedGPU
+	}
+	path := fmt.Sprintf("/dev/nvidia%d", *minor)
+
+	device = &Device{
+		handle: h,
+		UUID:   *uuid,
+		Path:   path,
+		PCI: PCIInfo{
+			BusID: *busid,
+		},
+	}
+	return
+}
+
 func (d *Device) Status() (status *DeviceStatus, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -345,19 +377,4 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 		err = ErrUnsupportedP2PLink
 	}
 	return
-}
-
-func GetDevicePath(idx uint) (string, error) {
-	h, err := deviceGetHandleByIndex(idx)
-	if err != nil {
-		return "", err
-	}
-	minor, err := h.deviceGetMinorNumber()
-	if err != nil {
-		return "", err
-	}
-	if minor == nil {
-		return "", ErrUnsupportedGPU
-	}
-	return fmt.Sprintf("/dev/nvidia%d", *minor), nil
 }

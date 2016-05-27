@@ -4,7 +4,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/NVIDIA/nvidia-docker/tools/src/docker"
 	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
@@ -36,22 +35,22 @@ func devicesArgs() ([]string, error) {
 	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceCtl))
 	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceUVM))
 
-	devs, err := nvidia.LookupDevicePaths()
+	devs, err := nvidia.LookupDevices(nvidia.LookupMinimal)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(GPU) == 0 {
 		for i := range devs {
-			args = append(args, fmt.Sprintf("--device=%s", devs[i]))
+			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
 		}
 	} else {
-		for _, id := range GPU {
-			i, err := strconv.Atoi(id)
-			if err != nil || i < 0 || i >= len(devs) {
-				return nil, fmt.Errorf("invalid device: %s", id)
-			}
-			args = append(args, fmt.Sprintf("--device=%s", devs[i]))
+		devs, err := nvidia.FilterDevices(devs, GPU)
+		if err != nil {
+			return nil, err
+		}
+		for i := range devs {
+			args = append(args, fmt.Sprintf("--device=%s", devs[i].Path))
 		}
 	}
 	return args, nil
