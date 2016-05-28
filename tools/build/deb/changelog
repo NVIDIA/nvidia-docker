@@ -1,3 +1,12 @@
+nvidia-docker (1.0.0~rc.2-1) trusty; urgency=low
+
+  * Allow UUIDs to be used in NV_GPU and docker/cli RestAPI endpoint
+  * Change the plugin usage with version information (Closes: #90)
+  * Remove the volume setup command (Closes: #96)
+  * Add support for the Pascal architecture 
+
+ -- NVIDIA CORPORATION <digits@nvidia.com>  Sat, 28 May 2016 00:18:44 +0000
+
 nvidia-docker (1.0.0~rc-1) trusty; urgency=low
 
   * Add /docker/cli/json RestAPI endpoint (Closes: #39, #91)

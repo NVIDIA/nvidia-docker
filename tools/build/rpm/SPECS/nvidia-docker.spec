@@ -69,6 +69,12 @@ fi
 %systemd_postun_with_restart %{name}
 
 %changelog
+* Sat May 28 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.2-1
+- Allow UUIDs to be used in NV_GPU and docker/cli RestAPI endpoint
+- Change the plugin usage with version information (Closes: #90)
+- Remove the volume setup command (Closes: #96)
+- Add support for the Pascal architecture
+
 * Tue May 03 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc-1
 - Add /docker/cli/json RestAPI endpoint (Closes: #39, #91)
 - Fix support for Docker 1.9 (Closes: #83)

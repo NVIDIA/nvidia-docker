@@ -9,7 +9,7 @@ bindir      ?= $(exec_prefix)/bin
 CR_NAME  := NVIDIA CORPORATION
 CR_EMAIL := digits@nvidia.com
 PKG_NAME := nvidia-docker
-PKG_VERS := 1.0.0~rc
+PKG_VERS := 1.0.0~rc.2
 PKG_REV  := 1
 ifneq ($(MAKECMDGOALS),rpm)
 PKG_ARCH := amd64
