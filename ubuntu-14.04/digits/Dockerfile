@@ -1,4 +1,4 @@
-FROM caffe
+FROM caffe:0.14
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 ENV DIGITS_VERSION 3.0

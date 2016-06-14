@@ -11,5 +11,5 @@ all: latest
 #################### NVIDIA DIGITS ####################
 
 latest: $(CURDIR)/Dockerfile
-	make -C $(CURDIR)/../caffe
+	make -C $(CURDIR)/../caffe 0.14
 	$(NV_DOCKER) build -t digits $(CURDIR)
