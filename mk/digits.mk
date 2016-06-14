@@ -2,14 +2,19 @@
 
 NV_DOCKER ?= docker
 
+DIGITS_LATEST := $(word 1, $(DIGITS_VERSIONS))
+
 # Building Docker images in parallel will duplicate identical layers.
 .NOTPARALLEL:
-.PHONY: all latest
+.PHONY: all latest $(DIGITS_VERSIONS)
 
-all: latest
+all: $(DIGITS_VERSIONS) latest
 
 #################### NVIDIA DIGITS ####################
 
-latest: $(CURDIR)/Dockerfile
+latest: $(DIGITS_LATEST)
+	$(NV_DOCKER) tag digits:$< digits
+
+3.0: $(CURDIR)/3.0/Dockerfile
 	make -C $(CURDIR)/../caffe 0.14
-	$(NV_DOCKER) build -t digits $(CURDIR)
+	$(NV_DOCKER) build -t digits:$@ $(CURDIR)/$@
