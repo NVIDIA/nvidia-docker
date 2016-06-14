@@ -18,3 +18,7 @@ latest: $(DIGITS_LATEST)
 3.0: $(CURDIR)/3.0/Dockerfile
 	make -C $(CURDIR)/../caffe 0.14
 	$(NV_DOCKER) build -t digits:$@ $(CURDIR)/$@
+
+3.3: $(CURDIR)/3.3/Dockerfile
+	make -C $(CURDIR)/../caffe 0.14
+	$(NV_DOCKER) build -t digits:$@ $(CURDIR)/$@
