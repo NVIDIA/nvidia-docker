@@ -18,6 +18,9 @@ const (
 )
 
 func Init() error {
+	if err := os.Setenv("CUDA_DISABLE_UNIFIED_MEMORY", "1"); err != nil {
+		return err
+	}
 	if err := os.Setenv("CUDA_CACHE_DISABLE", "1"); err != nil {
 		return err
 	}
