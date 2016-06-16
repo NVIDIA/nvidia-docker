@@ -184,7 +184,11 @@ type dockerArgs struct {
 }
 
 func dockerCLIArgs(devs, vols []string) (*dockerArgs, error) {
-	devs, err := dockerCLIDevices(devs)
+	cdevs, err := nvidia.GetControlDevicePaths()
+	if err != nil {
+		return nil, err
+	}
+	devs, err = dockerCLIDevices(devs)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +199,7 @@ func dockerCLIArgs(devs, vols []string) (*dockerArgs, error) {
 	return &dockerArgs{
 		VolumeDriver: nvidia.DockerPlugin,
 		Volumes:      vols,
-		Devices:      append(devs, nvidia.DeviceCtl, nvidia.DeviceUVM),
+		Devices:      append(cdevs, devs...),
 	}, nil
 }
 

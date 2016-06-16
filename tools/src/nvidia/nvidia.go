@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	DockerPlugin = "nvidia-docker"
-	DeviceCtl    = "/dev/nvidiactl"
-	DeviceUVM    = "/dev/nvidia-uvm"
+	DockerPlugin   = "nvidia-docker"
+	DeviceCtl      = "/dev/nvidiactl"
+	DeviceUVM      = "/dev/nvidia-uvm"
+	DeviceUVMTools = "/dev/nvidia-uvm-tools"
 )
 
 func Init() error {
@@ -35,8 +36,9 @@ func Shutdown() error {
 }
 
 func LoadUVM() error {
-	if _, err := os.Stat(DeviceUVM); err == nil {
-		return nil
+	_, err := os.Stat(DeviceUVM)
+	if !os.IsNotExist(err) {
+		return err
 	}
 	if exec.Command("nvidia-modprobe", "-u", "-c=0").Run() != nil {
 		return errors.New("Could not load UVM kernel module")
@@ -50,4 +52,14 @@ func GetDriverVersion() (string, error) {
 
 func GetCUDAVersion() (string, error) {
 	return cuda.GetDriverVersion()
+}
+
+func GetControlDevicePaths() ([]string, error) {
+	devs := []string{DeviceCtl, DeviceUVM}
+
+	_, err := os.Stat(DeviceUVMTools)
+	if os.IsNotExist(err) {
+		return devs, nil
+	}
+	return append(devs, DeviceUVMTools), err
 }

@@ -32,8 +32,13 @@ func GenerateLocalArgs(image string, vols []string) ([]string, error) {
 func devicesArgs() ([]string, error) {
 	var args []string
 
-	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceCtl))
-	args = append(args, fmt.Sprintf("--device=%s", nvidia.DeviceUVM))
+	cdevs, err := nvidia.GetControlDevicePaths()
+	if err != nil {
+		return nil, err
+	}
+	for i := range cdevs {
+		args = append(args, fmt.Sprintf("--device=%s", cdevs[i]))
+	}
 
 	devs, err := nvidia.LookupDevices(nvidia.LookupMinimal)
 	if err != nil {
