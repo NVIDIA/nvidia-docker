@@ -221,10 +221,14 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 	}()
 
 	for _, d := range v.dirs {
-		dir := path.Join(v.Path, v.Version, d.name)
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		vpath := path.Join(v.Path, v.Version, d.name)
+		if err := os.MkdirAll(vpath, 0755); err != nil {
 			return err
 		}
+
+		// For each file matching the volume components (blacklist excluded), create a hardlink/copy
+		// of it inside the volume directory. We also need to create soname symlinks similar to what
+		// ldconfig does since our volume will only show up at runtime.
 		for _, f := range d.files {
 			obj, err := elf.Open(f)
 			if err != nil {
@@ -240,7 +244,7 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 				continue
 			}
 
-			l := path.Join(dir, path.Base(f))
+			l := path.Join(vpath, path.Base(f))
 			if err := s.Clone(f, l); err != nil {
 				return err
 			}
@@ -249,16 +253,15 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 				return fmt.Errorf("%s: %v", f, err)
 			}
 			if len(soname) > 0 {
-				f = path.Join(v.Mountpoint, d.name, path.Base(f))
-				l = path.Join(dir, soname[0])
-				if err := os.Symlink(f, l); err != nil && !os.IsExist(err) {
+				l = path.Join(vpath, soname[0])
+				if err := os.Symlink(path.Base(f), l); err != nil && !os.IsExist(err) {
 					return err
 				}
 				// XXX GLVND requires this symlink for indirect GLX support
 				// It won't be needed once we have an indirect GLX vendor neutral library.
 				if strings.HasPrefix(soname[0], "libGLX_nvidia") {
 					l = strings.Replace(l, "GLX_nvidia", "GLX_indirect", 1)
-					if err := os.Symlink(f, l); err != nil && !os.IsExist(err) {
+					if err := os.Symlink(path.Base(f), l); err != nil && !os.IsExist(err) {
 						return err
 					}
 				}
