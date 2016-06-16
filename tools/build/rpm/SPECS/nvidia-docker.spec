@@ -47,16 +47,20 @@ install -m 644 -t %{buildroot}%{_unitdir} %{name}.service
 
 %post
 if [ $1 -eq 1 ]; then
+    echo "Configuring user"
     id -u %{nvidia_docker_user} >/dev/null 2>&1 || \
     useradd -r -M -d %{nvidia_docker_root} -s /usr/sbin/nologin -c "NVIDIA Docker plugin" %{nvidia_docker_user}
     chown %{nvidia_docker_user}: %{nvidia_docker_root}
 fi
+echo "Setting up permissions"
 setcap cap_fowner+pe %{_bindir}/nvidia-docker-plugin
 %systemd_post %{name}
 
 %preun
 if [ $1 -eq 0 ]; then
-    docker volume ls | awk -v drv=%{nvidia_docker_driver} '{if ($1 == drv) print $2}' | xargs -r docker volume rm || exit 1
+    echo "Purging NVIDIA volumes"
+    docker volume ls | awk -v drv=%{nvidia_docker_driver} '{if ($1 == drv) print $2}' | xargs -r docker volume rm ||
+        echo "Failed to remove NVIDIA volumes, ignoring"
     find %{nvidia_docker_root} ! -wholename %{nvidia_docker_root} -type d -empty -delete
 fi
 %systemd_preun %{name}

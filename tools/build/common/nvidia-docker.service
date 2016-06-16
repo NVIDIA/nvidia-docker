@@ -6,7 +6,6 @@ Wants=docker.service
 
 [Service]
 Environment="SOCK_DIR=/var/lib/nvidia-docker"
-Environment="SOCK_FILE=unix:///var/lib/nvidia-docker/nvidia-docker.sock"
 Environment="SPEC_FILE=/etc/docker/plugins/nvidia-docker.spec"
 
 User=nvidia-docker
@@ -18,7 +17,7 @@ TimeoutStopSec=20
 
 ExecStart=/usr/bin/nvidia-docker-plugin -s $SOCK_DIR
 ExecStartPost=/bin/sh -c '/bin/mkdir -p $( dirname $SPEC_FILE )'
-ExecStartPost=/bin/sh -c '/bin/echo $SOCK_FILE > $SPEC_FILE'
+ExecStartPost=/bin/sh -c '/bin/echo unix://$SOCK_DIR/nvidia-docker.sock > $SPEC_FILE'
 ExecStopPost=/bin/rm -f $SPEC_FILE
 
 [Install]
