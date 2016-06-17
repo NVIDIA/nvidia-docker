@@ -74,10 +74,10 @@ func volumesArgs(vols []string) ([]string, error) {
 				// Check if the volume exists locally otherwise fallback to using the plugin
 				n := fmt.Sprintf("%s_%s", vol.Name, drv)
 				if _, err := docker.VolumeInspect(n); err == nil {
-					args = append(args, fmt.Sprintf("--volume=%s:%s:ro", n, vol.Mountpoint))
+					args = append(args, fmt.Sprintf("--volume=%s:%s:%s", n, vol.Mountpoint, vol.MountOptions))
 				} else {
 					args = append(args, fmt.Sprintf("--volume-driver=%s", nvidia.DockerPlugin))
-					args = append(args, fmt.Sprintf("--volume=%s:%s:ro", n, vol.Mountpoint))
+					args = append(args, fmt.Sprintf("--volume=%s:%s:%s", n, vol.Mountpoint, vol.MountOptions))
 				}
 				break
 			}

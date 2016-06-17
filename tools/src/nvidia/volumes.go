@@ -34,9 +34,10 @@ type volumeDir struct {
 }
 
 type VolumeInfo struct {
-	Name       string
-	Mountpoint string
-	Components components
+	Name         string
+	Mountpoint   string
+	MountOptions string
+	Components   components
 }
 
 type Volume struct {
@@ -104,6 +105,7 @@ var Volumes = []VolumeInfo{
 	{
 		"nvidia_driver",
 		"/usr/local/nvidia",
+		"ro",
 		components{
 			"binaries": {
 				//"nvidia-modprobe",       // Kernel module loader
