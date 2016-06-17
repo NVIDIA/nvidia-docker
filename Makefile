@@ -36,6 +36,9 @@ tarball:
 cuda: $(CURDIR)/$(OS)/cuda
 	make -C $(CURDIR)/$(OS)/cuda
 
+opencl: $(CURDIR)/$(OS)/opencl
+	make -C $(CURDIR)/$(OS)/opencl
+
 caffe: $(CURDIR)/$(OS)/caffe
 	make -C $(CURDIR)/$(OS)/caffe
 

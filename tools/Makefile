@@ -43,7 +43,7 @@ DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
 
 all: build
 
-build:
+build: distclean
 ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
@@ -62,12 +62,12 @@ uninstall:
 clean:
 	-@$(DOCKER_IMAGES) | xargs $(DOCKER_RMI) 2> /dev/null
 	-@$(DOCKER_RMI) golang:1.5 ubuntu:14.04 centos:7 2> /dev/null
-	@rm -rf $(BIN_DIR)
 
 distclean:
+	@rm -rf $(BIN_DIR)
 	@rm -rf $(DIST_DIR)
 
-tarball: build distclean
+tarball: build
 	@mkdir -p $(DIST_DIR)
 	tar --transform='s;.*/;$(PKG_NAME)/;' -caf $(DIST_DIR)/$(PKG_NAME)_$(PKG_VERS)_$(PKG_ARCH).tar.xz $(BIN_DIR)/*
 	@printf "\nFind tarball at $(DIST_DIR)\n\n"
