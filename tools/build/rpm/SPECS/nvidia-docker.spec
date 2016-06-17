@@ -50,9 +50,9 @@ if [ $1 -eq 1 ]; then
     echo "Configuring user"
     id -u %{nvidia_docker_user} >/dev/null 2>&1 || \
     useradd -r -M -d %{nvidia_docker_root} -s /usr/sbin/nologin -c "NVIDIA Docker plugin" %{nvidia_docker_user}
-    chown %{nvidia_docker_user}: %{nvidia_docker_root}
 fi
 echo "Setting up permissions"
+chown %{nvidia_docker_user}: %{nvidia_docker_root}
 setcap cap_fowner+pe %{_bindir}/nvidia-docker-plugin
 %systemd_post %{name}
 

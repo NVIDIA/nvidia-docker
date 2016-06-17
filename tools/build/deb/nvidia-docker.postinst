@@ -12,9 +12,9 @@ case "$1" in
             echo "Configuring user"
             id -u "$NVIDIA_DOCKER_USER" >/dev/null 2>&1 || \
             useradd -r -M -d "$NVIDIA_DOCKER_ROOT" -s /usr/sbin/nologin -c "NVIDIA Docker plugin" "$NVIDIA_DOCKER_USER"
-            chown "$NVIDIA_DOCKER_USER": "$NVIDIA_DOCKER_ROOT"
         fi
         echo "Setting up permissions"
+        chown "$NVIDIA_DOCKER_USER": "$NVIDIA_DOCKER_ROOT"
         setcap cap_fowner+pe "$NVIDIA_DOCKER_PLUGIN"
     ;;
 
