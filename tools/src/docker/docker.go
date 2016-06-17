@@ -81,6 +81,18 @@ var booleanFlags = map[string]map[string][]string{
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
 			"-detach", "d", "-rm", "-sig-proxy"},
 	},
+	"1.12": {
+		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
+		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
+			"-disable-legacy-registry", "-help", "-icc", "-ip-forward",
+			"-ip-masq", "-iptables", "-ipv6", "-live-restore", "-raw-logs",
+			"-selinux-enabled", "-userland-proxy"},
+		"create": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
+		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
+			"-detach", "d", "-no-healthcheck", "-rm", "-sig-proxy"},
+	},
 }
 
 func ParseArgs(args []string, cmd ...string) (string, int, error) {
