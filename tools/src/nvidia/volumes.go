@@ -213,7 +213,8 @@ func blacklisted(file string, obj *elf.File) (bool, error) {
 }
 
 func (v *Volume) Create(s FileCloneStrategy) (err error) {
-	if err = os.MkdirAll(v.Path, 0755); err != nil {
+	root := path.Join(v.Path, v.Version)
+	if err = os.MkdirAll(root, 0755); err != nil {
 		return
 	}
 	defer func() {
@@ -223,7 +224,7 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 	}()
 
 	for _, d := range v.dirs {
-		vpath := path.Join(v.Path, v.Version, d.name)
+		vpath := path.Join(root, d.name)
 		if err := os.MkdirAll(vpath, 0755); err != nil {
 			return err
 		}
