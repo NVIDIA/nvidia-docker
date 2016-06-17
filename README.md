@@ -18,7 +18,7 @@ Assuming the NVIDIA drivers and Docker are properly installed (see [installation
 #### _Ubuntu distributions_
 ```sh
 # Install nvidia-docker and nvidia-docker-plugin
-wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.2/nvidia-docker_1.0.0.rc.2-1_amd64.deb
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.3/nvidia-docker_1.0.0.rc.3-1_amd64.deb
 sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
 
 # Test nvidia-smi
@@ -28,7 +28,7 @@ nvidia-docker run --rm nvidia/cuda nvidia-smi
 #### _CentOS distributions_
 ```sh
 # Install nvidia-docker and nvidia-docker-plugin
-wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.2/nvidia-docker-1.0.0.rc.2-1.x86_64.rpm
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.3/nvidia-docker-1.0.0.rc.3-1.x86_64.rpm
 sudo rpm -i /tmp/nvidia-docker*.rpm && rm /tmp/nvidia-docker*.rpm
 sudo systemctl start nvidia-docker
 
@@ -39,7 +39,7 @@ nvidia-docker run --rm nvidia/cuda nvidia-smi
 #### _Other distributions_
 ```sh
 # Install nvidia-docker and nvidia-docker-plugin
-wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.2/nvidia-docker_1.0.0.rc.2_amd64.tar.xz
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.0-rc.3/nvidia-docker_1.0.0.rc.3_amd64.tar.xz
 sudo tar --strip-components=1 -C /usr/bin -xvf /tmp/nvidia-docker*.tar.xz && rm /tmp/nvidia-docker*.tar.xz
 
 # Run nvidia-docker-plugin

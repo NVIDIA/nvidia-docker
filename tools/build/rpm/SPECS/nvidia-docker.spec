@@ -73,6 +73,14 @@ fi
 %systemd_postun_with_restart %{name}
 
 %changelog
+* Fri Jun 17 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.3-1
+- Support for Docker 1.12
+- Add volume mount options support to the nvidia package
+- Export the nvidia-uvm-tools device
+- Provide the libcuda.so symlink as part of the driver volume (Closes: #103)
+- Use relative symlinks inside the volumes
+- Disable CUDA unified memory
+
 * Sat May 28 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.2-1
 - Allow UUIDs to be used in NV_GPU and docker/cli RestAPI endpoint
 - Change the plugin usage with version information (Closes: #90)
