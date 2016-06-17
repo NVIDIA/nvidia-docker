@@ -58,7 +58,6 @@ var booleanFlags = map[string]map[string][]string{
 		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
 			"-detach", "d", "-rm", "-sig-proxy"},
-		"volume": []string{},
 	},
 	"1.10": {
 		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
@@ -70,7 +69,6 @@ var booleanFlags = map[string]map[string][]string{
 		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
 			"-detach", "d", "-rm", "-sig-proxy"},
-		"volume": []string{},
 	},
 	"1.11": {
 		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
@@ -82,7 +80,6 @@ var booleanFlags = map[string]map[string][]string{
 		"run": []string{"-disable-content-trust", "-help", "-interactive", "i", "-oom-kill-disable",
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
 			"-detach", "d", "-rm", "-sig-proxy"},
-		"volume": []string{},
 	},
 }
 
