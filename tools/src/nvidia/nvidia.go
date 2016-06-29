@@ -41,7 +41,7 @@ func LoadUVM() error {
 		return err
 	}
 	if exec.Command("nvidia-modprobe", "-u", "-c=0").Run() != nil {
-		return errors.New("Could not load UVM kernel module")
+		return errors.New("Could not load UVM kernel module. Is nvidia-modprobe installed?")
 	}
 	return nil
 }
