@@ -30,7 +30,7 @@ LABEL com.nvidia.digits.version="4.0"
 
 WORKDIR /opt/digits
 
-ENV CLONE_TAG=v4.0.0-rc.3
+ENV CLONE_TAG=v4.0.0
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/NVIDIA/DIGITS.git . && \
     for req in $(cat requirements.txt); do pip install $req; done
 
