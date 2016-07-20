@@ -268,6 +268,14 @@ func (v *Volume) Create(s FileCloneStrategy) (err error) {
 						return err
 					}
 				}
+				// XXX libcuda.so assumes that libEGL.so exists.
+				// Hardcode the libEGL symlink for the time being.
+				if strings.HasPrefix(soname[0], "libEGL") {
+					l = strings.TrimRight(l, ".0123456789")
+					if err := os.Symlink(path.Base(f), l); err != nil && !os.IsExist(err) {
+						return err
+					}
+				}
 				// XXX GLVND requires this symlink for indirect GLX support
 				// It won't be needed once we have an indirect GLX vendor neutral library.
 				if strings.HasPrefix(soname[0], "libGLX_nvidia") {
