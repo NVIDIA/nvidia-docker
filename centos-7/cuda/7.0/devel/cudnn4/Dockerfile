@@ -1,4 +1,5 @@
 FROM cuda:7.0-devel
+MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 ENV CUDNN_VERSION 4
 LABEL com.nvidia.cudnn.version="4"
