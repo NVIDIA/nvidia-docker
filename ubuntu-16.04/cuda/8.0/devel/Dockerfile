@@ -21,3 +21,5 @@ RUN curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cud
         cuda-driver-dev-$CUDA_PKG_VERSION && \
     apt-get remove --purge -y cuda-repo-ubuntu1604-8-0-rc && \
     rm -rf /var/lib/apt/lists/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
