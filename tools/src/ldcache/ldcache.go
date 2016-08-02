@@ -24,10 +24,11 @@ const (
 	flagTypeMask = 0x00ff
 	flagTypeELF  = 0x0001
 
-	flagArchMask  = 0xff00
-	flagArchI386  = 0x0000
-	flagArchX8664 = 0x0300
-	flagArchX32   = 0x0800
+	flagArchMask    = 0xff00
+	flagArchI386    = 0x0000
+	flagArchX8664   = 0x0300
+	flagArchX32     = 0x0800
+	flagArchPpc64le = 0x0500
 )
 
 var ErrInvalidCache = errors.New("invalid ld.so.cache file")
@@ -156,6 +157,8 @@ func (c *LDCache) Lookup(libs ...string) (paths32, paths64 []string) {
 		}
 		switch e.Flags & flagArchMask {
 		case flagArchX8664:
+			fallthrough
+		case flagArchPpc64le:
 			paths = &paths64
 		case flagArchX32:
 			fallthrough
