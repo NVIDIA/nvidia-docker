@@ -83,6 +83,10 @@ func getHost() (*url.URL, error) {
 	if err != nil {
 		return nil, ErrInvalidURI
 	}
+	if uri.Scheme == "unix" {
+		return nil, nil
+	}
+
 	host, sport, hport := parseAddr(uri.Host)
 	if host == "" {
 		return nil, ErrInvalidURI
