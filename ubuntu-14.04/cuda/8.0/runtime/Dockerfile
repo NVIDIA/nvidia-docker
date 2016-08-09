@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV CUDA_VERSION 8.0
 LABEL com.nvidia.cuda.version="8.0"
 
-ENV CUDA_DOWNLOAD_SUM 9edcebbe8b646e40317f9ab822a733e10146003a73fc775a089226630121da7b
+ENV CUDA_DOWNLOAD_SUM 58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972bbdd811
 
 ENV CUDA_PKG_VERSION 8-0=8.0.27-1
 RUN curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
