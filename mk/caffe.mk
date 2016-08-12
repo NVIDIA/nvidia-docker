@@ -15,6 +15,10 @@ all: $(CAFFE_VERSIONS) latest
 latest: $(CAFFE_LATEST)
 	$(NV_DOCKER) tag caffe:$< caffe
 
+0.15: $(CURDIR)/0.15/Dockerfile
+	make -C $(CURDIR)/../cuda 7.5-cudnn5-runtime
+	$(NV_DOCKER) build -t caffe:$@ $(CURDIR)/$@
+
 0.14: $(CURDIR)/0.14/Dockerfile
 	make -C $(CURDIR)/../cuda 7.5-cudnn5-runtime
 	$(NV_DOCKER) build -t caffe:$@ $(CURDIR)/$@
