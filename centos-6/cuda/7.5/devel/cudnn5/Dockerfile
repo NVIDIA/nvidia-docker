@@ -4,10 +4,10 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 ENV CUDNN_VERSION 5
 LABEL com.nvidia.cudnn.version="5"
 
-ENV CUDNN_DOWNLOAD_SUM c4739a00608c3b66a004a74fc8e721848f9112c5cb15f730c1be4964b3a23b3a
+ENV CUDNN_DOWNLOAD_SUM 40d506d0a8a00a3faccce1433346806b8cd2535683b6f08a63683ce6e474419f
 
-RUN curl -fsSL http://developer.download.nvidia.com/compute/redist/cudnn/v5/cudnn-7.5-linux-x64-v5.0-ga.tgz -O && \
-    echo "$CUDNN_DOWNLOAD_SUM  cudnn-7.5-linux-x64-v5.0-ga.tgz" | sha256sum -c - && \
-    tar -xzf cudnn-7.5-linux-x64-v5.0-ga.tgz -C /usr/local && \
-    rm cudnn-7.5-linux-x64-v5.0-ga.tgz && \
+RUN curl -fsSL http://developer.download.nvidia.com/compute/redist/cudnn/v5.1/cudnn-7.5-linux-x64-v5.1.tgz -O && \
+    echo "$CUDNN_DOWNLOAD_SUM  cudnn-7.5-linux-x64-v5.1.tgz" | sha256sum -c - && \
+    tar -xzf cudnn-7.5-linux-x64-v5.1.tgz -C /usr/local && \
+    rm cudnn-7.5-linux-x64-v5.1.tgz && \
     ldconfig

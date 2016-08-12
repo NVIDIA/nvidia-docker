@@ -7,5 +7,5 @@ ENV CUDNN_VERSION 5
 LABEL com.nvidia.cudnn.version="5"
 
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
-            libcudnn5=5.0.5-1+cuda7.5 && \
+            libcudnn5=5.1.3-1+cuda7.5 && \
     rm -rf /var/lib/apt/lists/*
