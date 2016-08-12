@@ -8,5 +8,6 @@ ENV CAFFE_PKG_VERSION 0.14.5-2+cuda7.5
 RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
             caffe-nv=$CAFFE_PKG_VERSION \
             caffe-nv-tools=$CAFFE_PKG_VERSION \
-            python-caffe-nv=$CAFFE_PKG_VERSION && \
+            python-caffe-nv=$CAFFE_PKG_VERSION \
+            libcaffe-nv0=$CAFFE_PKG_VERSION && \
     rm -rf /var/lib/apt/lists/*
