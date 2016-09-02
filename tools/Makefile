@@ -23,6 +23,14 @@ BUILD_DIR  := $(CURDIR)/build
 DOCKER_BIN := $(BIN_DIR)/nvidia-docker
 PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 
+# Mirror the BUILD_ARCH from the build Dockerfile
+BUILD_ARCH = $(shell uname -m)
+ifneq ($(BUILD_ARCH),ppc64le)
+    BUILD_ARCH = ''
+else
+	PKG_ARCH = $(BUILD_ARCH)
+endif
+
 DOCKER_VERS      := $(shell $(NV_DOCKER) version -f '{{.Client.Version}}')
 DOCKER_VERS_MAJ  := $(shell echo $(DOCKER_VERS) | cut -d. -f1)
 DOCKER_VERS_MIN  := $(shell echo $(DOCKER_VERS) | cut -d. -f2)
@@ -48,8 +56,8 @@ ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
 	@mkdir -p $(BIN_DIR)
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
-	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin $(PKG_NAME):$@
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@.$(BUILD_ARCH) $(CURDIR)
+	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin:Z $(PKG_NAME):$@
 
 install: build
 	install -D -m 755 -t $(bindir) $(DOCKER_BIN)
@@ -76,7 +84,7 @@ deb: tarball
 ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@.$(BUILD_ARCH) $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
 
@@ -84,6 +92,6 @@ rpm: tarball
 ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@.$(BUILD_ARCH) $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"

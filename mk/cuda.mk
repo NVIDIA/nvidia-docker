@@ -5,6 +5,11 @@ NV_DOCKER ?= docker
 CUDA_LATEST := $(word 1, $(CUDA_VERSIONS))
 CUDNN_LATEST := $(word 1, $(CUDNN_VERSIONS))
 
+BUILD_ARCH = $(shell uname -m)
+ifneq ($(BUILD_ARCH),ppc64le)
+    BUILD_ARCH = ''
+endif
+
 # Building Docker images in parallel will duplicate identical layers.
 .NOTPARALLEL:
 .PHONY: all all-cudnn all-cuda latest $(CUDA_VERSIONS) $(CUDNN_VERSIONS)
@@ -44,7 +49,7 @@ runtime: $(CUDA_LATEST)-runtime
 	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/devel
 
 %-runtime: $(CURDIR)/%/runtime/Dockerfile
-	$(NV_DOCKER) build -t cuda:$@ $(CURDIR)/$*/runtime
+	$(NV_DOCKER) build -f $(CURDIR)/$*/runtime/Dockerfile.$(BUILD_ARCH) -t cuda:$@ $(CURDIR)/$*/runtime
 
 #################### cuDNN ####################
 
