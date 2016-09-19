@@ -49,7 +49,7 @@ ifneq ($(DOCKER_SUPPORTED),true)
 endif
 	@mkdir -p $(BIN_DIR)
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
-	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin $(PKG_NAME):$@
+	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin:Z $(PKG_NAME):$@
 
 install: build
 	install -D -m 755 -t $(bindir) $(DOCKER_BIN)
@@ -77,7 +77,7 @@ ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
-	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
+	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
 
 rpm: tarball
@@ -85,5 +85,5 @@ ifneq ($(DOCKER_SUPPORTED),true)
 	$(error Unsupported Docker version)
 endif
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
-	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist -v $(BUILD_DIR):/build $(PKG_NAME):$@
+	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
