@@ -3,10 +3,10 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
-ENV NVIDIA_GPGKEY_SUM bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e0b5c1c
-ENV NVIDIA_GPGKEY_FPR 889bee522da690103c4b085ed88c3d385c37d3be
+ENV NVIDIA_GPGKEY_SUM d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5
+ENV NVIDIA_GPGKEY_FPR ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80
 
-RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY && \
+RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
     apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list

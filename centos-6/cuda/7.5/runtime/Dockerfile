@@ -3,9 +3,9 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
-ENV NVIDIA_GPGKEY_SUM bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e0b5c1c
+ENV NVIDIA_GPGKEY_SUM d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5
 
-RUN curl -fsSL http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
+RUN curl -fsSL http://developer.download.nvidia.com/compute/cuda/repos/rhel6/x86_64/7fa2af80.pub | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
     echo "$NVIDIA_GPGKEY_SUM  /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c -
 
 COPY cuda.repo /etc/yum.repos.d/cuda.repo
