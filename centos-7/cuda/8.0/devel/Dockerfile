@@ -1,7 +1,8 @@
 FROM cuda:8.0-runtime
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
-RUN curl -o cuda-repo.rpm -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-rhel7-8-0-rc-8.0.27-1.x86_64.rpm && \
+RUN CUDA_DOWNLOAD_SUM=bb56e675ea8e4ea7bb9b6ed3b26542b8af644394d5be238a9adfa61f9764defe && \
+    curl -o cuda-repo.rpm -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-rhel7-8-0-rc-8.0.27-1.x86_64.rpm && \
     echo "$CUDA_DOWNLOAD_SUM  cuda-repo.rpm" | sha256sum -c --strict - && \
     rpm -i cuda-repo.rpm && \
     rm cuda-repo.rpm && \

@@ -6,10 +6,9 @@ LABEL com.nvidia.volumes.needed="nvidia_driver"
 ENV CUDA_VERSION 8.0
 LABEL com.nvidia.cuda.version="8.0"
 
-ENV CUDA_DOWNLOAD_SUM bb56e675ea8e4ea7bb9b6ed3b26542b8af644394d5be238a9adfa61f9764defe
-
 ENV CUDA_PKG_VERSION 8-0-8.0.27-1
-RUN curl -o cuda-repo.rpm -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-rhel7-8-0-rc-8.0.27-1.x86_64.rpm && \
+RUN CUDA_DOWNLOAD_SUM=bb56e675ea8e4ea7bb9b6ed3b26542b8af644394d5be238a9adfa61f9764defe && \
+    curl -o cuda-repo.rpm -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-rhel7-8-0-rc-8.0.27-1.x86_64.rpm && \
     echo "$CUDA_DOWNLOAD_SUM  cuda-repo.rpm" | sha256sum -c --strict - && \
     rpm -i cuda-repo.rpm && \
     rm cuda-repo.rpm && \

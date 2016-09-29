@@ -1,10 +1,8 @@
 FROM golang:1.5
 
-ENV NVIDIA_GPGKEY_SUM d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5
-ENV NVIDIA_GPGKEY_FPR ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80
-ENV NVIDIA_GDK_SUM 1e32e58f69fe29ee67b845233e7aa9347f37994463252bccbc8bfc8a7104ab5a
-
-RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
+RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+    NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
     apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
@@ -16,7 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
 
 RUN objcopy --redefine-sym memcpy=memcpy@GLIBC_2.2.5 /usr/local/cuda-6.5/lib64/libcudart_static.a
 
-RUN wget -O gdk.run -q http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_352_39_gdk_linux.run && \
+RUN NVIDIA_GDK_SUM=1e32e58f69fe29ee67b845233e7aa9347f37994463252bccbc8bfc8a7104ab5a && \
+    wget -O gdk.run -q http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_352_39_gdk_linux.run && \
     echo "$NVIDIA_GDK_SUM  gdk.run" | sha256sum -c --strict - && \
     chmod +x gdk.run && ./gdk.run --silent && rm gdk.run
 

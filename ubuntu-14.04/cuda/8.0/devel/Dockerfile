@@ -1,7 +1,8 @@
 FROM cuda:8.0-runtime
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
-RUN curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
+RUN CUDA_DOWNLOAD_SUM=58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972bbdd811 && \
+    curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
     echo "$CUDA_DOWNLOAD_SUM  cuda-repo.deb" | sha256sum -c --strict - && \
     dpkg -i cuda-repo.deb && \
     rm cuda-repo.deb && \
