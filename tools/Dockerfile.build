@@ -7,7 +7,7 @@ RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efac
     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cudart-dev-6-5=6.5-19 \
         cuda-misc-headers-6-5=6.5-19 && \
     rm -rf /var/lib/apt/lists/*

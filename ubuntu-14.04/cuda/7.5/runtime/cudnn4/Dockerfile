@@ -6,6 +6,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 ENV CUDNN_VERSION 4
 LABEL com.nvidia.cudnn.version="4"
 
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
             libcudnn4=4.0.7 && \
     rm -rf /var/lib/apt/lists/*

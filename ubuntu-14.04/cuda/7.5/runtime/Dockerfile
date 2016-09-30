@@ -14,7 +14,7 @@ ENV CUDA_VERSION 7.5
 LABEL com.nvidia.cuda.version="7.5"
 
 ENV CUDA_PKG_VERSION 7-5=7.5-18
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-nvrtc-$CUDA_PKG_VERSION \
         cuda-cusolver-$CUDA_PKG_VERSION \
         cuda-cublas-$CUDA_PKG_VERSION \

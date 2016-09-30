@@ -5,7 +5,7 @@ ENV CAFFE_VERSION 0.14
 LABEL com.nvidia.caffe.version="0.14"
 
 ENV CAFFE_PKG_VERSION 0.14.5-2+cuda7.5
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
             caffe-nv=$CAFFE_PKG_VERSION \
             caffe-nv-tools=$CAFFE_PKG_VERSION \
             python-caffe-nv=$CAFFE_PKG_VERSION \

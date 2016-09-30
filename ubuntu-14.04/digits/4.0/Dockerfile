@@ -6,7 +6,7 @@ LABEL com.nvidia.digits.version="4.0"
 
 # workaround: gcc and libhdf5-dev are dependencies that are currently missing from the torch package
 ENV DIGITS_PKG_VERSION 4.0.0-1
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
             torch7-nv=0.9.99-1+cuda7.5 \
             graphviz \
             gcc \

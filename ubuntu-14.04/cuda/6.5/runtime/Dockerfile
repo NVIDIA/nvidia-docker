@@ -14,7 +14,7 @@ ENV CUDA_VERSION 6.5
 LABEL com.nvidia.cuda.version="6.5"
 
 ENV CUDA_PKG_VERSION 6-5=6.5-19
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cublas-$CUDA_PKG_VERSION \
         cuda-cufft-$CUDA_PKG_VERSION \
         cuda-curand-$CUDA_PKG_VERSION \

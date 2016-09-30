@@ -1,7 +1,7 @@
 FROM cuda:7.5-runtime
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-core-$CUDA_PKG_VERSION \
         cuda-misc-headers-$CUDA_PKG_VERSION \
         cuda-command-line-tools-$CUDA_PKG_VERSION \

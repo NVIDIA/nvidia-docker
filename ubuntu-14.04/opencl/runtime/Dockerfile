@@ -3,7 +3,7 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
-RUN apt-get update && apt-get install -y --no-install-recommends --force-yes \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         ocl-icd-libopencl1 \
         clinfo && \
     rm -rf /var/lib/apt/lists/*
