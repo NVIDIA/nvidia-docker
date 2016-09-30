@@ -4,7 +4,7 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 ENV CAFFE_VERSION 0.15
 LABEL com.nvidia.caffe.version="0.15"
 
-ENV CAFFE_PKG_VERSION 0.15.9-1+cuda7.5
+ENV CAFFE_PKG_VERSION 0.15.13-1+cuda7.5
 RUN apt-get update && apt-get install -y --no-install-recommends \
         caffe-nv=$CAFFE_PKG_VERSION \
         caffe-nv-tools=$CAFFE_PKG_VERSION \
