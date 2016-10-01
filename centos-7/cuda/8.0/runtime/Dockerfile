@@ -3,16 +3,17 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
+RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+    curl -fsSL http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/7fa2af80.pub | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
+    echo "$NVIDIA_GPGKEY_SUM  /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c --strict -
+
+COPY cuda.repo /etc/yum.repos.d/cuda.repo
+
 ENV CUDA_VERSION 8.0
 LABEL com.nvidia.cuda.version="8.0"
 
-ENV CUDA_PKG_VERSION 8-0-8.0.27-1
-RUN CUDA_DOWNLOAD_SUM=bb56e675ea8e4ea7bb9b6ed3b26542b8af644394d5be238a9adfa61f9764defe && \
-    curl -o cuda-repo.rpm -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-rhel7-8-0-rc-8.0.27-1.x86_64.rpm && \
-    echo "$CUDA_DOWNLOAD_SUM  cuda-repo.rpm" | sha256sum -c --strict - && \
-    rpm -i cuda-repo.rpm && \
-    rm cuda-repo.rpm && \
-    yum install -y \
+ENV CUDA_PKG_VERSION 8-0-8.0.44-1
+RUN yum install -y \
         cuda-nvrtc-$CUDA_PKG_VERSION \
         cuda-nvgraph-$CUDA_PKG_VERSION \
         cuda-cusolver-$CUDA_PKG_VERSION \
@@ -22,7 +23,6 @@ RUN CUDA_DOWNLOAD_SUM=bb56e675ea8e4ea7bb9b6ed3b26542b8af644394d5be238a9adfa61f97
         cuda-cusparse-$CUDA_PKG_VERSION \
         cuda-npp-$CUDA_PKG_VERSION \
         cuda-cudart-$CUDA_PKG_VERSION && \
-    yum remove -y cuda-repo-rhel7-8-0-rc.x86_64 && \
     ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
     rm -rf /var/cache/yum/*
 

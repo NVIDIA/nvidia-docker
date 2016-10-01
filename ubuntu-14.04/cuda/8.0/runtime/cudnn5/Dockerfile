@@ -1,6 +1,10 @@
 FROM cuda:8.0-runtime
 MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
+RUN apt-get update && apt-get install -y \
+        curl && \
+    rm -rf /var/lib/apt/lists/*
+
 ENV CUDNN_VERSION 5
 LABEL com.nvidia.cudnn.version="5"
 

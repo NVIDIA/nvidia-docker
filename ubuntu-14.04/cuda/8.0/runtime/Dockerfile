@@ -3,21 +3,18 @@ MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl && \
-    rm -rf /var/lib/apt/lists/*
+RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+    NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
+    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
+    echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
 ENV CUDA_VERSION 8.0
 LABEL com.nvidia.cuda.version="8.0"
 
-ENV CUDA_PKG_VERSION 8-0=8.0.27-1
-RUN CUDA_DOWNLOAD_SUM=58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972bbdd811 && \
-    curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
-    echo "$CUDA_DOWNLOAD_SUM  cuda-repo.deb" | sha256sum -c --strict - && \
-    dpkg -i cuda-repo.deb && \
-    rm cuda-repo.deb && \
-    apt-get update && apt-get install -y --no-install-recommends \
+ENV CUDA_PKG_VERSION 8-0=8.0.44-1
+RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-nvrtc-$CUDA_PKG_VERSION \
         cuda-nvgraph-$CUDA_PKG_VERSION \
         cuda-cusolver-$CUDA_PKG_VERSION \
@@ -28,7 +25,6 @@ RUN CUDA_DOWNLOAD_SUM=58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972b
         cuda-npp-$CUDA_PKG_VERSION \
         cuda-cudart-$CUDA_PKG_VERSION && \
     ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
-    apt-get remove --purge -y cuda-repo-ubuntu1404-8-0-rc && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
