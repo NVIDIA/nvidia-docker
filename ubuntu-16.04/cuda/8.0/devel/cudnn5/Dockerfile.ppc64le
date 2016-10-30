@@ -1,0 +1,12 @@
+FROM cuda:8.0-devel
+MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+
+ENV CUDNN_VERSION 5
+LABEL com.nvidia.cudnn.version="5"
+
+RUN CUDNN_DOWNLOAD_SUM=51f698d468401cef2e3e2ef9bb557bd57cbeb4dca895d1d1ae8a751d090bbe39 && \
+    curl -fsSL http://developer.download.nvidia.com/compute/redist/cudnn/v5.1/cudnn-8.0-linux-ppc64le-v5.1.tgz -O && \
+    echo "$CUDNN_DOWNLOAD_SUM  cudnn-8.0-linux-ppc64le-v5.1-ga.tgz" | sha256sum -c --strict - && \
+    tar -xzf cudnn-8.0-linux-ppc64le-v5.1-ga.tgz -C /usr/local && \
+    rm cudnn-8.0-linux-ppc64le-v5.1-ga.tgz && \
+    ldconfig
