@@ -1,0 +1,49 @@
+FROM cuda:8.0-cudnn5-devel
+MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+
+ENV CAFFE_VERSION 0.14
+LABEL com.nvidia.caffe.version="0.14"
+
+ENV CAFFE_RELEASE v0.14.5-nv-ppc
+ENV CAFFE_ROOT /usr/local/caffe/
+ENV CAFFE_BIN $CAFFE_ROOT/build/install/bin
+ENV CAFFE_LIB $CAFFE_ROOT/build/install/lib
+
+ENV PATH $PATH:$CAFFE_BIN
+ENV PYTHONPATH $PYTHONPATH:$CAFFE_ROOT/build/install/python
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$CAFFE_LIB
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        g++ \
+        git \
+        liblapack-dev \
+        libboost-all-dev \
+        libopencv-dev \
+        cmake \
+        protobuf-compiler \
+        libprotobuf-dev \
+        libprotoc-dev \
+        libprotobuf-dev \
+        libatlas-base-dev \
+        libhdf5-serial-dev \
+        liblmdb-dev \
+        libleveldb-dev \
+        libsnappy-dev \
+        libgoogle-glog-dev \
+        libgflags-dev \
+        libsnappy-dev \
+        python-pip \
+        python-numpy && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip install setuptools && \
+    pip install wheel && \
+    pip install scikit-image && \
+    pip install protobuf && \
+    git clone --branch $CAFFE_RELEASE https://github.com/ibmsoe/caffe $CAFFE_ROOT && \
+    cd $CAFFE_ROOT &&  \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make lib pycaffe tools && \
+    make install
