@@ -35,6 +35,7 @@ func (p *pluginVolume) register(api *PluginAPI) {
 	api.Handle("POST", prefix+".Path", p.path)
 	api.Handle("POST", prefix+".Get", p.get)
 	api.Handle("POST", prefix+".List", p.list)
+	api.Handle("POST", prefix+".Capabilities", p.capabilities)
 }
 
 func fmtError(err error, vol string) *string {
@@ -188,5 +189,19 @@ func (p *pluginVolume) list(resp http.ResponseWriter, req *http.Request) {
 			})
 		}
 	}
+
+	assert(json.NewEncoder(resp).Encode(r))
+}
+
+func (p *pluginVolume) capabilities(resp http.ResponseWriter, req *http.Request) {
+	type Capabilities struct{ Scope string }
+	var r struct {
+		Capabilities Capabilities
+	}
+
+	r.Capabilities = Capabilities{
+		Scope: "local",
+	}
+
 	assert(json.NewEncoder(resp).Encode(r))
 }
