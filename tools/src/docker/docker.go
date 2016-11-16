@@ -148,7 +148,7 @@ func ParseArgs(args []string, cmd ...string) (string, int, error) {
 }
 
 func Label(image, label string) (string, error) {
-	format := fmt.Sprintf(`--format='{{index .Config.Labels "%s"}}'`, label)
+	format := fmt.Sprintf(`--format={{index .Config.Labels "%s"}}`, label)
 
 	b, err := docker(false, "inspect", format, image)
 	if err != nil {
