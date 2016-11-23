@@ -17,8 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 VOLUME /data
 VOLUME /jobs
 
-COPY digits.cfg digits/digits.cfg
-
-EXPOSE 34448
 WORKDIR /usr/share/digits
+
+COPY digits.cfg digits/digits.cfg
+EXPOSE 34448
+
 ENTRYPOINT ["./digits-server"]
