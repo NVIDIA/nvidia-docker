@@ -1,5 +1,5 @@
 FROM cuda:7.0-runtime
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
 

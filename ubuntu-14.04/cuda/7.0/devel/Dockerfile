@@ -1,5 +1,5 @@
 FROM cuda:7.0-runtime
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-core-$CUDA_PKG_VERSION \

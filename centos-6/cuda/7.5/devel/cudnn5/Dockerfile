@@ -1,5 +1,5 @@
 FROM cuda:7.5-devel
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 ENV CUDNN_VERSION 5
 LABEL com.nvidia.cudnn.version="5"

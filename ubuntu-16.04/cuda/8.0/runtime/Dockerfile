@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 

@@ -1,5 +1,5 @@
 FROM caffe:0.14
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 ENV DIGITS_VERSION 3.0
 LABEL com.nvidia.digits.version="3.0"

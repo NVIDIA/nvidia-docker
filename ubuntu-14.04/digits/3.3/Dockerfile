@@ -1,5 +1,5 @@
 FROM caffe:0.14
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 # workaround: gcc and libhdf5-dev are dependencies that are currently missing from the torch package
 RUN apt-get update && apt-get install -y --no-install-recommends \

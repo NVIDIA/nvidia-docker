@@ -1,5 +1,5 @@
 FROM cuda:7.5-cudnn5-runtime
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 ENV CAFFE_VERSION 0.14
 LABEL com.nvidia.caffe.version="0.14"

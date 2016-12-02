@@ -1,5 +1,5 @@
 FROM cuda:8.0-runtime
-MAINTAINER NVIDIA CORPORATION <digits@nvidia.com>
+LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
 RUN yum install -y \
         cuda-core-$CUDA_PKG_VERSION \
