@@ -50,13 +50,13 @@ func GenerateRemoteArgs(image string, vols []string) ([]string, error) {
 		strings.Join(vols, "+"),
 		strings.Join(GPU, "+"),
 	)
-	r, err = c.Get(uri)
+	r2, err := c.Get(uri)
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
+	defer r2.Body.Close()
 
-	b, err := ioutil.ReadAll(r.Body)
+	b, err := ioutil.ReadAll(r2.Body)
 	if err != nil {
 		return nil, err
 	}
