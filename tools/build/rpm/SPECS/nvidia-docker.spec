@@ -17,7 +17,7 @@ Source2: LICENSE
 
 %{?systemd_requires}
 BuildRequires: systemd
-Requires: docker-engine
+Requires: docker-engine, libcap
 
 %define nvidia_docker_user %{name}
 %define nvidia_docker_driver %{name}
