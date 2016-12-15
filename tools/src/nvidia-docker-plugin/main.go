@@ -28,7 +28,7 @@ func init() {
 	log.SetPrefix(os.Args[0] + " | ")
 
 	flag.BoolVar(&PrintVersion, "v", false, "Show the plugin version information")
-	flag.StringVar(&ListenAddr, "l", "localhost:3476", "Server listen address")
+	flag.StringVar(&ListenAddr, "l", "0.0.0.0:3476", "Server listen address")
 	flag.StringVar(&VolumesPath, "d", "/var/lib/nvidia-docker/volumes", "Path where to store the volumes")
 	flag.StringVar(&SocketPath, "s", "/run/docker/plugins", "Path to the plugin socket")
 }
