@@ -1,7 +1,7 @@
 FROM cuda:7.5-devel
 LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         curl && \
     rm -rf /var/lib/apt/lists/*
 
