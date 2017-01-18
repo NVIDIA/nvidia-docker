@@ -73,6 +73,14 @@ fi
 %systemd_postun_with_restart %{name}
 
 %changelog
+* Wed Jan 18 2017 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0-1
+- Support for Docker 1.13
+- Fix CPU affinity reporting on systems where NUMA is disabled (Closes: #198)
+- Fix premature EOF in the remote API responses (Closes: #123)
+- Add support for the VolumeDriver.Capabilities plugin endpoint
+- Enable ppc64le library lookup (Closes: #194)
+- Fix parsing of DOCKER_HOST for unix domain sockets (Closes: #119)
+
 * Fri Jun 17 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.3-1
 - Support for Docker 1.12
 - Add volume mount options support to the nvidia package
