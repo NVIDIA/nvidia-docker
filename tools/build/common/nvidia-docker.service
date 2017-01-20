@@ -15,7 +15,7 @@ RestartSec=1
 TimeoutStartSec=0
 TimeoutStopSec=20
 
-ExecStart=/usr/bin/nvidia-docker-plugin -s $SOCK_DIR
+ExecStart=/usr/bin/nvidia-docker-plugin -s $SOCK_DIR -l 0.0.0.0:3476
 ExecStartPost=/bin/sh -c '/bin/mkdir -p $( dirname $SPEC_FILE )'
 ExecStartPost=/bin/sh -c '/bin/echo unix://$SOCK_DIR/nvidia-docker.sock > $SPEC_FILE'
 ExecStopPost=/bin/rm -f $SPEC_FILE
