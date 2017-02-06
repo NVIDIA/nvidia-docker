@@ -6,5 +6,6 @@
 .\#*
 *~
 \#*
-tools/bin
-tools/dist
+bin
+dist
+samples

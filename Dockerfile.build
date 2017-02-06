@@ -20,7 +20,7 @@ RUN NVIDIA_GDK_SUM=1e32e58f69fe29ee67b845233e7aa9347f37994463252bccbc8bfc8a7104a
     chmod +x gdk.run && ./gdk.run --silent && rm gdk.run
 
 VOLUME /go/bin
-WORKDIR /go/src/github.com/NVIDIA/nvidia-docker/tools/src
+WORKDIR /go/src/github.com/NVIDIA/nvidia-docker/src
 COPY src .
 
 ENV CGO_CFLAGS "-I /usr/local/cuda-6.5/include -I /usr/include/nvidia/gdk"

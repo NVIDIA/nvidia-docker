@@ -11,7 +11,7 @@ import (
 	"path"
 	"regexp"
 
-	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
+	"github.com/NVIDIA/nvidia-docker/src/nvidia"
 )
 
 var (

@@ -9,8 +9,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/NVIDIA/nvidia-docker/tools/src/graceful"
-	"github.com/NVIDIA/nvidia-docker/tools/src/nvidia"
+	"github.com/NVIDIA/nvidia-docker/src/graceful"
+	"github.com/NVIDIA/nvidia-docker/src/nvidia"
 )
 
 const socketName = nvidia.DockerPlugin + ".sock"
