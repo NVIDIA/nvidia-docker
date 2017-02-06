@@ -46,8 +46,7 @@ digits: $(CURDIR)/$(OS)/digits
 	make -C $(CURDIR)/$(OS)/digits
 
 samples: $(CURDIR)/samples
-	make -C $(CURDIR)/$(OS)/cuda latest
-	make -C $(CURDIR)/samples/$(OS)
+	make -C $(CURDIR)/samples/ubuntu-16.04
 
 rm_images = \
 $(NV_DOCKER) images | awk '$$1 == "$(1)" {print $$1":"$$2}' | xargs -r $(NV_DOCKER) rmi

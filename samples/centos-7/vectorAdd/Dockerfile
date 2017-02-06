@@ -1,4 +1,4 @@
-FROM cuda
+FROM nvidia/cuda:8.0-devel-centos7
 
 RUN yum install -y \
         cuda-samples-$CUDA_PKG_VERSION && \
