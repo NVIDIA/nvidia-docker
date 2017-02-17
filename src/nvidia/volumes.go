@@ -105,7 +105,7 @@ var Volumes = []VolumeInfo{
 	{
 		"nvidia_driver",
 		"/usr/local/nvidia",
-		"ro",
+		"ro,z",
 		components{
 			"binaries": {
 				//"nvidia-modprobe",       // Kernel module loader
