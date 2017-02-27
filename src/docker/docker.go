@@ -5,7 +5,6 @@ package docker
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -46,7 +45,8 @@ func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	return b, nil
 }
 
-// List of boolean options: https://github.com/docker/docker/blob/1.13.x/contrib/completion/bash/docker
+// List of boolean options: https://github.com/docker/docker/blob/17.03.x/contrib/completion/bash/docker
+var lastSupportedVersion = "17.03"
 var booleanFlags = map[string]map[string][]string{
 	"1.9": {
 		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
@@ -105,6 +105,18 @@ var booleanFlags = map[string]map[string][]string{
 			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
 			"-detach", "d", "-no-healthcheck", "-rm", "-sig-proxy"},
 	},
+	lastSupportedVersion: {
+		"": []string{"-debug", "D", "-tls", "-tlsverify"}, // global options
+		"daemon": []string{"-debug", "D", "-tls", "-tlsverify", // global options
+			"-disable-legacy-registry", "-experimental", "-help", "-icc", "-init", "-ip-forward",
+			"-ip-masq", "-iptables", "-ipv6", "-live-restore", "-raw-logs",
+			"-selinux-enabled", "-userland-proxy"},
+		"create": []string{"-disable-content-trust", "-help", "-init", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t"},
+		"run": []string{"-disable-content-trust", "-help", "-init", "-interactive", "i", "-oom-kill-disable",
+			"-privileged", "-publish-all", "P", "-read-only", "-tty", "t", // same as "create"
+			"-detach", "d", "-no-healthcheck", "-rm", "-sig-proxy"},
+	},
 }
 
 func ParseArgs(args []string, cmd ...string) (string, int, error) {
@@ -119,7 +131,8 @@ func ParseArgs(args []string, cmd ...string) (string, int, error) {
 
 	cmdBooleanFlags, ok := booleanFlags[vmaj][cmd[0]]
 	if !ok {
-		return "", -1, errors.New("unsupported Docker version")
+		// Docker is newer than supported version: use flags from last version we know.
+		cmdBooleanFlags, _ = booleanFlags[lastSupportedVersion][cmd[0]]
 	}
 
 	// Build the set of boolean Docker options for this command
