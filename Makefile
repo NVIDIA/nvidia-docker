@@ -26,7 +26,6 @@ PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
 DOCKER_VERS      := $(shell $(NV_DOCKER) version -f '{{.Client.Version}}')
 DOCKER_VERS_MAJ  := $(shell echo $(DOCKER_VERS) | cut -d. -f1)
 DOCKER_VERS_MIN  := $(shell echo $(DOCKER_VERS) | cut -d. -f2)
-DOCKER_SUPPORTED := $(shell [ $(DOCKER_VERS_MAJ) -eq 1 -a $(DOCKER_VERS_MIN) -ge 9 ] && echo true)
 
 DOCKER_RMI       := $(NV_DOCKER) rmi
 DOCKER_RUN       := $(NV_DOCKER) run --rm --net=host
@@ -44,9 +43,6 @@ DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
 all: build
 
 build: distclean
-ifneq ($(DOCKER_SUPPORTED),true)
-	$(error Unsupported Docker version)
-endif
 	@mkdir -p $(BIN_DIR)
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
 	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin:Z $(PKG_NAME):$@
@@ -73,17 +69,11 @@ tarball: build
 	@printf "\nFind tarball at $(DIST_DIR)\n\n"
 
 deb: tarball
-ifneq ($(DOCKER_SUPPORTED),true)
-	$(error Unsupported Docker version)
-endif
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
 
 rpm: tarball
-ifneq ($(DOCKER_SUPPORTED),true)
-	$(error Unsupported Docker version)
-endif
 	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
