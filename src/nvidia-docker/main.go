@@ -52,6 +52,10 @@ func main() {
 	command, off, err := docker.ParseArgs(args)
 	assert(err)
 
+	if command == "container" {
+		command = args[off+1]
+		off += 1
+	}
 	if command != "create" && command != "run" {
 		if command == "version" {
 			fmt.Printf("NVIDIA Docker: %s\n\n", Version)
