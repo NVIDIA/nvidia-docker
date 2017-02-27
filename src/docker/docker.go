@@ -29,7 +29,7 @@ func docker(stdout bool, command string, arg ...string) (b []byte, err error) {
 	cmd.Stderr = &buf
 
 	if stdout {
-		cmd.Stdout = os.Stdout
+		cmd.Stdout = os.Stderr
 		err = cmd.Run()
 	} else {
 		b, err = cmd.Output()
