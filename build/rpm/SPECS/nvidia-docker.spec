@@ -73,6 +73,12 @@ fi
 %systemd_postun_with_restart %{name}
 
 %changelog
+* Fri Mar 03 2017 NVIDIA CORPORATION <digits@nvidia.com> 1.0.1-1
+- Support for Docker 17.03 including EE and CE (Closes: #323, #324)
+- Load UVM unconditionally
+- Fix Docker argument parsing (Closes: #295)
+- Fix images pull output (Closes: #310)
+
 * Wed Jan 18 2017 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0-1
 - Support for Docker 1.13
 - Fix CPU affinity reporting on systems where NUMA is disabled (Closes: #198)

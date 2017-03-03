@@ -1,3 +1,12 @@
+nvidia-docker (1.0.1-1) trusty; urgency=low
+
+  * Support for Docker 17.03 including EE and CE (Closes: #323, #324)
+  * Load UVM unconditionally
+  * Fix Docker argument parsing (Closes: #295)
+  * Fix images pull output (Closes: #310)
+
+ -- NVIDIA CORPORATION <digits@nvidia.com>  Fri, 03 Mar 2017 00:59:14 +0000
+
 nvidia-docker (1.0.0-1) trusty; urgency=low
 
   * Support for Docker 1.13
