@@ -84,6 +84,9 @@ func main() {
 				nvidia.Shutdown()
 			}
 			assert(err)
+			if args[off] == "--" {
+				off -= 1
+			}
 			args = append(args[:off], append(nargs, args[off:]...)...)
 		}
 	}
