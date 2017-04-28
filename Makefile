@@ -38,13 +38,21 @@ DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
                                        --build-arg PKG_REV="$(PKG_REV)" \
                                        --build-arg PKG_ARCH="$(PKG_ARCH)"
 
+# Mirror the BUILD_ARCH from the build Dockerfile
+BUILD_ARCH = .$(shell uname -m)
+ifneq ($(BUILD_ARCH),.ppc64le)
+    BUILD_ARCH =
+else
+	PKG_ARCH = $(BUILD_ARCH)
+endif
+
 .PHONY: all build install uninstall clean distclean tarball deb rpm
 
 all: build
 
 build: distclean
 	@mkdir -p $(BIN_DIR)
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
 	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin:Z $(PKG_NAME):$@
 
 install: build
@@ -69,11 +77,11 @@ tarball: build
 	@printf "\nFind tarball at $(DIST_DIR)\n\n"
 
 deb: tarball
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
 
 rpm: tarball
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@ $(CURDIR)
+	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
 	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
 	@printf "\nFind packages at $(DIST_DIR)\n\n"
