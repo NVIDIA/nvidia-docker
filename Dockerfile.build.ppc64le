@@ -1,0 +1,53 @@
+FROM ppc64le/golang:1.6.3
+
+RUN echo "deb http://httpredir.debian.org/debian stretch main" >> /etc/apt/sources.list && \
+    echo "deb http://httpredir.debian.org/debian stretch-updates main" >> /etc/apt/sources.list && \
+    echo "deb http://security.debian.org stretch/updates main" >> /etc/apt/sources.list && \
+    apt-get clean && apt-get update && \
+    apt-get upgrade -y \
+        binutils \
+        libc6 \
+        libc6-dev \
+        libc-bin && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN NVIDIA_GPGKEY_SUM=bd841d59a27a406e513db7d405550894188a4c1cd96bf8aa4f82f1b39e0b5c1c && \
+    NVIDIA_GPGKEY_FPR=889bee522da690103c4b085ed88c3d385c37d3be && \
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/GPGKEY && \
+    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
+    echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/ppc64el /" > /etc/apt/sources.list.d/cuda.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        cuda-cudart-dev-7-5=7.5-23  \
+        cuda-misc-headers-7-5=7.5-23 && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN NVIDIA_GDK_SUM=064678e29d39f0c21f4b66c5e2fb18ba65fd9bc3372d0b319c31cab0e791fc1c && \
+    curl -fsSL -o gdk.run http://developer.download.nvidia.com/compute/cuda/7.5/Prod/gdk/gdk_linux_ppc64le_352_79_release.run && \
+    echo "$NVIDIA_GDK_SUM  gdk.run" | sha256sum -c --strict - && \
+    chmod +x gdk.run && ./gdk.run --silent && rm gdk.run
+
+VOLUME /go/bin
+WORKDIR /go/src/github.com/NVIDIA/nvidia-docker/src
+COPY src .
+
+ENV CGO_CFLAGS "-I /usr/local/cuda-7.5/include -I /usr/include/nvidia/gdk"
+ENV CGO_LDFLAGS "-L /usr/local/cuda-7.5/lib64"
+
+RUN go get -v ./...
+
+ARG USER_ID
+RUN useradd --non-unique --uid $USER_ID nvidia
+USER nvidia
+
+ARG CR_NAME
+ARG CR_EMAIL
+ARG PKG_NAME
+ARG PKG_VERS
+ARG PKG_REV
+ARG PKG_ARCH
+
+ENV VERSION $PKG_VERS
+
+CMD go install -v -ldflags="-s -X main.Version=$VERSION" ./...

@@ -49,6 +49,11 @@ sudo -b nohup nvidia-docker-plugin > /tmp/nvidia-docker.log
 nvidia-docker run --rm nvidia/cuda nvidia-smi
 ```
 
+#### _ppc64le (POWER) Archictecture_
+There is limited build support for ppc64le. Running `make deb` will build the nvidia-docker deb for ppc64le (if run on a ppc64le system). If the deb install fails because you have the 'docker.io' (>= v1.9) package installed, but not the 'docker-engine' package, you can force-install. There is currently no docker-provided docker-engine repository for ppc64le.
+
+Not all the build targets for ppc64le have been implemented. If you would like for a Dockerfile to be created to enable a ppc64le target, please open an issue.
+
 # Issues and Contributing
 
 **A signed copy of the [Contributor License Agreement](https://raw.githubusercontent.com/NVIDIA/nvidia-docker/master/CLA) needs to be provided to digits@nvidia.com before any change can be accepted.**
