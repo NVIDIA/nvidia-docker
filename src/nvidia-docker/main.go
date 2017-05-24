@@ -52,7 +52,7 @@ func main() {
 	command, off, err := docker.ParseArgs(args)
 	assert(err)
 
-	if command == "container" {
+	if command == "container" && off+1 < len(args) {
 		command = args[off+1]
 		off += 1
 	}
