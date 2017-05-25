@@ -47,6 +47,9 @@ func LookupDevices(s ...LookupStrategy) (devs []Device, err error) {
 		return nil, err
 	}
 	devs = make([]Device, 0, n)
+	if n == 0 {
+		return
+	}
 
 	if len(s) == 1 && s[0] == LookupMinimal {
 		for i = 0; i < n; i++ {
