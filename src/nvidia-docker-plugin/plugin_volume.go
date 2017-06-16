@@ -78,7 +78,7 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 	ok, err := volume.Exists()
 	assert(err)
 	if !ok {
-		assert(volume.Create(nvidia.LinkStrategy{}))
+		assert(volume.Create(nvidia.LinkOrCopyStrategy{}))
 	}
 	assert(json.NewEncoder(resp).Encode(r))
 }
