@@ -260,6 +260,13 @@ func (h handle) deviceGetClockInfo() (*uint, *uint, error) {
 	return uintPtr(sm), uintPtr(mem), errorString(r)
 }
 
+func (h handle) deviceGetFanSpeed() (*uint, error) {
+	var n C.uint
+
+	r := C.nvmlDeviceGetFanSpeed(h.dev, &n)
+	return uintPtr(n), errorString(r)
+}
+
 func (h handle) deviceGetMemoryErrorCounter() (*uint64, *uint64, *uint64, error) {
 	var l1, l2, mem C.ulonglong
 
