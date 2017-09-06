@@ -2,5 +2,6 @@
 
 set -e
 
-sed -i "s/#RUNTIME_VERSION#/${RUNTIME_VERSION}/g" debian/control
-sed -i "s/#DOCKER_VERSION#/${DOCKER_VERSION}/g" debian/control
+sed -i "s;@SECTION@;${SECTION:+$SECTION/};g" debian/control
+sed -i "s;@RUNTIME_VERSION@;${RUNTIME_VERSION};g" debian/control
+sed -i "s;@DOCKER_VERSION@;${DOCKER_VERSION};g" debian/control
