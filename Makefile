@@ -17,6 +17,14 @@ else
 PKG_ARCH := x86_64
 endif
 
+# Mirror the BUILD_ARCH from the build Dockerfile
+BUILD_ARCH = .$(shell uname -m)
+ifneq ($(BUILD_ARCH),.ppc64le)
+    BUILD_ARCH =
+else
+    PKG_ARCH = ppc64le
+endif
+
 BIN_DIR    := $(CURDIR)/bin
 DIST_DIR   := $(CURDIR)/dist
 BUILD_DIR  := $(CURDIR)/build
@@ -37,14 +45,6 @@ DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
                                        --build-arg PKG_VERS="$(PKG_VERS)" \
                                        --build-arg PKG_REV="$(PKG_REV)" \
                                        --build-arg PKG_ARCH="$(PKG_ARCH)"
-
-# Mirror the BUILD_ARCH from the build Dockerfile
-BUILD_ARCH = .$(shell uname -m)
-ifneq ($(BUILD_ARCH),.ppc64le)
-    BUILD_ARCH =
-else
-	PKG_ARCH = $(BUILD_ARCH)
-endif
 
 .PHONY: all build install uninstall clean distclean tarball deb rpm
 
