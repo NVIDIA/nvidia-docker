@@ -17,9 +17,16 @@ const (
 	szUUID     = C.NVML_DEVICE_UUID_BUFFER_SIZE
 	szProcs    = 32
 	szProcName = 64
+
+	XidCriticalError = C.nvmlEventTypeXidCriticalError
 )
 
 type handle struct{ dev C.nvmlDevice_t }
+type Event struct {
+	UUID  *string
+	Etype uint64
+	Edata uint64
+}
 
 func uintPtr(c C.uint) *uint {
 	i := uint(c)
@@ -50,6 +57,31 @@ func init_() error {
 		return errors.New("could not load NVML library")
 	}
 	return errorString(r)
+}
+
+func NewEventSet() C.nvmlEventSet_t {
+	var set C.nvmlEventSet_t
+	C.nvmlEventSetCreate(&set)
+
+	return set
+}
+
+func DeleteEventSet(set C.nvmlEventSet_t) {
+	C.nvmlEventSetFree(set)
+}
+
+func WaitForEvent(set C.nvmlEventSet_t, timeout uint) (Event, error) {
+	var data C.nvmlEventData_t
+
+	r := C.nvmlEventSetWait(set, &data, C.uint(timeout))
+	uuid, _ := handle{data.device}.deviceGetUUID()
+
+	return Event{
+			UUID:  uuid,
+			Etype: uint64(data.eventType),
+			Edata: uint64(data.eventData),
+		},
+		errorString(r)
 }
 
 func shutdown() error {
