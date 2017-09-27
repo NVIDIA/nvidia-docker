@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/NVIDIA/nvidia-docker
 
 Package: #PACKAGE#
 Architecture: #ARCHITECTURE#
-Depends: ${misc:Depends}, ${shlibs:Depends}, adduser, docker-engine (>= 1.9.0) | docker-ce | docker-ee, libcap2-bin
+Depends: ${misc:Depends}, ${shlibs:Depends}, adduser, docker-engine (>= 1.9.0) | docker-ce | docker-ee | docker.io (>= 1.19), libcap2-bin
 Description: NVIDIA Docker container tools
  NVIDIA Docker provides utilities to extend the Docker CLI allowing users
  to build and run GPU applications as lightweight containers.

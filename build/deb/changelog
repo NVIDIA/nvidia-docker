@@ -1,3 +1,10 @@
+nvidia-docker (1.0.1-1+debian.1) UNRELEASED; urgency=medium
+
+  * Add docker.io runtime dependency alternative to support official
+    Debian and Ubuntu docker packages.
+
+ -- Adam Cecile <acecile@le-.vert.net>  Wed, 27 Sep 2017 13:40:49 +0200
+
 nvidia-docker (1.0.1-1) trusty; urgency=low
 
   * Support for Docker 17.03 including EE and CE (Closes: #323, #324)
