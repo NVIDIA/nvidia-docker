@@ -22,6 +22,7 @@ const (
 )
 
 type handle struct{ dev C.nvmlDevice_t }
+type EventSet struct { set C.nvmlEventSet_t }
 type Event struct {
 	UUID  *string
 	Etype uint64
@@ -59,21 +60,43 @@ func init_() error {
 	return errorString(r)
 }
 
-func NewEventSet() C.nvmlEventSet_t {
+func NewEventSet() EventSet {
 	var set C.nvmlEventSet_t
 	C.nvmlEventSetCreate(&set)
 
-	return set
+	return EventSet{set}
 }
 
-func DeleteEventSet(set C.nvmlEventSet_t) {
-	C.nvmlEventSetFree(set)
+func RegisterEvent(es EventSet, event int) error {
+	n, err := deviceGetCount()
+	if err != nil {
+		return err
+	}
+
+	var i uint
+	for i = 0; i < n; i++ {
+		h, err := deviceGetHandleByIndex(i)
+		if err != nil {
+			return err
+		}
+
+		r := C.nvmlDeviceRegisterEvents(h.dev, C.ulonglong(event), es.set)
+		if r != C.NVML_SUCCESS {
+			return errorString(r)
+		}
+	}
+
+	return nil
 }
 
-func WaitForEvent(set C.nvmlEventSet_t, timeout uint) (Event, error) {
+func DeleteEventSet(es EventSet) {
+	C.nvmlEventSetFree(es.set)
+}
+
+func WaitForEvent(es EventSet, timeout uint) (Event, error) {
 	var data C.nvmlEventData_t
 
-	r := C.nvmlEventSetWait(set, &data, C.uint(timeout))
+	r := C.nvmlEventSetWait(es.set, &data, C.uint(timeout))
 	uuid, _ := handle{data.device}.deviceGetUUID()
 
 	return Event{
