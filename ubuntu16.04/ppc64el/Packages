@@ -1,0 +1,19 @@
+Package: nvidia-docker
+Architecture: ppc64el
+Version: 1.0.1-1
+Priority: optional
+Section: devel
+Maintainer: NVIDIA CORPORATION <digits@nvidia.com>
+Installed-Size: 15656
+Depends: init-system-helpers (>= 1.13~), sysv-rc (>= 2.88dsf-24) | file-rc (>= 0.8.16), libc6 (>= 2.17), adduser, docker-engine (>= 1.9.0) | docker-ce | docker-ee, libcap2-bin
+Filename: ./nvidia-docker_1.0.1-1_ppc64el.deb
+Size: 2267056
+MD5sum: f6647735021e182bb7ee0b149946b3eb
+SHA1: 32eb56f97dbd882a33d74c5b27cf064954beadc4
+SHA256: 9e57be86d5c05684db6217337d4af18136a682457eeebd2163f6ad5f47cbffa5
+SHA512: 0532373e4d8d376932cf5c80356811cef74d0094305aa9cad28d41b5e439ebec4bced26c0abface059a39f30261dfb6160a10c21a8ada4b5f6e0ec754811dd12
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: NVIDIA Docker container tools
+ NVIDIA Docker provides utilities to extend the Docker CLI allowing users
+ to build and run GPU applications as lightweight containers.
+
