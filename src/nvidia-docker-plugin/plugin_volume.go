@@ -21,6 +21,10 @@ var (
 	ErrVolumeVersion     = errors.New("invalid volume version")
 )
 
+var (
+	StrictVersionCheck bool
+)
+
 type pluginVolume struct{}
 
 func (p *pluginVolume) implement() string { return "VolumeDriver" }
@@ -70,7 +74,7 @@ func (p *pluginVolume) create(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 	// The volume version requested needs to match the volume version in cache
-	if version != volume.Version {
+	if StrictVersionCheck && version != volume.Version {
 		r.Err = fmtError(ErrVolumeVersion, q.Name)
 		assert(json.NewEncoder(resp).Encode(r))
 		return
