@@ -15,7 +15,7 @@ all: xenial centos7
 
 xenial: 17.09.0-xenial 17.06.2-xenial 17.06.1-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
 
-centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-centos7
+centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-centos7 1.12.6-centos7
 
 17.09.0-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.0-1" \
@@ -94,5 +94,14 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
                         --build-arg DOCKER_VERSION="17.03.2.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.03.2.ce" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
+
+1.12.6-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker1.12.6" \
+                        --build-arg DOCKER_VERSION="2:1.12.6" \
+                        --build-arg DOCKER_PKG="docker" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker1.12.6" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
 	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@

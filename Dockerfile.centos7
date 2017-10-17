@@ -10,11 +10,13 @@ ARG PKG_VERS
 ARG PKG_REV
 ARG RUNTIME_VERSION
 ARG DOCKER_VERSION
+ARG DOCKER_PKG=docker-ce
 
 ENV VERSION $PKG_VERS
 ENV RELEASE $PKG_REV
 ENV RUNTIME_VERSION $RUNTIME_VERSION
 ENV DOCKER_VERSION $DOCKER_VERSION
+ENV DOCKER_PKG $DOCKER_PKG
 
 # output directory
 ENV DIST_DIR=/tmp/nvidia-container-runtime-$PKG_VERS/SOURCES
@@ -32,5 +34,6 @@ CMD rpmbuild --clean -bb \
              -D "release $RELEASE" \
              -D "runtime_version $RUNTIME_VERSION" \
              -D "docker_version $DOCKER_VERSION" \
+             -D "docker_pkg $DOCKER_PKG" \
              SPECS/nvidia-docker2.spec && \
     mv RPMS/noarch/*.rpm /dist
