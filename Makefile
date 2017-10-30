@@ -19,7 +19,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.09.0-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.0-1" \
-                        --build-arg DOCKER_VERSION="17.09.0~ce-0~ubuntu" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)" \
                         --build-arg PKG_VERS="$(VERSION)+docker17.09.0" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -27,7 +27,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.06.2-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.06.2-1" \
-                        --build-arg DOCKER_VERSION="17.06.2~ce-0~ubuntu" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)" \
                         --build-arg PKG_VERS="$(VERSION)+docker17.06.2" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -35,7 +35,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.06.1-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.06.1-1" \
-                        --build-arg DOCKER_VERSION="17.06.1~ce-0~ubuntu" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.06.1~ce-0~ubuntu) | docker-ee (= 17.06.1~ee-0~ubuntu)" \
                         --build-arg PKG_VERS="$(VERSION)+docker17.06.1" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -43,7 +43,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.03.2-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.03.2-1" \
-                        --build-arg DOCKER_VERSION="17.03.2~ce-0~ubuntu-xenial" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)" \
                         --build-arg PKG_VERS="$(VERSION)+docker17.03.2" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -51,7 +51,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 1.13.1-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.13.1-1" \
-                        --build-arg DOCKER_VERSION="1.13.1-0~ubuntu-xenial" \
+                        --build-arg DOCKER_VERSION="docker-engine(= 1.13.1-0~ubuntu-xenial)" \
                         --build-arg PKG_VERS="$(VERSION)+docker1.13.1" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -59,7 +59,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 1.12.6-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.12.6-1" \
-                        --build-arg DOCKER_VERSION="1.12.6-0~ubuntu-xenial" \
+                        --build-arg DOCKER_VERSION="docker-engine (= 1.12.6-0~ubuntu-xenial) | docker.io (= 1.12.6-0ubuntu1~16.04.1)" \
                         --build-arg PKG_VERS="$(VERSION)+docker1.12.6" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
@@ -67,7 +67,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.09.0.ce-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.09.0" \
-                        --build-arg DOCKER_VERSION="17.09.0.ce" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.09.0.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.09.0.ce" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
@@ -75,7 +75,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.06.2.ce-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.06.2" \
-                        --build-arg DOCKER_VERSION="17.06.2.ce" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.06.2.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.06.2.ce" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
@@ -83,7 +83,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.06.1.ce-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.06.1" \
-                        --build-arg DOCKER_VERSION="17.06.1.ce" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.06.1.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.06.1.ce" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
@@ -91,7 +91,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 17.03.2.ce-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.03.2" \
-                        --build-arg DOCKER_VERSION="17.03.2.ce" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.03.2.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.03.2.ce" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
@@ -99,8 +99,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.06.1.ce-centos7 17.03.2.ce-cen
 
 1.12.6-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker1.12.6" \
-                        --build-arg DOCKER_VERSION="2:1.12.6" \
-                        --build-arg DOCKER_PKG="docker" \
+                        --build-arg DOCKER_VERSION="docker = 2:1.12.6" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker1.12.6" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .

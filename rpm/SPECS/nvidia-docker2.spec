@@ -17,7 +17,7 @@ Source2: LICENSE
 
 Conflicts: nvidia-docker
 Requires: nvidia-container-runtime = %{runtime_version}
-Requires: %{docker_pkg} = %{docker_version}
+Requires: %{docker_version}
 
 %description
 Replaces nvidia-docker with a new implementation based on nvidia-container-runtime
