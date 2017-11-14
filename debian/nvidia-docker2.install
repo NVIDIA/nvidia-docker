@@ -1,0 +1,2 @@
+daemon.json /etc/docker
+nvidia-* /usr/bin

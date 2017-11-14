@@ -1,0 +1,40 @@
+FROM ubuntu:xenial
+
+# packaging dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        dh-make \
+        fakeroot \
+        build-essential \
+        devscripts && \
+    rm -rf /var/lib/apt/lists/*
+
+# packaging
+ARG PKG_VERS
+ARG PKG_REV
+ARG RUNTIME_VERSION
+ARG DOCKER_VERSION
+
+ENV DEBFULLNAME "NVIDIA CORPORATION"
+ENV DEBEMAIL "cudatools@nvidia.com"
+ENV REVISION "$PKG_VERS-$PKG_REV"
+ENV RUNTIME_VERSION $RUNTIME_VERSION
+ENV DOCKER_VERSION $DOCKER_VERSION
+ENV DISTRIB "UNRELEASED"
+ENV SECTION ""
+
+# output directory
+ENV DIST_DIR=/tmp/nvidia-docker2-$PKG_VERS
+RUN mkdir -p $DIST_DIR
+
+# nvidia-docker 2.0
+COPY nvidia-docker $DIST_DIR/nvidia-docker
+COPY daemon.json $DIST_DIR/daemon.json
+
+WORKDIR $DIST_DIR
+COPY debian ./debian
+
+RUN dch --create --package nvidia-docker2 -v "$REVISION" "v$REVISION" -D "$DISTRIB" && \
+    dch -r ""
+
+CMD debuild --preserve-env --dpkg-buildpackage-hook='sh debian/prepare' -i -us -uc -b && \
+    mv /tmp/*.deb /dist

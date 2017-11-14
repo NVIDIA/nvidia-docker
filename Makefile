@@ -1,87 +1,90 @@
-# Copyright (c) 2015-2016, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2017, NVIDIA CORPORATION. All rights reserved.
 
-NV_DOCKER ?= docker
+DOCKER ?= docker
 
-prefix      ?= /usr/local
-exec_prefix ?= $(prefix)
-bindir      ?= $(exec_prefix)/bin
+VERSION := 2.0.1
+PKG_REV := 1
+RUNTIME_VERSION := 1.1.0
 
-CR_NAME  := NVIDIA CORPORATION
-CR_EMAIL := digits@nvidia.com
-PKG_NAME := nvidia-docker
-PKG_VERS := 1.0.1
-PKG_REV  := 1
-ifneq ($(MAKECMDGOALS),rpm)
-PKG_ARCH := amd64
-else
-PKG_ARCH := x86_64
-endif
+DIST_DIR  := $(CURDIR)/dist
 
-# Mirror the BUILD_ARCH from the build Dockerfile
-BUILD_ARCH = .$(shell uname -m)
-ifneq ($(BUILD_ARCH),.ppc64le)
-    BUILD_ARCH =
-else
-    PKG_ARCH = ppc64le
-endif
+.NOTPARALLEL:
+.PHONY: all
 
-BIN_DIR    := $(CURDIR)/bin
-DIST_DIR   := $(CURDIR)/dist
-BUILD_DIR  := $(CURDIR)/build
-DOCKER_BIN := $(BIN_DIR)/nvidia-docker
-PLUGIN_BIN := $(BIN_DIR)/nvidia-docker-plugin
+all: xenial centos7
 
-DOCKER_VERS      := $(shell $(NV_DOCKER) version -f '{{.Client.Version}}')
-DOCKER_VERS_MAJ  := $(shell echo $(DOCKER_VERS) | cut -d. -f1)
-DOCKER_VERS_MIN  := $(shell echo $(DOCKER_VERS) | cut -d. -f2)
+xenial: 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
 
-DOCKER_RMI       := $(NV_DOCKER) rmi
-DOCKER_RUN       := $(NV_DOCKER) run --rm --net=host
-DOCKER_IMAGES    := $(NV_DOCKER) images -q $(PKG_NAME)
-DOCKER_BUILD     := $(NV_DOCKER) build --build-arg USER_ID="$(shell id -u)" \
-                                       --build-arg CR_NAME="$(CR_NAME)" \
-                                       --build-arg CR_EMAIL="$(CR_EMAIL)" \
-                                       --build-arg PKG_NAME="$(PKG_NAME)" \
-                                       --build-arg PKG_VERS="$(PKG_VERS)" \
-                                       --build-arg PKG_REV="$(PKG_REV)" \
-                                       --build-arg PKG_ARCH="$(PKG_ARCH)"
+centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.03.2.ce-centos7 1.12.6-centos7
 
-.PHONY: all build install uninstall clean distclean tarball deb rpm
+17.09.0-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.0-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.09.0" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
-all: build
+17.06.2-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.06.2-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.06.2" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
-build: distclean
-	@mkdir -p $(BIN_DIR)
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
-	@$(DOCKER_RUN) -v $(BIN_DIR):/go/bin:Z $(PKG_NAME):$@
+17.03.2-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.03.2-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.03.2" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
-install: build
-	install -D -m 755 -t $(bindir) $(DOCKER_BIN)
-	install -D -m 755 -t $(bindir) $(PLUGIN_BIN)
+1.13.1-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.13.1-1" \
+                        --build-arg DOCKER_VERSION="docker-engine(= 1.13.1-0~ubuntu-xenial)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker1.13.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
-uninstall:
-	$(RM) $(bindir)/$(notdir $(DOCKER_BIN))
-	$(RM) $(bindir)/$(notdir $(PLUGIN_BIN))
+1.12.6-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.12.6-1" \
+                        --build-arg DOCKER_VERSION="docker-engine (= 1.12.6-0~ubuntu-xenial) | docker.io (= 1.12.6-0ubuntu1~16.04.1)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker1.12.6" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
-clean:
-	-@$(DOCKER_IMAGES) | xargs $(DOCKER_RMI) 2> /dev/null
-	-@$(DOCKER_RMI) golang:1.5 ubuntu:14.04 centos:7 2> /dev/null
+17.09.0.ce-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.09.0" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.09.0.ce" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker17.09.0.ce" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
 
-distclean:
-	@rm -rf $(BIN_DIR)
-	@rm -rf $(DIST_DIR)
+17.06.2.ce-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.06.2" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.06.2.ce" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker17.06.2.ce" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
 
-tarball: build
-	@mkdir -p $(DIST_DIR)
-	tar --transform='s;.*/;$(PKG_NAME)/;' -caf $(DIST_DIR)/$(PKG_NAME)_$(PKG_VERS)_$(PKG_ARCH).tar.xz $(BIN_DIR)/*
-	@printf "\nFind tarball at $(DIST_DIR)\n\n"
+17.03.2.ce-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.03.2" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.03.2.ce" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker17.03.2.ce" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
 
-deb: tarball
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
-	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
-	@printf "\nFind packages at $(DIST_DIR)\n\n"
-
-rpm: tarball
-	@$(DOCKER_BUILD) -t $(PKG_NAME):$@ -f Dockerfile.$@$(BUILD_ARCH) $(CURDIR)
-	@$(DOCKER_RUN) -ti -v $(DIST_DIR):/dist:Z -v $(BUILD_DIR):/build:Z $(PKG_NAME):$@
-	@printf "\nFind packages at $(DIST_DIR)\n\n"
+1.12.6-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker1.12.6" \
+                        --build-arg DOCKER_VERSION="docker = 2:1.12.6" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker1.12.6" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
