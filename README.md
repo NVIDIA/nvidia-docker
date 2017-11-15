@@ -6,13 +6,13 @@
 
 # Documentation
 
-The full documentation is available on the [repository wiki](https://github.com/NVIDIA/nvidia-docker/wiki).  
+The full documentation is available on the [repository wiki](https://github.com/NVIDIA/nvidia-docker/wiki), section "Version 1.0".  
 A good place to start is to understand [why nvidia-docker](https://github.com/NVIDIA/nvidia-docker/wiki/Motivation) is needed in the first place.
 
 
 # Quick start
 
-Assuming the NVIDIA drivers and Docker® Engine are properly installed (see [installation](https://github.com/NVIDIA/nvidia-docker/wiki/Installation))
+Assuming the NVIDIA drivers and Docker® Engine are properly installed (see [installation](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-1.0)))
 
 #### _Ubuntu distributions_
 ```sh
