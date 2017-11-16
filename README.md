@@ -1,6 +1,7 @@
 # Docker Engine Utility for NVIDIA GPUs
 
 [![GitHub license](https://img.shields.io/badge/license-New%20BSD-blue.svg?style=flat-square)](https://raw.githubusercontent.com/NVIDIA/nvidia-docker/master/LICENSE)
+[![Documentation](https://img.shields.io/badge/documentation-wiki-blue.svg?style=flat-square)](https://github.com/NVIDIA/nvidia-docker/wiki)
 [![Package repository](https://img.shields.io/badge/packages-repository-b956e8.svg?style=flat-square)](https://nvidia.github.io/nvidia-docker)
 
 ![nvidia-gpu-docker](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png)
@@ -9,15 +10,15 @@
 
 # Documentation
 
-The full documentation is available on the [repository wiki](https://github.com/NVIDIA/nvidia-docker/wiki).  
+The full documentation and frequently asked questions are available on the [repository wiki](https://github.com/NVIDIA/nvidia-docker/wiki).  
 
 ## Quickstart
 
-**If you have a custom `/etc/docker/daemon.json`, the `nvidia-docker2` package will override it.**  
+**If you have a custom `/etc/docker/daemon.json`, the `nvidia-docker2` package might override it.**  
 
 #### Xenial x86_64
 ```sh
-# If you have nvidia-docker 1.0 installed: we need to remove all existing GPU containers
+# If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 sudo apt-get purge -y nvidia-docker
 
@@ -28,18 +29,18 @@ curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docke
   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 
-# Install nvidia-docker2
+# Install nvidia-docker2 and reload the Docker daemon configuration
 sudo apt-get install -y nvidia-docker2
 sudo pkill -SIGHUP dockerd
 
-# Test nvidia-smi
+# Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
 
 #### CentOS/RHEL 7 x86_64
 
 ```sh
-# If you have nvidia-docker 1.0 installed: we need to remove all existing GPU containers
+# If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 sudo yum remove nvidia-docker
 
@@ -47,11 +48,11 @@ sudo yum remove nvidia-docker
 curl -s -L https://nvidia.github.io/nvidia-docker/centos7/x86_64/nvidia-docker.repo | \
   sudo tee /etc/yum.repos.d/nvidia-docker.repo
 
-# Install nvidia-docker2
+# Install nvidia-docker2 and reload the Docker daemon configuration
 sudo yum install -y nvidia-docker2
 sudo pkill -SIGHUP dockerd
 
-# Test nvidia-smi
+# Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
 
