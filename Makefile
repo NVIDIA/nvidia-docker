@@ -43,7 +43,7 @@ centos7: 17.09.0.ce-centos7 17.06.2.ce-centos7 17.03.2.ce-centos7 1.12.6-centos7
 
 1.13.1-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.13.1-1" \
-                        --build-arg DOCKER_VERSION="docker-engine(= 1.13.1-0~ubuntu-xenial)" \
+                        --build-arg DOCKER_VERSION="docker-engine (= 1.13.1-0~ubuntu-xenial) | docker.io (= 1.13.1-0ubuntu1~16.04.2)" \
                         --build-arg PKG_VERS="$(VERSION)+docker1.13.1" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
