@@ -9,22 +9,20 @@ If you feel something is missing or requires additional information, please let 
 #### Xenial x86_64
 
 ```bash
-curl -L https://nvidia.github.io/nvidia-docker/gpgkey | \
-sudo apt-key add -
-sudo tee /etc/apt/sources.list.d/nvidia-docker.list <<< \
-"deb https://nvidia.github.io/libnvidia-container/ubuntu16.04/amd64 /
-deb https://nvidia.github.io/nvidia-container-runtime/ubuntu16.04/amd64 /
-deb https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64 /"
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
+  sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docker.list | \
+  sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 ```
 
 #### Xenial ppc64le
 
 ```bash
-curl -L https://nvidia.github.io/nvidia-docker/gpgkey | \
-sudo apt-key add -
-sudo tee /etc/apt/sources.list.d/nvidia-docker.list <<< \
-"deb https://nvidia.github.io/nvidia-docker/ubuntu16.04/ppc64el /"
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
+  sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/ppc64el/nvidia-docker.list | \
+  sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
 ```
 
@@ -33,50 +31,12 @@ sudo apt-get update
 #### RHEL7 x86_64
 
 ```bash
-sudo tee /etc/yum.repos.d/nvidia-docker.repo <<EOF
-[libnvidia-container]
-name=libnvidia-container
-baseurl=https://nvidia.github.io/libnvidia-container/centos7/x86_64
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://nvidia.github.io/libnvidia-container/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-
-[nvidia-container-runtime]
-name=nvidia-container-runtime
-baseurl=https://nvidia.github.io/nvidia-container-runtime/centos7/x86_64
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://nvidia.github.io/nvidia-container-runtime/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-
-[nvidia-docker]
-name=nvidia-docker
-baseurl=https://nvidia.github.io/nvidia-docker/centos7/x86_64
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://nvidia.github.io/nvidia-docker/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-EOF
+curl -s -L https://nvidia.github.io/nvidia-docker/centos7/x86_64/nvidia-docker.repo | \
+  sudo tee /etc/yum.repos.d/nvidia-docker.repo
 ```
 
 #### RHEL7 ppc64le
 ```bash
-sudo tee /etc/yum.repos.d/nvidia-docker.repo <<EOF
-[nvidia-docker]
-name=nvidia-docker
-baseurl=https://nvidia.github.io/nvidia-docker/centos7/ppc64le
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://nvidia.github.io/nvidia-docker/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-EOF
+curl -s -L https://nvidia.github.io/nvidia-docker/centos7/ppc64le/nvidia-docker.repo | \
+  sudo tee /etc/yum.repos.d/nvidia-docker.repo
 ```
