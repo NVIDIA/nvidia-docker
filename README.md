@@ -14,6 +14,8 @@ The full documentation and frequently asked questions are available on the [repo
 
 ## Quickstart
 
+**Make sure you have docker installed using the docker repositories**
+
 **If you have a custom `/etc/docker/daemon.json`, the `nvidia-docker2` package might override it.**  
 
 #### Xenial x86_64
