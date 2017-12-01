@@ -18,7 +18,7 @@ while [ $# -gt 0 ]; do
             break
         ;;
         version)
-            printf "NVIDIA Docker: 2.0.0\n"
+            printf "NVIDIA Docker: 2.0.1\n"
             break
         ;;
     esac
