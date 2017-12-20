@@ -21,6 +21,9 @@ while [ $# -gt 0 ]; do
             printf "NVIDIA Docker: 2.0.1\n"
             break
         ;;
+        *)
+            break
+        ;;
     esac
 done
 
