@@ -2,9 +2,9 @@
 
 DOCKER ?= docker
 
-VERSION := 2.0.1
+VERSION := 2.0.2
 PKG_REV := 1
-RUNTIME_VERSION := 1.1.0
+RUNTIME_VERSION := 1.1.1
 
 DIST_DIR  := $(CURDIR)/dist
 
