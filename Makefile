@@ -13,11 +13,19 @@ DIST_DIR  := $(CURDIR)/dist
 
 all: xenial centos7 stretch
 
-xenial: 17.09.1-xenial 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
+xenial: 17.12.0-xenial 17.09.1-xenial 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
 
 centos7: 17.09.1.ce-centos7 17.09.0.ce-centos7 17.06.2.ce-centos7 17.03.2.ce-centos7 1.13.1-centos7 1.12.6-centos7
 
 stretch: 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2-stretch
+
+17.12.0-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.0-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.12.0" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
 17.09.1-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.1-1" \
