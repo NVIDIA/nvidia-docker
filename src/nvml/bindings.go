@@ -89,6 +89,39 @@ func RegisterEvent(es EventSet, event int) error {
 	return nil
 }
 
+func RegisterEventForDevice(es EventSet, event int, uuid string) error {
+	n, err := deviceGetCount()
+	if err != nil {
+		return err
+	}
+
+	var i uint
+	for i = 0; i < n; i++ {
+		h, err := deviceGetHandleByIndex(i)
+		if err != nil {
+			return err
+		}
+
+		duuid, err := h.deviceGetUUID()
+		if err != nil {
+			return err
+		}
+
+		if *duuid != uuid {
+			continue
+		}
+
+		r := C.nvmlDeviceRegisterEvents(h.dev, C.ulonglong(event), es.set)
+		if r != C.NVML_SUCCESS {
+			return errorString(r)
+		}
+
+		return nil
+	}
+
+	return fmt.Errorf("nvml: device not found")
+}
+
 func DeleteEventSet(es EventSet) {
 	C.nvmlEventSetFree(es.set)
 }
