@@ -6,8 +6,6 @@
 
 ![nvidia-gpu-docker](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png)
 
-**Warning: This project is based on an alpha release (libnvidia-container). It is already more stable than 1.0 but we need help testing it.**
-
 # Documentation
 
 The full documentation and frequently asked questions are available on the [repository wiki](https://github.com/NVIDIA/nvidia-docker/wiki).  
