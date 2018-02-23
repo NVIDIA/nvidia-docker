@@ -189,14 +189,6 @@ stretch: 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2
                         -t nvidia-docker2:$@ -f Dockerfile.amzn1 .
 	$(DOCKER) run --rm -v $(DIST_DIR)/amzn1:/dist:Z nvidia-docker2:$@
 
-17.09.0.ce-amzn1:
-	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.09.0" \
-                        --build-arg DOCKER_VERSION="docker = 17.09.0.ce" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV).docker17.09.0.ce" \
-                        -t nvidia-docker2:$@ -f Dockerfile.amzn1 .
-	$(DOCKER) run --rm -v $(DIST_DIR)/amzn1:/dist:Z nvidia-docker2:$@
-
 17.06.2.ce-amzn1:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.06.2" \
                         --build-arg DOCKER_VERSION="docker = 17.06.2.ce" \
@@ -210,21 +202,5 @@ stretch: 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2
                         --build-arg DOCKER_VERSION="docker = 17.03.2.ce" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV).docker17.03.2.ce" \
-                        -t nvidia-docker2:$@ -f Dockerfile.amzn1 .
-	$(DOCKER) run --rm -v $(DIST_DIR)/amzn1:/dist:Z nvidia-docker2:$@
-
-1.13.1-amzn1:
-	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker1.13.1" \
-                        --build-arg DOCKER_VERSION="docker = 2:1.13.1" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV).docker1.13.1" \
-                        -t nvidia-docker2:$@ -f Dockerfile.amzn1 .
-	$(DOCKER) run --rm -v $(DIST_DIR)/amzn1:/dist:Z nvidia-docker2:$@
-
-1.12.6-amzn1:
-	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker1.12.6" \
-                        --build-arg DOCKER_VERSION="docker = 2:1.12.6" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV).docker1.12.6" \
                         -t nvidia-docker2:$@ -f Dockerfile.amzn1 .
 	$(DOCKER) run --rm -v $(DIST_DIR)/amzn1:/dist:Z nvidia-docker2:$@
