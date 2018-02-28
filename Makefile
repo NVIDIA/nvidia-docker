@@ -11,7 +11,9 @@ DIST_DIR  := $(CURDIR)/dist
 .NOTPARALLEL:
 .PHONY: all
 
-all: xenial centos7 stretch
+all: trusty xenial centos7 stretch
+
+trusty: 17.12.0-trusty 17.09.1-trusty 17.09.0-trusty 17.06.2-trusty 17.03.2-trusty 1.13.1-trusty 1.12.6-trusty
 
 xenial: 17.12.1-xenial 17.12.0-xenial 17.09.1-xenial 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
 
@@ -26,6 +28,62 @@ stretch: 17.12.1-stretch 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
 	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
+
+17.12.0-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.0-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.12.0" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+17.09.1-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.1-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.09.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+17.09.0-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.09.0-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.09.0" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+17.06.2-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.06.2-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.06.2" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+17.03.2-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.03.2-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.03.2~ce-0~ubuntu-trusty) | docker-ee (= 17.03.2~ee-0~ubuntu-trusty)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.03.2" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+1.13.1-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.13.1-1" \
+                        --build-arg DOCKER_VERSION="docker-engine (= 1.13.1-0~ubuntu-trusty)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker1.13.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
+
+1.12.6-trusty:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker1.12.6-1" \
+                        --build-arg DOCKER_VERSION="docker-engine (= 1.12.6-0~ubuntu-trusty)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker1.12.6" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.trusty .
+	$(DOCKER) run --rm -v $(DIST_DIR)/trusty:/dist:Z nvidia-docker2:$@
 
 17.12.0-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.0-1" \
