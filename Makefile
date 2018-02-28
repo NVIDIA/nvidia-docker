@@ -13,11 +13,19 @@ DIST_DIR  := $(CURDIR)/dist
 
 all: xenial centos7 stretch
 
-xenial: 17.12.0-xenial 17.09.1-xenial 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
+xenial: 17.12.1-xenial 17.12.0-xenial 17.09.1-xenial 17.09.0-xenial 17.06.2-xenial 17.03.2-xenial 1.13.1-xenial 1.12.6-xenial
 
-centos7: 17.12.0.ce-centos7 17.09.1.ce-centos7 17.09.0.ce-centos7 17.06.2.ce-centos7 17.03.2.ce-centos7 1.13.1-centos7 1.12.6-centos7
+centos7: 17.12.1.ce-centos7 17.12.0.ce-centos7 17.09.1.ce-centos7 17.09.0.ce-centos7 17.06.2.ce-centos7 17.03.2.ce-centos7 1.13.1-centos7 1.12.6-centos7
 
-stretch: 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2-stretch
+stretch: 17.12.1-stretch 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2-stretch
+
+17.12.1-xenial:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.1-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.12.1~ce-0~ubuntu) | docker-ee (= 17.12.1~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.12.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.xenial .
+	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
 17.12.0-xenial:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.0-1" \
@@ -75,6 +83,14 @@ stretch: 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2
                         -t nvidia-docker2:$@ -f Dockerfile.xenial .
 	$(DOCKER) run --rm -v $(DIST_DIR)/xenial:/dist:Z nvidia-docker2:$@
 
+17.12.1.ce-centos7:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.12.1" \
+                        --build-arg DOCKER_VERSION="docker-ce = 17.12.1.ce" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker17.12.1.ce" \
+                        -t nvidia-docker2:$@ -f Dockerfile.centos7 .
+	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
+
 17.12.0.ce-centos7:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker17.12.0" \
                         --build-arg DOCKER_VERSION="docker-ce = 17.12.0.ce" \
@@ -130,6 +146,14 @@ stretch: 17.12.0-stretch 17.09.1-stretch 17.09.0-stretch 17.06.2-stretch 17.03.2
                         --build-arg PKG_REV="$(PKG_REV).docker1.12.6" \
                         -t nvidia-docker2:$@ -f Dockerfile.centos7 .
 	$(DOCKER) run --rm -v $(DIST_DIR)/centos7:/dist:Z nvidia-docker2:$@
+
+17.12.1-stretch:
+	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.1-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= 17.12.1~ce-0~debian)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.12.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t nvidia-docker2:$@ -f Dockerfile.stretch .
+	$(DOCKER) run --rm -v $(DIST_DIR)/stretch:/dist:Z nvidia-docker2:$@
 
 17.12.0-stretch:
 	$(DOCKER) build --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.0-1" \
