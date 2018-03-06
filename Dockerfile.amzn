@@ -1,4 +1,5 @@
-FROM amazonlinux:1
+ARG VERSION_ID
+FROM amazonlinux:${VERSION_ID}
 
 # packaging dependencies
 RUN yum install -y \

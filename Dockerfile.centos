@@ -1,4 +1,5 @@
-FROM centos:7
+ARG VERSION_ID
+FROM centos:${VERSION_ID}
 
 # packaging dependencies
 RUN yum install -y \

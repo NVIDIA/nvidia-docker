@@ -1,4 +1,5 @@
-FROM ubuntu:xenial
+ARG VERSION_ID
+FROM ubuntu:${VERSION_ID}
 
 # packaging dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

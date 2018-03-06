@@ -1,4 +1,5 @@
-FROM debian:stretch
+ARG VERSION_ID
+FROM debian:${VERSION_ID}
 
 # packaging dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
