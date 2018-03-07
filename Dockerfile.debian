@@ -20,7 +20,6 @@ ENV DEBEMAIL "cudatools@nvidia.com"
 ENV REVISION "$PKG_VERS-$PKG_REV"
 ENV RUNTIME_VERSION $RUNTIME_VERSION
 ENV DOCKER_VERSION $DOCKER_VERSION
-ENV DISTRIB "UNRELEASED"
 ENV SECTION ""
 
 # output directory
@@ -34,8 +33,9 @@ COPY daemon.json $DIST_DIR/daemon.json
 WORKDIR $DIST_DIR
 COPY debian ./debian
 
-RUN dch --create --package nvidia-docker2 -v "$REVISION" "v$REVISION" -D "$DISTRIB" && \
-    dch -r ""
+RUN sed -i "s;@VERSION@;${REVISION#*+};" debian/changelog && \
+    if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then exit 1; fi
 
-CMD debuild --preserve-env --dpkg-buildpackage-hook='sh debian/prepare' -i -us -uc -b && \
+CMD export DISTRIB="unstable" && \
+    debuild --preserve-env --dpkg-buildpackage-hook='sh debian/prepare' -i -us -uc -b && \
     mv /tmp/*.deb /dist
