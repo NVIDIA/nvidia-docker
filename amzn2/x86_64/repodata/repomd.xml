@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
+ <revision>1.0</revision>
+<data type="filelists">
+  <checksum type="sha512">2ae9c0e832d21383e2a9dbce5024b803cc46f35e3a58b114974b0c056a84f65acb59bf312856bd957bf6b25e45eec900fa10aeed03778467d61dff97bf63bd04</checksum>
+  <open-checksum type="sha512">1ad8a6f683b69300b75797674e897af6be56296c5e2eb182c8fad450c46501a4a0b09bb19d78441aa4463ba92a71f002eee0cae884564703bc29e51f73ca334e</open-checksum>
+  <location href="repodata/2ae9c0e832d21383e2a9dbce5024b803cc46f35e3a58b114974b0c056a84f65acb59bf312856bd957bf6b25e45eec900fa10aeed03778467d61dff97bf63bd04-filelists.xml.xz"/>
+  <timestamp>1520559481</timestamp>
+  <size>432</size>
+  <open-size>593</open-size>
+</data>
+<data type="other">
+  <checksum type="sha512">98f30b72c57ccc82bc94fd602420b6cccae3ceb2588dfc0f96360eaf62e2ccfe70820b77c8eed13feb452e0dca6e2d91b8af3b116e3f09edc675c4f062ba9500</checksum>
+  <open-checksum type="sha512">d5936ce71b13992c902e51cfeede7ab2bdd021c03b16c5cd55b07816e50ca6c0c0b8b46cea4267c2e21074fa11a7f4b03124ed8ec277fdaf63ccb3c32ba72c58</open-checksum>
+  <location href="repodata/98f30b72c57ccc82bc94fd602420b6cccae3ceb2588dfc0f96360eaf62e2ccfe70820b77c8eed13feb452e0dca6e2d91b8af3b116e3f09edc675c4f062ba9500-other.xml.xz"/>
+  <timestamp>1520559481</timestamp>
+  <size>356</size>
+  <open-size>381</open-size>
+</data>
+<data type="primary">
+  <checksum type="sha512">83faf6842fbab41d82f1a83b54d3d58f481d6bc3da6e5cc71f613048957fe93f149d808ee1dfba8e0bba08a46cd654441b2eb7a0789dc8e31d22b17a78909423</checksum>
+  <open-checksum type="sha512">c046bac1626cf2e9d741cc20aabcd37c6714ab330c56a5a275d1f71670421a49e63942c09871dc6187ddfd4a71a42c3ed78b85083a71c6bac3d491c05eca18f9</open-checksum>
+  <location href="repodata/83faf6842fbab41d82f1a83b54d3d58f481d6bc3da6e5cc71f613048957fe93f149d808ee1dfba8e0bba08a46cd654441b2eb7a0789dc8e31d22b17a78909423-primary.xml.xz"/>
+  <timestamp>1520559481</timestamp>
+  <size>904</size>
+  <open-size>1887</open-size>
+</data>
+</repomd>
