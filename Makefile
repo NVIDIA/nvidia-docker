@@ -13,15 +13,15 @@ DIST_DIR  := $(CURDIR)/dist
 
 all: ubuntu16.04 ubuntu14.04 debian9 debian8 centos7 amzn2 amzn1
 
-ubuntu16.04: $(addsuffix -ubuntu16.04, 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 17.03.2 1.13.1 1.12.6)
+ubuntu16.04: $(addsuffix -ubuntu16.04, 18.03.0, 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 17.03.2 1.13.1 1.12.6)
 
-ubuntu14.04: $(addsuffix -ubuntu14.04, 17.12.1 17.09.1 17.06.2 17.03.2)
+ubuntu14.04: $(addsuffix -ubuntu14.04, 18.03.0, 17.12.1 17.09.1 17.06.2 17.03.2)
 
-debian9: $(addsuffix -debian9, 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 17.03.2)
+debian9: $(addsuffix -debian9, 18.03.0, 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 17.03.2)
 
-debian8: $(addsuffix -debian8, 17.12.1 17.09.1 17.06.2)
+debian8: $(addsuffix -debian8, 18.03.0, 17.12.1 17.09.1 17.06.2)
 
-centos7: $(addsuffix -centos7, 17.12.1.ce 17.12.0.ce 17.09.1.ce 17.09.0.ce 17.06.2.ce 17.03.2.ce 1.13.1 1.12.6)
+centos7: $(addsuffix -centos7, 18.03.0, 17.12.1.ce 17.12.0.ce 17.09.1.ce 17.09.0.ce 17.06.2.ce 17.03.2.ce 1.13.1 1.12.6)
 
 amzn2: $(addsuffix -amzn2, 17.06.2.ce)
 
