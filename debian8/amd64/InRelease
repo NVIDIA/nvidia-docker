@@ -2,24 +2,24 @@
 Hash: SHA512
 
 Architectures: amd64
-Codename: stretch
+Codename: jessie
 Components: main
 Date: Wed, 27 Sep 2017 23:08:53 +0000
 Description: NVIDIA Docker Engine wrapper repository
 Label: NVIDIA CORPORATION <cudatools@nvidia.com>
 Origin: https://nvidia.github.io/nvidia-docker
-Suite: stretch
+Suite: jessie
 Version: 1.0
 SHA512:
- c4031477f9bd3abbb72417dca797f8581ede7111fdeb9d01cef9b1a959c5193367b8445cfaee144ecf98354599ef448d9f438b4cc7f5d0a2d21ff697a7b2201a             2667 Packages
- 58b66d3c1f8dfe83d9101c0cb8ceba949985274f6759f2e67194f2d33a932440389435c6d0436998787f0d8a0c607c3a7ac1ff62752ecc5500c8dd62d3b2f5ad              968 Packages.xz
+ 472a63d496758bf6b7ac0d89ea5f252f9050ab2eab05c481dba43e79060932d5c12ed9c72ecb459b4d9e8909eb6619c24678454a7222b2aff3a5cf2b849f5b79             3556 Packages
+ 28cdefc82d9f6ffccb365a17909704cde3dfa535a08d537f3ddf2ac19bf8036868ef6143e3d39282b367512c5950f39489744b2900b62abe4bd5e59d9f77cc35             1132 Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iQEcBAEBCgAGBQJaoeVaAAoJEMRbFnagTqVSCGAH/Ai8Xc1u65tUPRCd1mvKAv/A
-P+YelrI2+HgwSPXoaAaMhqgQQLPLPYC7mb32rDNLTRP9gd+3noaSd7G7V0uMshAz
-bkZ1Ft543QspWHvbgGvwosOXowpfSiPg3IyhkmK6+/il0+PN3wKJSSMShwv3lgkL
-caHkkThg32ZCh4W2RWArREOyH61M3k9k87JIxC7UJOivJrLQoZIesq61hC5tXmyD
-qSvsgbNixOPbIuI3jj9UPEr5gbDOzO2eTvGDATgq9Sg2kb2m+PHq1h6xawht0uTU
-vIG/bbdo9ENZuj+nRT7krxH8i0d6v933MkRoBPUdzoMRPKKGj3LJIGNJKdPkRHI=
-=+TVf
+iQEcBAEBCgAGBQJas+G/AAoJEMRbFnagTqVSRlwH/Rt2M4/7q6AT8UdrZZQbG+Ul
+vYQjHKhPzW3iDKlpbWX4+rkyma4uH+yMa/+oVHVQSjilplZoH4oehpYsWvpINpUz
+AT+kA4VQO3Be2ZiF4P31Y/Rt6gxzKv8JvDpZ5SQxQBY/H2eqL9hcuAq4b2Iks1dG
+m5wZdSfyPmZJ7pR0qi0z83b8vPi3vRaSwjY/CcPQodE7w1HHZcrMWPwGrj2y3C04
+im7o25HXon1dKg2229SvfQSFDTiIiwPUeMfOjxj7EITd+rIxDF/0p83PM9wOq0wH
+clcdIFv45basAzcfYLgW5Lv9PYxgQDC3HTw751gBMk/fSoC+Gdbph63At+hYVKQ=
+=US0y
 -----END PGP SIGNATURE-----

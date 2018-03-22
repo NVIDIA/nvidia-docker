@@ -2,24 +2,24 @@
 Hash: SHA512
 
 Architectures: amd64
-Codename: xenial
+Codename: trusty
 Components: main
 Date: Wed, 27 Sep 2017 23:08:53 +0000
 Description: NVIDIA Docker Engine wrapper repository
 Label: NVIDIA CORPORATION <cudatools@nvidia.com>
 Origin: https://nvidia.github.io/nvidia-docker
-Suite: xenial
+Suite: trusty
 Version: 1.0
 SHA512:
- 07f5e50a15738c815e6579e2164a15e006ff73900e4ef6bb892f1d249f1a54fdbe3f02ef265c8fee5d2c96985f00f42318a33f75cd8bc2c3bf78defd5decdbc9             5546 Packages
- dff1a9e7667b1681cd7ba98d9ed344109a446bab81a0dd456f080ff034dfecb95ba19bba5da4997c549acf0079f747b55255ab42996c65109287bd05c5794c10             1716 Packages.xz
+ 886cc435ad9323121c5c905e6e4df37a4cefcd32c2f19cff88e2cdd3cf7454618400a1622b0ef24dd470fd276871ab5334e366cccd0af8be38ddada72fa21ca0             6471 Packages
+ 45b8880289cd8b53d14103a59221cddfd623c5c75350e118ae28605505f1a1eeaafb18568a89dc24958211f74fcf471bce9a65c06e658e005578791ccff38244             1888 Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iQEcBAEBCgAGBQJaoeVJAAoJEMRbFnagTqVS/y8IANQ9WQsaTr7oz/3gz5hFzALq
-4lHZ9In/OQPd1nNp+cOLRj4ybdVCDaJrJ5XLVcB/J5Ik4DkmaRVg4g4KEJ52DJ3g
-iJKLchaxPJe8eWTZm7b9cYJuco5nEvepmgLNKbf0C3YsrX+1YTRyRMSEfKHiR2CG
-ETIqCJPz6w7QsEGUQAqzeeqVQ6r2Z1esthMOtICwpEFQRzJAreaqejlGqkQ0eaom
-nlR8OhP0+QnZCyPePKmk72/K9448iIwBuj3m/Brdvhao1P2hFXlnb5Ugqa/P5yRD
-s3VatRBd9cA002MyD4+qVV09FM1LWVNtjZnjNcBO3gtg8tkbOsKiEba6bmgCxD0=
-=SsGX
+iQEcBAEBCgAGBQJas+G3AAoJEMRbFnagTqVS/FMH/1xzACheyptANgb4DrS3LqAi
+vKhOggkxjwq54VBknPJjBmdjvG8hKgHGBxzylT+BYjYGqiOGHk4c955J44Q33E/n
+DrA64tKXGkEfw8lNj16jk0a7HDu0wFDHMcpOCimajWwQhNrdzRBhUqs5uv/qu/wW
+DdjyT4Fr5ZYbVKiulXCsiuc+xO2FtTQ3v6fMj7H6l+bq6Pjonir05cxuT4Hn9O7Q
+wKaJ9rYG4GhDNBc4kZyafthGBYjo5S9IkabatULoMWQPgX7R2h3TxONgfjBkOsLZ
+KRwu4wiDF1aaVhbX3BEirY4PkDLYgoUdTv3gRcv55DQ+ImVwYnPSXPVCgawwyu4=
+=/16G
 -----END PGP SIGNATURE-----
