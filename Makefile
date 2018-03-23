@@ -21,7 +21,7 @@ debian9: $(addsuffix -debian9, 18.03.0, 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 
 
 debian8: $(addsuffix -debian8, 18.03.0, 17.12.1 17.09.1 17.06.2)
 
-centos7: $(addsuffix -centos7, 18.03.0, 17.12.1.ce 17.12.0.ce 17.09.1.ce 17.09.0.ce 17.06.2.ce 17.03.2.ce 1.13.1 1.12.6)
+centos7: $(addsuffix -centos7, 18.03.0.ce, 17.12.1.ce 17.12.0.ce 17.09.1.ce 17.09.0.ce 17.06.2.ce 17.03.2.ce 1.13.1 1.12.6)
 
 amzn2: $(addsuffix -amzn2, 17.06.2.ce)
 
