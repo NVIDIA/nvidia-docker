@@ -1,435 +1,19 @@
 Package: nvidia-docker2
 Architecture: all
-Version: 2.0.2+docker17.12.0-1
+Version: 2.0.0+docker1.12.6-1
 Priority: optional
 Section: utils
 Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
 Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker17.12.0-1), docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)
+Depends: nvidia-container-runtime (= 1.0.0+docker1.12.6-1), docker-ce (= 1.12.6-0~ubuntu-xenial) | docker-ee (= 1.12.6-0~ubuntu-xenial) | docker-engine (= 1.12.6-0~ubuntu-xenial)
 Breaks: nvidia-docker
 Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker17.12.0-1_all.deb
-Size: 2782
-MD5sum: e7fa7d58ed4c49e799337bcff06518b8
-SHA1: aa62935175aaa31d03773c3daf83b92e52619b6c
-SHA256: e9baca900c17fb3da728f8eb50e03d53394dabe331be852d608e671f717eab20
-SHA512: 35a07f45a0016339650b7a489386959f23bb91d4ea2748e4f17c114bbdb713a08b8aa5768dc35f939c342a3cfbf65a6e560691ff3c7c387fb84c7ba8c8e713c3
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.0+docker17.03.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.0.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ce-0~ubuntu-xenial) | docker-engine (= 17.03.2~ce-0~ubuntu-xenial)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.0+docker17.03.2-1_all.deb
-Size: 2780
-MD5sum: 273b85c19c524f1052126283747e682b
-SHA1: 7c3b0f9bc962803ac7433c92088e6af5b542a6d0
-SHA256: 8aedd7a97a50c979acf6445b6cadcf7c6c4eaaae4b80aaa5e23aaa1d23dc7a3d
-SHA512: 46f746034f14a3d49abd046b6b40f6e1665aa5c961c49737407654ba3300ee6e67013d13d0505e5bafb769171e7ccf865bec5fe7878082744f2db36354cf7f22
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.1+docker17.03.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.1+docker17.03.2-1_all.deb
-Size: 2770
-MD5sum: 998bb1bf879a43a124658f427b269ec1
-SHA1: 83714ae4d480b60460c625d4a6d42059bd15375a
-SHA256: ba18f45a015a8b4d322f3a5c2675ba6a7d28cb9b8c344b647e2b77fa41c315ab
-SHA512: 3cc62517ffd17d829d009627fb1a527ad0b1175c6784913e409737bcdffb6e90f97b170cc5a0af747c628b972e85eb6d6162f457a558a5672deb069bf8e84e76
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker1.12.6-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker1.12.6-1), docker-engine (= 1.12.6-0~ubuntu-xenial) | docker.io (= 1.12.6-0ubuntu1~16.04.1)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker1.12.6-1_all.deb
-Size: 2816
-MD5sum: a438eb7123af02df664a066646e69cd2
-SHA1: 860c3c104199fb6df10a05e9d3f36bc70fc80436
-SHA256: 77fbb134b35bc3f7fda79ac210f9866373964a187fdf40f589ea1a5fb08cfb3b
-SHA512: c3fc17d6eeeffff9f34804a50c6ead5f1652c327ec79ac564944f011670f90f90d2a9cc8a70a784a043f6280ae7acec71f1ef2d566d62ea631efb66a6d6b5814
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.2+docker17.09.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker17.09.1-1_all.deb
-Size: 2788
-MD5sum: 3870794b5117ed3dc894ca30693b8680
-SHA1: daac19192ef95c7b72c1cd9878b6ba54d7547e59
-SHA256: de87574115b684468065e810e4e13517b9439edcff7baf1413be4e172b109b81
-SHA512: e7b97fdd2df6481e416ff8e36767b7cd670c303bd5819e76ea9004072bf62bb131d719357f0edadb8cb514e6e1d73030b3c9a667fab94ffc70591359f502b876
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.2+docker17.06.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker17.06.2-1_all.deb
-Size: 2782
-MD5sum: fc3fb10346c5f056c416ce725bdba084
-SHA1: 0ca3b32a84e309a068575c98947d66a80008ff61
-SHA256: 6a3e9ad03e258f0f719fd035cd84fdd87bb1c6849d8b2a11bdd571b7d727aa43
-SHA512: 37d5b8e13c020f4a24b83ce64343ec184a568911df7d42ef143f8159194bab5e26a87b69b0729d7cbe54b2d087d07cb434182e20138950c3c99fd006dbc41c2f
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.2+docker17.03.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker17.03.2-1_all.deb
-Size: 2788
-MD5sum: 87e8533c624030311e91ed701c0cd660
-SHA1: ab5f39e3c594332e98a07c8e96fb300ddc2aabf9
-SHA256: 007f0df92ba51392ffca437e6b6f41d75b456661982d91a9f42167b7c4d430f4
-SHA512: e1883b209ca5d0f15ccccccb869b0f9359603cedaf81b0c4b95f338e97c3d1e803a7d9a8dd01688e210e016e3beade036dfdb3a9d853de3341ebdc75e69287c0
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.03.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.03.2-1_all.deb
-Size: 2816
-MD5sum: 94731b88015d8e12e15c1f8ddce84fe1
-SHA1: 0f58a3bfa41056d676663cd0173c02c81f752d44
-SHA256: 5ce94573016f73ef4794cfc7e9e9d980653521de7c77f1ce86c491d661949b94
-SHA512: 4133d989f36cd73e1a197d5aff52367be290d802ecb7b7f95edc38f4830eed447c05404fe8481974bf037eda5e38cffee94db8de6d5a8c2aae68a2f42f3e090b
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.12.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.12.1-1), docker-ce (= 17.12.1~ce-0~ubuntu) | docker-ee (= 17.12.1~ee-0~ubuntu)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.12.1-1_all.deb
-Size: 2810
-MD5sum: 0eefcbe6e2a2a9757b011b33e7a29fc3
-SHA1: 546f829244eab5232910451033132533bdc6fd96
-SHA256: c3b9c6ba087237cc0ba70f40e3a4bea9b74c5c304aec2a546718159c0e6189d1
-SHA512: 523708a244f30ceaa540a77fdc139852e799b0baabda2409f3bc966e8a8514e1256406d30b3d0794de49fceb2b150479cec2bd319bcedd3eabb982270816f619
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.09.0-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.09.0-1_all.deb
-Size: 2804
-MD5sum: 91670d9bcac4b172cba9d7b12026266b
-SHA1: b2e03ba8766e2c7c973899070075ffb555b91ecc
-SHA256: 26b89153747bdea4c7400eeaa76608b4ddac8aefd5103a904e94657429f7311d
-SHA512: 0b978bc3ea174450b6c91b332a8ef23bfc99d00b27161dfab49dea0c78aa3a3ed2fef4c1a32936d761d359c266226096f59d26374d1098d3baa0f537eb7e6cec
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.1+docker1.13.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.0+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.1+docker1.13.1-1_all.deb
-Size: 2754
-MD5sum: cc0dd357f339054305aad72f2b14066f
-SHA1: df5e578ef85adf55098b0ced59cd507cc68651fd
-SHA256: e2b82769f4620f8670398a3d8c0b277e9e2bfb749cf57a8b5a89990e30222146
-SHA512: 29d32551a164af44b789171d9a5032baa63b8dc52bcf82ff6dbfc6c1a873b65624b485cd3811aeec838e60c0bcf5e275ba7634c87fffafa20196a5345a2a51dc
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.0+docker17.06.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.0.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ce-0~ubuntu) | docker-engine (= 17.06.2~ce-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.0+docker17.06.2-1_all.deb
-Size: 2774
-MD5sum: 466bf746b7a34b84e9a52465c199b5c4
-SHA1: aef101bc3e4bc7f620c8c62bce6d76010e4f4817
-SHA256: baddc55ac044b29cd67a560dcd12da56d2b5a71f7da60a56555af017e2765446
-SHA512: 58e5f7220edfff109f4e7c4eecd58ab75f3a8a6255d8f97251135edbf81c6b3a818939ade3997877fba7f3574251ea61fed8beca6b1f19dbdb296f8d2176bd59
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker
-Architecture: amd64
-Version: 1.0.0-1
-Priority: optional
-Section: devel
-Maintainer: NVIDIA CORPORATION <digits@nvidia.com>
-Installed-Size: 13737
-Depends: init-system-helpers (>= 1.13~), sysv-rc (>= 2.88dsf-24) | file-rc (>= 0.8.16), libc6 (>= 2.3.3), adduser, docker-engine (>= 1.9.0), libcap2-bin
-Filename: ./nvidia-docker_1.0.0-1_amd64.deb
-Size: 2263532
-MD5sum: 4572a32fe599949381f83c44f8fc57f9
-SHA1: ba7dffeb4aba106d041976dd6cc8dae790cb3d4b
-SHA256: 235c3817e70ee6dd266783ef7f2c6ab11e57b2a68bf2586d690cde0da63cb2b2
-SHA512: 8050039f5811388bbb38aa28976141e04e4b5eba28bac916a861eb8b673bca513ce6d0915be5e3ea56d4c412b69443747024fee85a875ada0c1e2645667b5b85
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: NVIDIA Docker container tools
- NVIDIA Docker provides utilities to extend the Docker CLI allowing users
- to build and run GPU applications as lightweight containers.
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.1+docker17.09.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.0+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.1+docker17.09.1-1_all.deb
-Size: 2782
-MD5sum: 0d88c02e5db52b84b38c4befd3b40e77
-SHA1: faef111c53195cb4ceb23b9a21bd7c9f78c909be
-SHA256: 32a9035d345e80f42487b2486fa66e0b3782a0e56b87e5072ad99d2be98e3f77
-SHA512: 5918aef96d58d6a865490e28df06aeea020da0065de71ced6d06bf036e8d9fd1f48d71b565f947a20f670fc9363e05a7297a3afbe8ff855d982e47006f5a802d
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.12.0-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.12.0-1), docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.12.0-1_all.deb
-Size: 2802
-MD5sum: e4f7d2117dcc1fd6263bac99ef7ece46
-SHA1: 7c50e54c1c63a4a4452eb302d90ce5fdf416a70c
-SHA256: 6570b9ff6305a39a9171db1c0d7958d7fb682b27f9e2f720ca8ea9b5de9bef92
-SHA512: 8bc0dd3634da9e69ad22d43918b400bed7423c1dcdde32b78465ce0b59567dbdad5e29a60e1a8d6f0776832f34b38a80f7dc15b134c9dddf66cc4a42db2b4a6d
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.2+docker1.13.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial) | docker.io (= 1.13.1-0ubuntu1~16.04.2)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker1.13.1-1_all.deb
-Size: 2798
-MD5sum: 84f8cde358d7a887656a941499982542
-SHA1: bcc861fbb175a79658943470c23271e152b44f50
-SHA256: cd3c13e18b089d6b2c10e5c50a6f7e85253361201201d9d39f135dc0dd90af29
-SHA512: e79c69f773ca4c638529bd3bd49309f9ef17251e34923f95717c62ab3e429a550ff804878a91bc0fade273443c3f25bb6a4c5156a47ce7f6d01cf4edfc95f55d
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.06.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.06.2-1_all.deb
-Size: 2810
-MD5sum: 96bde3280019665b45b7670f61c1b9bc
-SHA1: 97a960d996fdf5e5602aba626654f9b9633ee603
-SHA256: d7c8952ae268dc3adb2b4b8c5552723461620c35ad5a8a5108b189d86634a341
-SHA512: bf060ae538ce00f7ebcdd7399fca473071f35527e11ac93497867894652d141f6a56a3dabd03b704e661b3fb3d636ee91c76ba8f2b52b1b3ac3612176a8fa42c
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker1.13.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial) | docker.io (= 1.13.1-0ubuntu1~16.04.2)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker1.13.1-1_all.deb
-Size: 2812
-MD5sum: ee18b86f932e3b8b8735197233e96b0f
-SHA1: 25648b8ba5dc2ca1c0e8767faf98813d8765f522
-SHA256: 765c05f558f43ada8bd2ae4542ae2dbb2647a6508456af628e25d45306160a63
-SHA512: a675df9b5ab81ec4223e5c715a9f5caa82bbc78ddd965f8c855aec97c619a096101b82e260178b79a2627da0798a77de1fc437dad5648d299e0f36d95ab7c78b
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker
-Architecture: amd64
-Version: 1.0.1-1
-Priority: optional
-Section: devel
-Maintainer: NVIDIA CORPORATION <digits@nvidia.com>
-Installed-Size: 13741
-Depends: init-system-helpers (>= 1.13~), sysv-rc (>= 2.88dsf-24) | file-rc (>= 0.8.16), libc6 (>= 2.3.3), adduser, docker-engine (>= 1.9.0) | docker-ce | docker-ee, libcap2-bin
-Filename: ./nvidia-docker_1.0.1-1_amd64.deb
-Size: 2266050
-MD5sum: 1063bc3d3abd6cdb211a9c04e357dfeb
-SHA1: 91ff9e0af3b293e9739f3b2e5622ab3ddbb79d2c
-SHA256: 9fbfd98f87ef2fd2e2137e3ba59431890dde6caf96f113ea0a1bd15bb3e51afa
-SHA512: 72e1cf20b6da03bac86b6e55617bb47753f921f3bbea819df28b2ff032f2e30a3910a79df13f47db20d2475ea96d6f5efe050dc216d015fbac351396f7e46d1f
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: NVIDIA Docker container tools
- NVIDIA Docker provides utilities to extend the Docker CLI allowing users
- to build and run GPU applications as lightweight containers.
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.0+docker17.06.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.0.0+docker17.06.1-1), docker-ce (= 17.06.1~ce-0~ubuntu) | docker-ee (= 17.06.1~ce-0~ubuntu) | docker-engine (= 17.06.1~ce-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.0+docker17.06.1-1_all.deb
-Size: 2766
-MD5sum: 20243e69a868cdd5455632290ee5f205
-SHA1: c2271e25b7d1583050b82312fae568cd5b9cf4b8
-SHA256: b502d4a9f693430bb04ed398d4c67de7066b37f1ccb0d3559758f658b8bd5952
-SHA512: 84791c5d81adc9edc28510ef83cb9576a77a14ff3117982bab25aefd941de864ef23fbf892adb4e711430e31450fe4e33141e62bcfd1d7178d7897691c25649c
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.1+docker17.06.2-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.1+docker17.06.2-1_all.deb
-Size: 2768
-MD5sum: c2edbe7b14f30e0a5407ac73cbf84d67
-SHA1: dde63729d37724728fcf629440b1d84d1b48abf9
-SHA256: e10f3f85670ab1ae4d59d35f5eb6b08bedb316beca09a05f2b9746fbb5d75e5f
-SHA512: a8f53f2519644421a1016de54f3d62c71f2e1b4f87377c150994b59d1c62136589c972875cd44f2b1d486e856fed7be440284e6b057fd54ffe31abf704b0c021
+Filename: ./nvidia-docker2_2.0.0+docker1.12.6-1_all.deb
+Size: 2776
+MD5sum: ff032ce9c95d2b9634229805455d48ef
+SHA1: 16128dbe3963e3e4655a75e86c73ba3cf5d05d87
+SHA256: 5c15ad7a58681a196e38ec38170f781875560186c8dc5a2a0ca662b5ce329d4b
+SHA512: 0814dcf3625981ab064f919d17c8f8b96e7869006ebec98cc734cb4e4f5eb878626d6503da17b3534ddceb6e26cf1c03be1cd305ba03272cdc9b299422659f86
 Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
 Description: nvidia-docker CLI wrapper
  Replaces nvidia-docker with a new implementation based on
@@ -458,6 +42,69 @@ Description: nvidia-docker CLI wrapper
 
 Package: nvidia-docker2
 Architecture: all
+Version: 2.0.0+docker17.03.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.0.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ce-0~ubuntu-xenial) | docker-engine (= 17.03.2~ce-0~ubuntu-xenial)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.0+docker17.03.2-1_all.deb
+Size: 2780
+MD5sum: 273b85c19c524f1052126283747e682b
+SHA1: 7c3b0f9bc962803ac7433c92088e6af5b542a6d0
+SHA256: 8aedd7a97a50c979acf6445b6cadcf7c6c4eaaae4b80aaa5e23aaa1d23dc7a3d
+SHA512: 46f746034f14a3d49abd046b6b40f6e1665aa5c961c49737407654ba3300ee6e67013d13d0505e5bafb769171e7ccf865bec5fe7878082744f2db36354cf7f22
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.0+docker17.06.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.0.0+docker17.06.1-1), docker-ce (= 17.06.1~ce-0~ubuntu) | docker-ee (= 17.06.1~ce-0~ubuntu) | docker-engine (= 17.06.1~ce-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.0+docker17.06.1-1_all.deb
+Size: 2766
+MD5sum: 20243e69a868cdd5455632290ee5f205
+SHA1: c2271e25b7d1583050b82312fae568cd5b9cf4b8
+SHA256: b502d4a9f693430bb04ed398d4c67de7066b37f1ccb0d3559758f658b8bd5952
+SHA512: 84791c5d81adc9edc28510ef83cb9576a77a14ff3117982bab25aefd941de864ef23fbf892adb4e711430e31450fe4e33141e62bcfd1d7178d7897691c25649c
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.0+docker17.06.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.0.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ce-0~ubuntu) | docker-engine (= 17.06.2~ce-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.0+docker17.06.2-1_all.deb
+Size: 2774
+MD5sum: 466bf746b7a34b84e9a52465c199b5c4
+SHA1: aef101bc3e4bc7f620c8c62bce6d76010e4f4817
+SHA256: baddc55ac044b29cd67a560dcd12da56d2b5a71f7da60a56555af017e2765446
+SHA512: 58e5f7220edfff109f4e7c4eecd58ab75f3a8a6255d8f97251135edbf81c6b3a818939ade3997877fba7f3574251ea61fed8beca6b1f19dbdb296f8d2176bd59
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
 Version: 2.0.0+docker17.09.0-1
 Priority: optional
 Section: utils
@@ -472,69 +119,6 @@ MD5sum: bb923aae077123c9703d79f090cd0030
 SHA1: ee35ec1bb37ef8713742a174523c8acdb55601e4
 SHA256: 566f55b2edef6bb30f8ba210d485a663825e313d9bcf6070de58d1bb2515265f
 SHA512: 5e6494dddfd3a650c264469ebb877c1899b1263050399d68c0197ad137bcda5ffeb6c6067658ce24f82c88967ead18f54ce70074f8439069860ee42634d9ae83
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.2+docker17.09.0-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.1+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.2+docker17.09.0-1_all.deb
-Size: 2788
-MD5sum: 5243a455a9de62ddd10992f59bb4f704
-SHA1: 62a64cb138bc7a95b36f5bef9c91218c85f3d332
-SHA256: 089dcb87fce7a5932df062befb60f255c7e3cc51e9ccdcf72812f51b37995aca
-SHA512: a97fc31fdb33f4e4dcbe49af906c67e0c07df69c2445720a5d58a676b00af0799ee60a8ca0b2d7fd2f73011ea37a1933efcf2071d4d8da59fdb9df42f1a6e842
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.3+docker17.09.1-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 2.0.0+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
-Breaks: nvidia-docker (<< 2.0.0)
-Replaces: nvidia-docker (<< 2.0.0)
-Filename: ./nvidia-docker2_2.0.3+docker17.09.1-1_all.deb
-Size: 2808
-MD5sum: 3d682728d051b65910bbfb8f918d7aad
-SHA1: 434af683634f5a4bd4ec7c1a5118a7751bc94555
-SHA256: 03bcfcc0260515b2bc36b7117614dd440f4bda09d07b5dc83e3743c6dea50719
-SHA512: 27b6accb82abc6d4f6f40a991fe949a2defba594f85657f062388a625f55bd98c9715a384a0344e0877831dbfe610ffab862fc30612c1f15cca92e8627d4a60e
-Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
-Description: nvidia-docker CLI wrapper
- Replaces nvidia-docker with a new implementation based on
- nvidia-container-runtime
-
-Package: nvidia-docker2
-Architecture: all
-Version: 2.0.0+docker1.12.6-1
-Priority: optional
-Section: utils
-Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
-Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.0.0+docker1.12.6-1), docker-ce (= 1.12.6-0~ubuntu-xenial) | docker-ee (= 1.12.6-0~ubuntu-xenial) | docker-engine (= 1.12.6-0~ubuntu-xenial)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.0+docker1.12.6-1_all.deb
-Size: 2776
-MD5sum: ff032ce9c95d2b9634229805455d48ef
-SHA1: 16128dbe3963e3e4655a75e86c73ba3cf5d05d87
-SHA256: 5c15ad7a58681a196e38ec38170f781875560186c8dc5a2a0ca662b5ce329d4b
-SHA512: 0814dcf3625981ab064f919d17c8f8b96e7869006ebec98cc734cb4e4f5eb878626d6503da17b3534ddceb6e26cf1c03be1cd305ba03272cdc9b299422659f86
 Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
 Description: nvidia-docker CLI wrapper
  Replaces nvidia-docker with a new implementation based on
@@ -563,6 +147,111 @@ Description: nvidia-docker CLI wrapper
 
 Package: nvidia-docker2
 Architecture: all
+Version: 2.0.1+docker1.13.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.0+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.1+docker1.13.1-1_all.deb
+Size: 2754
+MD5sum: cc0dd357f339054305aad72f2b14066f
+SHA1: df5e578ef85adf55098b0ced59cd507cc68651fd
+SHA256: e2b82769f4620f8670398a3d8c0b277e9e2bfb749cf57a8b5a89990e30222146
+SHA512: 29d32551a164af44b789171d9a5032baa63b8dc52bcf82ff6dbfc6c1a873b65624b485cd3811aeec838e60c0bcf5e275ba7634c87fffafa20196a5345a2a51dc
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.1+docker17.03.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.1+docker17.03.2-1_all.deb
+Size: 2770
+MD5sum: 998bb1bf879a43a124658f427b269ec1
+SHA1: 83714ae4d480b60460c625d4a6d42059bd15375a
+SHA256: ba18f45a015a8b4d322f3a5c2675ba6a7d28cb9b8c344b647e2b77fa41c315ab
+SHA512: 3cc62517ffd17d829d009627fb1a527ad0b1175c6784913e409737bcdffb6e90f97b170cc5a0af747c628b972e85eb6d6162f457a558a5672deb069bf8e84e76
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.1+docker17.06.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.1+docker17.06.2-1_all.deb
+Size: 2768
+MD5sum: c2edbe7b14f30e0a5407ac73cbf84d67
+SHA1: dde63729d37724728fcf629440b1d84d1b48abf9
+SHA256: e10f3f85670ab1ae4d59d35f5eb6b08bedb316beca09a05f2b9746fbb5d75e5f
+SHA512: a8f53f2519644421a1016de54f3d62c71f2e1b4f87377c150994b59d1c62136589c972875cd44f2b1d486e856fed7be440284e6b057fd54ffe31abf704b0c021
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.1+docker17.09.0-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.0+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.1+docker17.09.0-1_all.deb
+Size: 2770
+MD5sum: 72fb1417f200f23bcf5642ea675adf9e
+SHA1: 55464069dd588557aa3d1d74dadbf0e7eed5914d
+SHA256: aad65da8e5fb04fdffc2126d01c9ed85815d63f9ce0ee846f15413f1ccbce470
+SHA512: f4924c0a5cc2a5d0177e040649ce454ba5d22d410e5090714d60f3eb79f017e0a536a26f1625fcbdda14ddd019f3866d63ceab85b61b94a3a6178e5940401c3e
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.1+docker17.09.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.0+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.1+docker17.09.1-1_all.deb
+Size: 2782
+MD5sum: 0d88c02e5db52b84b38c4befd3b40e77
+SHA1: faef111c53195cb4ceb23b9a21bd7c9f78c909be
+SHA256: 32a9035d345e80f42487b2486fa66e0b3782a0e56b87e5072ad99d2be98e3f77
+SHA512: 5918aef96d58d6a865490e28df06aeea020da0065de71ced6d06bf036e8d9fd1f48d71b565f947a20f670fc9363e05a7297a3afbe8ff855d982e47006f5a802d
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
 Version: 2.0.2+docker1.12.6-1
 Priority: optional
 Section: utils
@@ -577,6 +266,300 @@ MD5sum: 3c4426048ab83b49dcf5b979979e5382
 SHA1: f3695eced06310c4a6e4e827bd6a2284580bb29b
 SHA256: f2406f7bf13905d08fab52116b9f5ad4ea8abc63218777617463238dd839710a
 SHA512: 5942c81cd48ab8fb9e0f8f4f179b161da3d28e940316708b1f58fe4b9f7e5e251556cef306560cf4e938ccb2f8c7c7dedcb33ba92f80dfe61038381ba54d8818
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker1.13.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial) | docker.io (= 1.13.1-0ubuntu1~16.04.2)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker1.13.1-1_all.deb
+Size: 2798
+MD5sum: 84f8cde358d7a887656a941499982542
+SHA1: bcc861fbb175a79658943470c23271e152b44f50
+SHA256: cd3c13e18b089d6b2c10e5c50a6f7e85253361201201d9d39f135dc0dd90af29
+SHA512: e79c69f773ca4c638529bd3bd49309f9ef17251e34923f95717c62ab3e429a550ff804878a91bc0fade273443c3f25bb6a4c5156a47ce7f6d01cf4edfc95f55d
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker17.03.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker17.03.2-1_all.deb
+Size: 2788
+MD5sum: 87e8533c624030311e91ed701c0cd660
+SHA1: ab5f39e3c594332e98a07c8e96fb300ddc2aabf9
+SHA256: 007f0df92ba51392ffca437e6b6f41d75b456661982d91a9f42167b7c4d430f4
+SHA512: e1883b209ca5d0f15ccccccb869b0f9359603cedaf81b0c4b95f338e97c3d1e803a7d9a8dd01688e210e016e3beade036dfdb3a9d853de3341ebdc75e69287c0
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker17.06.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker17.06.2-1_all.deb
+Size: 2782
+MD5sum: fc3fb10346c5f056c416ce725bdba084
+SHA1: 0ca3b32a84e309a068575c98947d66a80008ff61
+SHA256: 6a3e9ad03e258f0f719fd035cd84fdd87bb1c6849d8b2a11bdd571b7d727aa43
+SHA512: 37d5b8e13c020f4a24b83ce64343ec184a568911df7d42ef143f8159194bab5e26a87b69b0729d7cbe54b2d087d07cb434182e20138950c3c99fd006dbc41c2f
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker17.09.0-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker17.09.0-1_all.deb
+Size: 2788
+MD5sum: 5243a455a9de62ddd10992f59bb4f704
+SHA1: 62a64cb138bc7a95b36f5bef9c91218c85f3d332
+SHA256: 089dcb87fce7a5932df062befb60f255c7e3cc51e9ccdcf72812f51b37995aca
+SHA512: a97fc31fdb33f4e4dcbe49af906c67e0c07df69c2445720a5d58a676b00af0799ee60a8ca0b2d7fd2f73011ea37a1933efcf2071d4d8da59fdb9df42f1a6e842
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker17.09.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker17.09.1-1_all.deb
+Size: 2788
+MD5sum: 3870794b5117ed3dc894ca30693b8680
+SHA1: daac19192ef95c7b72c1cd9878b6ba54d7547e59
+SHA256: de87574115b684468065e810e4e13517b9439edcff7baf1413be4e172b109b81
+SHA512: e7b97fdd2df6481e416ff8e36767b7cd670c303bd5819e76ea9004072bf62bb131d719357f0edadb8cb514e6e1d73030b3c9a667fab94ffc70591359f502b876
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.2+docker17.12.0-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 1.1.1+docker17.12.0-1), docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)
+Breaks: nvidia-docker
+Replaces: nvidia-docker
+Filename: ./nvidia-docker2_2.0.2+docker17.12.0-1_all.deb
+Size: 2782
+MD5sum: e7fa7d58ed4c49e799337bcff06518b8
+SHA1: aa62935175aaa31d03773c3daf83b92e52619b6c
+SHA256: e9baca900c17fb3da728f8eb50e03d53394dabe331be852d608e671f717eab20
+SHA512: 35a07f45a0016339650b7a489386959f23bb91d4ea2748e4f17c114bbdb713a08b8aa5768dc35f939c342a3cfbf65a6e560691ff3c7c387fb84c7ba8c8e713c3
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker1.12.6-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker1.12.6-1), docker-engine (= 1.12.6-0~ubuntu-xenial) | docker.io (= 1.12.6-0ubuntu1~16.04.1)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker1.12.6-1_all.deb
+Size: 2816
+MD5sum: a438eb7123af02df664a066646e69cd2
+SHA1: 860c3c104199fb6df10a05e9d3f36bc70fc80436
+SHA256: 77fbb134b35bc3f7fda79ac210f9866373964a187fdf40f589ea1a5fb08cfb3b
+SHA512: c3fc17d6eeeffff9f34804a50c6ead5f1652c327ec79ac564944f011670f90f90d2a9cc8a70a784a043f6280ae7acec71f1ef2d566d62ea631efb66a6d6b5814
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker1.13.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker1.13.1-1), docker-engine (= 1.13.1-0~ubuntu-xenial) | docker.io (= 1.13.1-0ubuntu1~16.04.2)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker1.13.1-1_all.deb
+Size: 2812
+MD5sum: ee18b86f932e3b8b8735197233e96b0f
+SHA1: 25648b8ba5dc2ca1c0e8767faf98813d8765f522
+SHA256: 765c05f558f43ada8bd2ae4542ae2dbb2647a6508456af628e25d45306160a63
+SHA512: a675df9b5ab81ec4223e5c715a9f5caa82bbc78ddd965f8c855aec97c619a096101b82e260178b79a2627da0798a77de1fc437dad5648d299e0f36d95ab7c78b
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.03.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.03.2-1), docker-ce (= 17.03.2~ce-0~ubuntu-xenial) | docker-ee (= 17.03.2~ee-0~ubuntu-xenial)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.03.2-1_all.deb
+Size: 2816
+MD5sum: 94731b88015d8e12e15c1f8ddce84fe1
+SHA1: 0f58a3bfa41056d676663cd0173c02c81f752d44
+SHA256: 5ce94573016f73ef4794cfc7e9e9d980653521de7c77f1ce86c491d661949b94
+SHA512: 4133d989f36cd73e1a197d5aff52367be290d802ecb7b7f95edc38f4830eed447c05404fe8481974bf037eda5e38cffee94db8de6d5a8c2aae68a2f42f3e090b
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.06.2-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.06.2-1), docker-ce (= 17.06.2~ce-0~ubuntu) | docker-ee (= 17.06.2~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.06.2-1_all.deb
+Size: 2810
+MD5sum: 96bde3280019665b45b7670f61c1b9bc
+SHA1: 97a960d996fdf5e5602aba626654f9b9633ee603
+SHA256: d7c8952ae268dc3adb2b4b8c5552723461620c35ad5a8a5108b189d86634a341
+SHA512: bf060ae538ce00f7ebcdd7399fca473071f35527e11ac93497867894652d141f6a56a3dabd03b704e661b3fb3d636ee91c76ba8f2b52b1b3ac3612176a8fa42c
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.09.0-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.09.0-1_all.deb
+Size: 2804
+MD5sum: 91670d9bcac4b172cba9d7b12026266b
+SHA1: b2e03ba8766e2c7c973899070075ffb555b91ecc
+SHA256: 26b89153747bdea4c7400eeaa76608b4ddac8aefd5103a904e94657429f7311d
+SHA512: 0b978bc3ea174450b6c91b332a8ef23bfc99d00b27161dfab49dea0c78aa3a3ed2fef4c1a32936d761d359c266226096f59d26374d1098d3baa0f537eb7e6cec
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.09.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.09.1-1), docker-ce (= 17.09.1~ce-0~ubuntu) | docker-ee (= 17.09.1~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.09.1-1_all.deb
+Size: 2808
+MD5sum: 3d682728d051b65910bbfb8f918d7aad
+SHA1: 434af683634f5a4bd4ec7c1a5118a7751bc94555
+SHA256: 03bcfcc0260515b2bc36b7117614dd440f4bda09d07b5dc83e3743c6dea50719
+SHA512: 27b6accb82abc6d4f6f40a991fe949a2defba594f85657f062388a625f55bd98c9715a384a0344e0877831dbfe610ffab862fc30612c1f15cca92e8627d4a60e
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.12.0-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.12.0-1), docker-ce (= 17.12.0~ce-0~ubuntu) | docker-ee (= 17.12.0~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.12.0-1_all.deb
+Size: 2802
+MD5sum: e4f7d2117dcc1fd6263bac99ef7ece46
+SHA1: 7c50e54c1c63a4a4452eb302d90ce5fdf416a70c
+SHA256: 6570b9ff6305a39a9171db1c0d7958d7fb682b27f9e2f720ca8ea9b5de9bef92
+SHA512: 8bc0dd3634da9e69ad22d43918b400bed7423c1dcdde32b78465ce0b59567dbdad5e29a60e1a8d6f0776832f34b38a80f7dc15b134c9dddf66cc4a42db2b4a6d
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker17.12.1-1
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker17.12.1-1), docker-ce (= 17.12.1~ce-0~ubuntu) | docker-ee (= 17.12.1~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker17.12.1-1_all.deb
+Size: 2810
+MD5sum: 0eefcbe6e2a2a9757b011b33e7a29fc3
+SHA1: 546f829244eab5232910451033132533bdc6fd96
+SHA256: c3b9c6ba087237cc0ba70f40e3a4bea9b74c5c304aec2a546718159c0e6189d1
+SHA512: 523708a244f30ceaa540a77fdc139852e799b0baabda2409f3bc966e8a8514e1256406d30b3d0794de49fceb2b150479cec2bd319bcedd3eabb982270816f619
 Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
 Description: nvidia-docker CLI wrapper
  Replaces nvidia-docker with a new implementation based on
@@ -605,22 +588,60 @@ Description: nvidia-docker CLI wrapper
 
 Package: nvidia-docker2
 Architecture: all
-Version: 2.0.1+docker17.09.0-1
+Version: 2.0.3+docker18.03.1-1
 Priority: optional
 Section: utils
 Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
 Installed-Size: 18
-Depends: nvidia-container-runtime (= 1.1.0+docker17.09.0-1), docker-ce (= 17.09.0~ce-0~ubuntu) | docker-ee (= 17.09.0~ee-0~ubuntu)
-Breaks: nvidia-docker
-Replaces: nvidia-docker
-Filename: ./nvidia-docker2_2.0.1+docker17.09.0-1_all.deb
-Size: 2770
-MD5sum: 72fb1417f200f23bcf5642ea675adf9e
-SHA1: 55464069dd588557aa3d1d74dadbf0e7eed5914d
-SHA256: aad65da8e5fb04fdffc2126d01c9ed85815d63f9ce0ee846f15413f1ccbce470
-SHA512: f4924c0a5cc2a5d0177e040649ce454ba5d22d410e5090714d60f3eb79f017e0a536a26f1625fcbdda14ddd019f3866d63ceab85b61b94a3a6178e5940401c3e
+Depends: nvidia-container-runtime (= 2.0.0+docker18.03.1-1), docker-ce (= 18.03.1~ce-0~ubuntu) | docker-ee (= 18.03.1~ee-0~ubuntu)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker18.03.1-1_all.deb
+Size: 2892
+MD5sum: 5c369863a8aae89049dece27e7a56836
+SHA1: a6dc3e8856e4784873cba15183e91ce4bed72322
+SHA256: 5dac4cb181365b9ee65add31651f942e6ea1f5ccb39452d53757c17c406c3af4
+SHA512: b0f4fc484280fb2e20289f4a2cc0b183f4371b6379956e866549d51c2e0e3e24ddb06a11ee42577a529f66b9b202c1ef1218174497d870c89847a3e46ea924d4
 Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
 Description: nvidia-docker CLI wrapper
  Replaces nvidia-docker with a new implementation based on
  nvidia-container-runtime
+
+Package: nvidia-docker
+Architecture: amd64
+Version: 1.0.0-1
+Priority: optional
+Section: devel
+Maintainer: NVIDIA CORPORATION <digits@nvidia.com>
+Installed-Size: 13737
+Depends: init-system-helpers (>= 1.13~), sysv-rc (>= 2.88dsf-24) | file-rc (>= 0.8.16), libc6 (>= 2.3.3), adduser, docker-engine (>= 1.9.0), libcap2-bin
+Filename: ./nvidia-docker_1.0.0-1_amd64.deb
+Size: 2263532
+MD5sum: 4572a32fe599949381f83c44f8fc57f9
+SHA1: ba7dffeb4aba106d041976dd6cc8dae790cb3d4b
+SHA256: 235c3817e70ee6dd266783ef7f2c6ab11e57b2a68bf2586d690cde0da63cb2b2
+SHA512: 8050039f5811388bbb38aa28976141e04e4b5eba28bac916a861eb8b673bca513ce6d0915be5e3ea56d4c412b69443747024fee85a875ada0c1e2645667b5b85
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: NVIDIA Docker container tools
+ NVIDIA Docker provides utilities to extend the Docker CLI allowing users
+ to build and run GPU applications as lightweight containers.
+
+Package: nvidia-docker
+Architecture: amd64
+Version: 1.0.1-1
+Priority: optional
+Section: devel
+Maintainer: NVIDIA CORPORATION <digits@nvidia.com>
+Installed-Size: 13741
+Depends: init-system-helpers (>= 1.13~), sysv-rc (>= 2.88dsf-24) | file-rc (>= 0.8.16), libc6 (>= 2.3.3), adduser, docker-engine (>= 1.9.0) | docker-ce | docker-ee, libcap2-bin
+Filename: ./nvidia-docker_1.0.1-1_amd64.deb
+Size: 2266050
+MD5sum: 1063bc3d3abd6cdb211a9c04e357dfeb
+SHA1: 91ff9e0af3b293e9739f3b2e5622ab3ddbb79d2c
+SHA256: 9fbfd98f87ef2fd2e2137e3ba59431890dde6caf96f113ea0a1bd15bb3e51afa
+SHA512: 72e1cf20b6da03bac86b6e55617bb47753f921f3bbea819df28b2ff032f2e30a3910a79df13f47db20d2475ea96d6f5efe050dc216d015fbac351396f7e46d1f
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: NVIDIA Docker container tools
+ NVIDIA Docker provides utilities to extend the Docker CLI allowing users
+ to build and run GPU applications as lightweight containers.
 
