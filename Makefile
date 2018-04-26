@@ -11,7 +11,9 @@ DIST_DIR  := $(CURDIR)/dist
 .NOTPARALLEL:
 .PHONY: all
 
-all: ubuntu16.04 ubuntu14.04 debian9 debian8 centos7 amzn2 amzn1
+all: ubuntu18.04 ubuntu16.04 ubuntu14.04 debian9 debian8 centos7 amzn2 amzn1
+
+ubuntu18.04: $(addsuffix -ubuntu18.04, 17.12.1)
 
 ubuntu16.04: $(addsuffix -ubuntu16.04, 18.03.1 18.03.0 17.12.1 17.12.0 17.09.1 17.09.0 17.06.2 17.03.2 1.13.1 1.12.6)
 
@@ -27,6 +29,23 @@ amzn2: $(addsuffix -amzn2, 17.06.2.ce)
 
 amzn1: $(addsuffix -amzn1, 17.09.1.ce 17.06.2.ce 17.03.2.ce)
 
+%-ubuntu18.04:
+	$(DOCKER) build --build-arg VERSION_ID="18.04" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker$*-1" \
+                        --build-arg DOCKER_VERSION="docker-ce (= $*~ce-0~ubuntu) | docker-ee (= $*~ee-0~ubuntu)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker$*" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t "nvidia/nvidia-docker2/ubuntu:18.04-docker$*" -f Dockerfile.ubuntu .
+	$(DOCKER) run --rm -v $(DIST_DIR)/ubuntu18.04:/dist:Z "nvidia/nvidia-docker2/ubuntu:18.04-docker$*"
+
+17.12.1-ubuntu18.04:
+	$(DOCKER) build --build-arg VERSION_ID="18.04" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)+docker17.12.1-1" \
+                        --build-arg DOCKER_VERSION="docker.io (= 17.12.1-0ubuntu1)" \
+                        --build-arg PKG_VERS="$(VERSION)+docker17.12.1" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t "nvidia/nvidia-docker2/ubuntu:18.04-docker17.12.1" -f Dockerfile.ubuntu .
+	$(DOCKER) run --rm -v $(DIST_DIR)/ubuntu18.04:/dist:Z "nvidia/nvidia-docker2/ubuntu:18.04-docker17.12.1"
 
 %-ubuntu16.04:
 	$(DOCKER) build --build-arg VERSION_ID="16.04" \
