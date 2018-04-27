@@ -16,7 +16,7 @@ The full documentation and frequently asked questions are available on the [repo
 
 **If you have a custom `/etc/docker/daemon.json`, the `nvidia-docker2` package might override it.**  
 
-#### Ubuntu 14.04/16.04, Debian Jessie/Stretch
+#### Ubuntu 14.04/16.04/18.04, Debian Jessie/Stretch
 ```sh
 # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
@@ -38,7 +38,7 @@ sudo pkill -SIGHUP dockerd
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
 
-#### CentOS 7, RHEL 7.4, Amazon Linux 2
+#### CentOS 7, RHEL 7.4/7.5, Amazon Linux 2
 
 ```sh
 # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
