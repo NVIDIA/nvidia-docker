@@ -4,9 +4,15 @@ In order to setup the nvidia-docker repository for your distribution, follow the
 
 If you feel something is missing or requires additional information, please let us know by [filing a new issue](https://github.com/NVIDIA/nvidia-docker/issues/new).
 
+List of supported distributions:
+
+|         | Ubuntu 14.04 | Ubuntu 16.04 | Ubuntu 18.04 | Debian 8 | Debian 9 | Centos 7 | RHEL 7 | Amazon Linux 1 | Amazon Linux 2 |
+| ------- | :----------: | :----------: | :----------: | :------: | :------: | :------: | :----: | :------------: | :------------: |
+| x86_64  |      X       |      X       |       X      |     X    |    X     |    X     |    X   |        X       |        X       |
+| ppc64le |              |      X       |       X      |          |          |          |        |                |                |
+
 ## Debian-based distributions
 
-#### Ubuntu 14.04/16.04, Debian Jessie/Stretch
 ```bash
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
   sudo apt-key add -
@@ -16,17 +22,10 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update
 ```
 
-## CentOS/RHEL-based distributions
+## RHEL-based distributions
 
-#### CentOS 7, RHEL 7.4, Amazon Linux 2
 ```bash
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | \
-  sudo tee /etc/yum.repos.d/nvidia-docker.repo
-```
-
-#### Amazon Linux 1
-```bash
-curl -s -L https://nvidia.github.io/nvidia-docker/amzn1/nvidia-docker.repo | \
   sudo tee /etc/yum.repos.d/nvidia-docker.repo
 ```
