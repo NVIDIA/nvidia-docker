@@ -38,7 +38,7 @@ sudo pkill -SIGHUP dockerd
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
 
-#### CentOS 7, RHEL 7.4/7.5, Amazon Linux 2
+#### CentOS 7, RHEL 7.4/7.5, Amazon Linux 1/2
 
 ```sh
 # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
@@ -57,6 +57,7 @@ sudo pkill -SIGHUP dockerd
 # Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
+For `ppc64le`, look at the [FAQ](https://github.com/nvidia/nvidia-docker/wiki/Frequently-Asked-Questions#do-you-support-powerpc64-ppc64).
 
 #### Other distributions and architectures
 
