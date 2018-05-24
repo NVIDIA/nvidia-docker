@@ -38,7 +38,9 @@ sudo pkill -SIGHUP dockerd
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
 
-#### CentOS 7, RHEL 7.4/7.5, Amazon Linux 1/2
+#### CentOS 7 (docker-ce), RHEL 7.4/7.5 (docker-ce), Amazon Linux 1/2
+
+If you are **not** using the official `docker-ce` package on CentOS/RHEL, use the next section.
 
 ```sh
 # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
@@ -57,6 +59,32 @@ sudo pkill -SIGHUP dockerd
 # Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
+If `yum` reports a conflict on `/etc/docker/daemon.json` with the
+`docker` package, you need to use the next section instead.
+
+#### CentOS 7 (docker), RHEL 7.4/7.5 (docker)
+```sh
+# If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
+docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
+sudo yum remove nvidia-docker
+
+# Add the package repositories
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \
+  sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo
+
+# Install the nvidia runtime hook
+sudo yum install -y nvidia-container-runtime-hook
+sudo mkdir -p /usr/libexec/oci/hooks.d
+echo -e '#!/bin/sh\nPATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" exec nvidia-container-runtime-hook "$@"' | \
+  sudo tee /usr/libexec/oci/hooks.d/nvidia
+sudo chmod +x /usr/libexec/oci/hooks.d/nvidia
+
+# Test nvidia-smi with the latest official CUDA image
+# You can't use `--runtime=nvidia` with this setup.
+docker run --rm nvidia/cuda nvidia-smi
+```
+
 For `ppc64le`, look at the [FAQ](https://github.com/nvidia/nvidia-docker/wiki/Frequently-Asked-Questions#do-you-support-powerpc64-ppc64).
 
 #### Other distributions and architectures
