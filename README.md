@@ -38,6 +38,36 @@ $ sudo yum install -y nvidia-container-toolkit
 $ sudo systemctl restart docker
 ```
 
+#### openSUSE Leap 15.1 (docker-ce)
+
+Since openSUSE Leap 15.1 still has Docker 18.06, you have two options:
+
+**Option 1**: use the `Virtualization:containers` repository to fetch a more recent version of Docker
+
+```console
+# Upgrade Docker to 19.03+ first:
+$ zypper ar https://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_15.1/Virtualization:containers.repo
+$ zypper install --allow-vendor-change 'docker >= 19.03'  # accept the new signature
+
+# Add the package repositories
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+$ zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+
+$ sudo zypper install -y nvidia-container-toolkit
+$ sudo systemctl restart docker
+```
+
+**Option 2**: stay with the deprecated `nvidia-docker2` package for now (see also below)
+
+```console
+# Add the package repositories
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+$ zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+
+$ sudo zypper install -y nvidia-docker2  # accept the overwrite of /etc/docker/daemon.json
+$ sudo systemctl restart docker
+```
+
 ## Usage
 ```
 #### Test nvidia-smi with the latest official CUDA image
