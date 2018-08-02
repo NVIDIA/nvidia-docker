@@ -64,7 +64,7 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 If `yum` reports a conflict on `/etc/docker/daemon.json` with the
 `docker` package, you need to use the next section instead.
 
-For docker-ce on `ppc64le`, look at the [FAQ](https://github.com/nvidia/nvidia-docker/wiki/Frequently-Asked-Questions#do-you-support-powerpc64-ppc64).
+For docker-ce on `ppc64le`, look at the [FAQ](https://github.com/nvidia/nvidia-docker/wiki/Frequently-Asked-Questions#do-you-support-powerpc64-ppc64le).
 
 #### CentOS 7 (docker), RHEL 7.4/7.5 (docker)
 ```sh
