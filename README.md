@@ -79,10 +79,6 @@ curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidi
 
 # Install the nvidia runtime hook
 sudo yum install -y nvidia-container-runtime-hook
-sudo mkdir -p /usr/libexec/oci/hooks.d
-echo -e '#!/bin/sh\nPATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" exec nvidia-container-runtime-hook "$@"' | \
-  sudo tee /usr/libexec/oci/hooks.d/nvidia
-sudo chmod +x /usr/libexec/oci/hooks.d/nvidia
 
 # Test nvidia-smi with the latest official CUDA image
 # You can't use `--runtime=nvidia` with this setup.
