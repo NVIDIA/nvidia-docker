@@ -27,7 +27,7 @@ centos7: $(addsuffix -centos7, 18.06.1.ce 18.06.0.ce 18.03.1.ce 18.03.0.ce 17.12
 
 amzn2: $(addsuffix -amzn2, 18.06.1.ce 18.03.1.ce 17.06.2.ce)
 
-amzn1: $(addsuffix -amzn1, 18.03.1.ce 17.12.1.ce 17.09.1.ce 17.06.2.ce 17.03.2.ce)
+amzn1: $(addsuffix -amzn1, 18.06.1.ce 18.03.1.ce 17.12.1.ce 17.09.1.ce 17.06.2.ce 17.03.2.ce)
 
 18.06.1-ubuntu18.04:
 	$(DOCKER) build --build-arg VERSION_ID="18.04" \
