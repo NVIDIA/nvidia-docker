@@ -37,7 +37,7 @@ sudo apt-get install -y nvidia-docker2
 sudo pkill -SIGHUP dockerd
 
 # Test nvidia-smi with the latest official CUDA image
-docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
+docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ```
 
 #### CentOS 7 (docker-ce), RHEL 7.4/7.5 (docker-ce), Amazon Linux 1/2
@@ -59,7 +59,7 @@ sudo yum install -y nvidia-docker2
 sudo pkill -SIGHUP dockerd
 
 # Test nvidia-smi with the latest official CUDA image
-docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
+docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ```
 If `yum` reports a conflict on `/etc/docker/daemon.json` with the
 `docker` package, you need to use the next section instead.
@@ -82,7 +82,7 @@ sudo yum install -y nvidia-container-runtime-hook
 
 # Test nvidia-smi with the latest official CUDA image
 # You can't use `--runtime=nvidia` with this setup.
-docker run --rm nvidia/cuda nvidia-smi
+docker run --rm nvidia/cuda:9.0-base nvidia-smi
 ```
 
 #### Other distributions and architectures
