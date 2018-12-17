@@ -19,6 +19,9 @@ An introduction to the NVIDIA Container Runtime is also covered in our [blog pos
 **If you have a custom `/etc/docker/daemon.json`, the `nvidia-docker2` package might override it.**  
 
 #### Ubuntu 14.04/16.04/18.04, Debian Jessie/Stretch
+
+Ubuntu will install `docker.io` by default which isn't the latest version of Docker Engine. This implies that you will need to pin the version of nvidia-docker. [See more information here](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-20-if-im-not-using-the-latest-docker-version).
+
 ```sh
 # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
