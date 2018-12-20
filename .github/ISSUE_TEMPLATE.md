@@ -15,6 +15,7 @@ _Also, before reporting a new issue, please make sure that:_
 
 ### 3. Information to [attach](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/) (optional if deemed irrelevant)
 
+ - [ ] Some nvidia-container information: `nvidia-container-cli -k -d /dev/tty info`
  - [ ] Kernel version from `uname -a`
  - [ ] Any relevant kernel output lines from `dmesg`
  - [ ] Driver information from `nvidia-smi -a`
