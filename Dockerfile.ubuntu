@@ -25,7 +25,7 @@ ENV SECTION ""
 
 # output directory
 ENV DIST_DIR=/tmp/nvidia-docker2-$PKG_VERS
-RUN mkdir -p $DIST_DIR
+RUN mkdir -p $DIST_DIR /dist
 
 # nvidia-docker 2.0
 COPY nvidia-docker $DIST_DIR/nvidia-docker

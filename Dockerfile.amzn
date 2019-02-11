@@ -19,7 +19,7 @@ ENV DOCKER_VERSION $DOCKER_VERSION
 
 # output directory
 ENV DIST_DIR=/tmp/nvidia-container-runtime-$PKG_VERS/SOURCES
-RUN mkdir -p $DIST_DIR
+RUN mkdir -p $DIST_DIR /dist
 
 COPY nvidia-docker $DIST_DIR
 COPY daemon.json $DIST_DIR
