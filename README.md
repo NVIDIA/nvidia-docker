@@ -92,6 +92,19 @@ docker run --rm nvidia/cuda:9.0-base nvidia-smi
 
 Look at the [Installation section](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0)) of the wiki.
 
+## Changelog
+
+New nvidia-docker packages have been released for docker 18.09.2 and 18.06.2 addressing [CVE-2019-5736](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5736)
+
+Update nvidia-docker to adress runc critical vulnerability that allows specially-crafted containers to gain administrative privileges on the host.
+```sh
+# On Ubuntu/Debian
+sudo apt upgrade
+
+# On Centos/RHEL/Amazon Linux
+sudo yum upgrade
+```
+
 ## Issues and Contributing
 
 A signed copy of the [Contributor License Agreement](https://raw.githubusercontent.com/NVIDIA/nvidia-docker/master/CLA) needs to be provided to <a href="mailto:digits@nvidia.com">digits@nvidia.com</a> before any change can be accepted.
