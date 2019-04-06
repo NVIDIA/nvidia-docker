@@ -11,16 +11,16 @@ Origin: https://nvidia.github.io/nvidia-docker
 Suite: trusty
 Version: 1.0
 SHA512:
- b08727d6827e954348bb797ce4ce5e5e747bcb85759958ec5ceac82c81be028ff119d1dad0841fd762c7817f6eeebb203a2e57cae15f62d753871a8bc3b2f8f7            10183 Packages
- 300d236684a3b4a11d50787c13085ff7c7cc3c16bd6ba4bcaf7df158662f19445fc6ebc1ef7b8b2638c10910a67a063c3979dfd193c309403be52eb04a5ee4b8             2520 Packages.xz
+ 8a13a04fc7e40104de0aba1e8864d6e9d5457e269c8b47bdf3ce982b9d386bbe77c3a48e4f4c7a9ca3587e6e69bf5edd96cb5453d256193dec5d7d779b49e24e            11112 Packages
+ 9cec350c8dc3813c10802e6229f75450a59351970d923a7bbb8a236084ae387f1d121e44a5af1c5c041602e82511b75de113c2d20ce3f07797b0840ab04d3420             2672 Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEiLH4d5Jo/+sbd9/gxFsWdqBOpVIFAlymeTYACgkQxFsWdqBO
-pVJY2AgA20prdHUj31XDVqR07Pb9xEB5o/yetxjj8uwNO8EOG2LkFzYmHgT1zqJV
-Wgy9BclRYYyDBWMSwCMWkUuh+zy5r/h/p9hbmD6N/7F/OajpMziUGrq8xX3JgBOX
-7gX7pe+03qkwmrPDXXjyXWNBFy33dosV9kBjHoxlcCbus7m1OgpevLfyF5a3OKnS
-EpWBOpa0NqM4wXva0c4wof5QvwOenz4XcpTaiBnzwzAo0PmAvMKEoCGuu13EppmY
-8ehPgmMyeuXbhryfugphStna1ICndpzSBrerrFqjU8pePUEOQNJuxyOtfOxk1kNA
-BtaGFEnF/Gj7VoHQWmADb4XcgfGEdw==
-=LseB
+iQEzBAEBCgAdFiEEiLH4d5Jo/+sbd9/gxFsWdqBOpVIFAlyn7FMACgkQxFsWdqBO
+pVJbewf/QuCbIH22lUPF4bUmtU056GgTIWCkZgZt5rUoiLe7R7V/snCVi8UuB0kO
+YDrRBk2/sjZusBx8dl1y5qfyiTf+oudrr4YsG6/tIwvCaLJwXnOhYBO/IKuNNGc/
+ZP/JYijkeC0vGdYp7A9ULIC/1AO7Uu7Mav4AEdumFleFbbILvA4/0r+aN0DJzfqw
+bw3F3ZaNrnyzmPx+FMewuFC6udhPLQ08HXxK3Ssqea0lpYxg5eGGPbYQ7qfwMwET
+5fBvAd0NdUSOkeogfBu+zgU/sx/DZZLF3nWcAfq4YAXADaetqs2ut9rdQnkmtqEL
+b11ie1sDdrskreKFVjH2Eb2v1RCY8A==
+=kyzP
 -----END PGP SIGNATURE-----
