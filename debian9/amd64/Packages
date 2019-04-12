@@ -544,3 +544,24 @@ Description: nvidia-docker CLI wrapper
  Replaces nvidia-docker with a new implementation based on
  nvidia-container-runtime
 
+Package: nvidia-docker2
+Architecture: all
+Version: 2.0.3+docker18.09.5-2
+Priority: optional
+Section: utils
+Maintainer: NVIDIA CORPORATION <cudatools@nvidia.com>
+Installed-Size: 18
+Depends: nvidia-container-runtime (= 2.0.0+docker18.09.5-1), docker-ce (= 5:18.09.5~3-0~debian-stretch)
+Breaks: nvidia-docker (<< 2.0.0)
+Replaces: nvidia-docker (<< 2.0.0)
+Filename: ./nvidia-docker2_2.0.3+docker18.09.5-2_all.deb
+Size: 2872
+MD5sum: 8721cd694f66204486c925646754d9c4
+SHA1: 80fa62d6a2845469da56b3e7886dea68edb60973
+SHA256: 21f23510878f074f03fdea24bb8b85921ea030a814e08c73174cf65bad9d71fc
+SHA512: bdf779cfa600309bc3ffc71ab9fc5f0e684bbbd0a0215dc1315cb8a08f4d0a796590c30c4aac83e416bb5e23102f30d087d752b8e5fa7d5c7760ca819e262909
+Homepage: https://github.com/NVIDIA/nvidia-docker/wiki
+Description: nvidia-docker CLI wrapper
+ Replaces nvidia-docker with a new implementation based on
+ nvidia-container-runtime
+
