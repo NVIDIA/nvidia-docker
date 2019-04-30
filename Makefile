@@ -524,6 +524,19 @@ amzn1: $(addsuffix -amzn1, 18.06.2-ce 18.06.1-ce 18.03.1-ce 17.12.1-ce 17.09.1-c
 	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/centos7/$(ARCH)
 	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
 
+18.06.2.ce-centos7: ARCH := x86_64
+18.06.2.ce-centos7:
+	$(DOCKER) build --build-arg VERSION_ID="7" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)-1.docker18.06.2" \
+                        --build-arg DOCKER_VERSION="docker-ce = 3:18.06.2" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker18.06.2.ce" \
+                        -t "nvidia/nvidia-docker2/centos:7-docker18.06.2.ce" -f Dockerfile.centos .
+	$(MKDIR) -p $(DIST_DIR)/centos7/$(ARCH)
+	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/centos:7-docker18.06.2.ce"
+	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/centos7/$(ARCH)
+	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+
 %-centos7: ARCH := x86_64
 %-centos7:
 	$(DOCKER) build --build-arg VERSION_ID="7" \
