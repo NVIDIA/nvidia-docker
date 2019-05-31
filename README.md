@@ -37,7 +37,8 @@ sudo apt-get update
 
 # Install nvidia-docker2 and reload the Docker daemon configuration
 sudo apt-get install -y nvidia-docker2
-sudo pkill -SIGHUP dockerd
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
@@ -59,7 +60,8 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.re
 
 # Install nvidia-docker2 and reload the Docker daemon configuration
 sudo yum install -y nvidia-docker2
-sudo pkill -SIGHUP dockerd
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # Test nvidia-smi with the latest official CUDA image
 docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
