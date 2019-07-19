@@ -1,4 +1,4 @@
-nvidia-docker2 (2.0.3+@VERSION@) UNRELEASED; urgency=medium
+nvidia-docker2 (@VERSION@) UNRELEASED; urgency=medium
 
   * 2e9f20b Improve pass-through of docker arguments
   * 4edca2f Pave the way for a hypothetical transitional package from v1

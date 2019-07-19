@@ -19,7 +19,6 @@ ARG DOCKER_VERSION
 ENV DEBFULLNAME "NVIDIA CORPORATION"
 ENV DEBEMAIL "cudatools@nvidia.com"
 ENV REVISION "$PKG_VERS-$PKG_REV"
-ENV RUNTIME_VERSION $RUNTIME_VERSION
 ENV DOCKER_VERSION $DOCKER_VERSION
 ENV SECTION ""
 
@@ -35,8 +34,8 @@ WORKDIR $DIST_DIR
 COPY debian ./debian
 
 
-RUN sed -i "s;@VERSION@;${REVISION#*+};" debian/changelog && \
-    if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then exit 1; fi
+RUN sed -i "s;@VERSION@;${REVISION};" debian/changelog && \
+    if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then echo "$(dpkg-parsechangelog --show-field=Version)" && exit 1; fi
 
 CMD export DISTRIB="$(lsb_release -cs)" && \
     debuild --preserve-env --dpkg-buildpackage-hook='sh debian/prepare' -i -us -uc -b && \
