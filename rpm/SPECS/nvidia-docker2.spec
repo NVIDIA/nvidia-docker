@@ -16,7 +16,7 @@ Source1: daemon.json
 Source2: LICENSE
 
 Conflicts: nvidia-docker < 2.0.0
-Requires: nvidia-container-runtime >= 3.0.0
+Requires: nvidia-container-runtime >= %{runtime_version}
 Requires: %{docker_version}
 
 %description

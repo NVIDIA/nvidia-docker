@@ -4,6 +4,7 @@ DOCKER ?= docker
 MKDIR  ?= mkdir
 
 VERSION := 2.1.0
+RUNTIME_VERSION := 3.0.0
 PKG_REV := 1
 
 DIST_DIR  := $(CURDIR)/dist
@@ -17,6 +18,7 @@ ubuntu18.04: ARCH := amd64
 ubuntu18.04:
 	$(DOCKER) build --build-arg VERSION_ID="18.04" \
                         --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/ubuntu:18.04" -f Dockerfile.ubuntu .
@@ -29,6 +31,7 @@ ubuntu16.04: ARCH := amd64
 ubuntu16.04:
 	$(DOCKER) build --build-arg VERSION_ID="16.04" \
                         --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/ubuntu:16.04" -f Dockerfile.ubuntu .
@@ -41,6 +44,7 @@ debian9: ARCH := amd64
 debian9:
 	$(DOCKER) build --build-arg VERSION_ID="9" \
                         --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/debian:9" -f Dockerfile.debian .
@@ -53,6 +57,7 @@ centos7: ARCH := x86_64
 centos7:
 	$(DOCKER) build --build-arg VERSION_ID="7" \
                         --build-arg DOCKER_VERSION="docker-ce >= 18.06.3.ce-3.el7" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/centos:7" -f Dockerfile.centos .
@@ -65,6 +70,7 @@ amzn2: ARCH := x86_64
 amzn2:
 	$(DOCKER) build --build-arg VERSION_ID="2" \
                         --build-arg DOCKER_VERSION="docker >= 18.06.1ce-2.amzn2" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/amzn:2-docker" -f Dockerfile.amzn .
@@ -77,6 +83,7 @@ amzn1: ARCH := x86_64
 amzn1:
 	$(DOCKER) build --build-arg VERSION_ID="1" \
                         --build-arg DOCKER_VERSION="docker >= 18.06.1ce-2.16.amzn1" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
                         --build-arg PKG_VERS="$(VERSION)" \
                         --build-arg PKG_REV="$(PKG_REV)" \
                         -t "nvidia/nvidia-docker2/amzn:1" -f Dockerfile.amzn .
