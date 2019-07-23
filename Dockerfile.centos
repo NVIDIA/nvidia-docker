@@ -32,5 +32,6 @@ CMD rpmbuild --clean -bb \
              -D "version $VERSION" \
              -D "release $RELEASE" \
              -D "docker_version $DOCKER_VERSION" \
+             -D "runtime_version $RUNTIME_VERSION" \
              SPECS/nvidia-docker2.spec && \
     mv RPMS/noarch/*.rpm /dist
