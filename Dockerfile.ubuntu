@@ -37,6 +37,7 @@ COPY debian ./debian
 
 
 RUN sed -i "s;@VERSION@;${REVISION};" debian/changelog && \
+    sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
     if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then echo "$(dpkg-parsechangelog --show-field=Version)" && exit 1; fi
 
 CMD export DISTRIB="$(lsb_release -cs)" && \

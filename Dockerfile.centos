@@ -27,6 +27,8 @@ COPY daemon.json $DIST_DIR
 WORKDIR $DIST_DIR/..
 COPY rpm .
 
+RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker
+
 CMD rpmbuild --clean -bb \
              -D "_topdir $PWD" \
              -D "version $VERSION" \
