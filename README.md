@@ -80,7 +80,7 @@ Note that in the future, nvidia-docker2 packages will no longer be supported.
 
 ## Issues and Contributing
 
-A signed copy of the [Contributor License Agreement](https://raw.githubusercontent.com/NVIDIA/nvidia-docker/master/CLA) needs to be provided to <a href="mailto:digits@nvidia.com">digits@nvidia.com</a> before any change can be accepted.
+[Checkout the Contributing document!](CONTRIBUTING.md)
 
 * Please let us know by [filing a new issue](https://github.com/NVIDIA/nvidia-docker/issues/new)
 * You can contribute by opening a [pull request](https://help.github.com/articles/using-pull-requests/)
