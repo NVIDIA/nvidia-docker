@@ -12,7 +12,7 @@ DIST_DIR  := $(CURDIR)/dist
 .NOTPARALLEL:
 .PHONY: all
 
-all: ubuntu18.04 ubuntu16.04 debian9 centos7 amzn2 amzn1
+all: ubuntu18.04 ubuntu16.04 debian10 debian9 centos7 amzn2 amzn1
 
 ubuntu18.04: ARCH := amd64
 ubuntu18.04:
@@ -38,6 +38,19 @@ ubuntu16.04:
 	$(MKDIR) -p $(DIST_DIR)/ubuntu16.04/$(ARCH)
 	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/ubuntu:16.04"
 	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/ubuntu16.04/$(ARCH)
+	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+
+debian10: ARCH := amd64
+debian10:
+	$(DOCKER) build --build-arg VERSION_ID="10" \
+                        --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)" \
+                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV)" \
+                        -t "nvidia/nvidia-docker2/debian:10" -f Dockerfile.debian .
+	$(MKDIR) -p $(DIST_DIR)/debian10/$(ARCH)
+	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/debian:10"
+	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/debian10/$(ARCH)
 	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
 
 debian9: ARCH := amd64
