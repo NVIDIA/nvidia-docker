@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ARG PKG_VERS
 ARG PKG_REV
 ARG RUNTIME_VERSION
-ARG RUNTIME_VERSION
 ARG DOCKER_VERSION
 
 ENV DEBFULLNAME "NVIDIA CORPORATION"
@@ -34,7 +33,6 @@ COPY daemon.json $DIST_DIR/daemon.json
 
 WORKDIR $DIST_DIR
 COPY debian ./debian
-
 
 RUN sed -i "s;@VERSION@;${REVISION};" debian/changelog && \
     sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
