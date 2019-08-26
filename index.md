@@ -6,10 +6,10 @@ If you feel something is missing or requires additional information, please let 
 
 List of supported distributions:
 
-|         | Ubuntu 14.04 | Ubuntu 16.04 | Ubuntu 18.04 | Debian 8 | Debian 9 | Centos 7 | RHEL 7 | Amazon Linux 1 | Amazon Linux 2 |
-| ------- | :----------: | :----------: | :----------: | :------: | :------: | :------: | :----: | :------------: | :------------: |
-| x86_64  |      X       |      X       |       X      |     X    |    X     |    X     |    X   |        X       |        X       |
-| ppc64le |              |      X       |       X      |          |          |          |        |                |                |
+|         | Ubuntu 14.04 | Ubuntu 16.04 | Ubuntu 18.04 | Debian 8 | Debian 9 | Debian 10 | Centos 7 | RHEL 7 | Amazon Linux 1 | Amazon Linux 2 |
+| ------- | :----------: | :----------: | :----------: | :------: | :------: | :-------: | :------: | :----: | :------------: | :------------: |
+| x86_64  |      X       |      X       |       X      |     X    |    X     |     X     |    X     |    X   |        X       |        X       |
+| ppc64le |              |      X       |       X      |          |          |           |          |        |                |                |
 
 ## Debian-based distributions
 
