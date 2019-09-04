@@ -3,7 +3,7 @@
 DOCKER ?= docker
 MKDIR  ?= mkdir
 
-VERSION := 2.2.1
+VERSION := 2.2.2
 RUNTIME_VERSION := 3.1.2
 PKG_REV := 1
 
