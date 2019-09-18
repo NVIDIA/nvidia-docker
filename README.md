@@ -12,6 +12,7 @@ The NVIDIA Container Toolkit allows users to build and run GPU accelerated Docke
 ## Quickstart
 
 **Make sure you have installed the [NVIDIA driver](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver) and Docker 19.03 for your Linux distribution**
+**Note that you do not need to install the CUDA toolkit on the host, but the driver needs to be installed**
 
 Note that with the release of Docker 19.03, usage of nvidia-docker2 packages are deprecated since NVIDIA GPUs are now natively supported as devices in the Docker runtime.
 If you are an existing user of the nvidia-docker2 packages, review the instructions in the [“Upgrading with nvidia-docker2” section](https://github.com/NVIDIA/nvidia-docker/tree/master#upgrading-with-nvidia-docker2-deprecated).
