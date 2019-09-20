@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64
+Codename: trusty
+Components: main
+Date: Wed, 27 Sep 2017 23:08:53 +0000
+Description: NVIDIA Docker Engine wrapper repository
+Label: NVIDIA CORPORATION <cudatools@nvidia.com>
+Origin: https://nvidia.github.io/nvidia-docker
+Suite: trusty
+Version: 1.0
+SHA512:
+ 8a13a04fc7e40104de0aba1e8864d6e9d5457e269c8b47bdf3ce982b9d386bbe77c3a48e4f4c7a9ca3587e6e69bf5edd96cb5453d256193dec5d7d779b49e24e            11112 Packages
+ 9cec350c8dc3813c10802e6229f75450a59351970d923a7bbb8a236084ae387f1d121e44a5af1c5c041602e82511b75de113c2d20ce3f07797b0840ab04d3420             2672 Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJdhUYWAAoJEG7ZHKOsEWDNGMsIAMVHjALnT4w8sMMdv3IMrguk
+YZXugCeuQZ+8ERzrKewSJx6UJX9H2HntnltDPkW+yWkhKtUSg2kb5E+/LsMJJiKN
+Pn5gfP/tSbQvbLxKcjsr5DRhiieQcB14okFpENqqMsjMhP4m1MgMbqHgoO5EFDTW
+TqhKDEdfII4fyEdQwJtdlX+bSlBe5a4NNPPgC89zBXS26ahefZ0+6D7ONSHvcxpQ
+NhKaEuDocuOAyY8AvwhS/X1m5HVWMh0T/0tDQjLfxipiP1gtSlupgZy2WP03/SIu
+HLNck/BjhFTJmRgtl8SKQHHmxx/LCrkdlu5I/aPqorFMQTUw72iz8b0WTtT4SWE=
+=z91T
+-----END PGP SIGNATURE-----

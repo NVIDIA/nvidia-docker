@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64
+Codename: jessie
+Components: main
+Date: Wed, 27 Sep 2017 23:08:53 +0000
+Description: NVIDIA Docker Engine wrapper repository
+Label: NVIDIA CORPORATION <cudatools@nvidia.com>
+Origin: https://nvidia.github.io/nvidia-docker
+Suite: jessie
+Version: 1.0
+SHA512:
+ 49b9337e224b72845377a59d6a696dbcec7c84fb5f930be97dd8bcddcaeeb38d85333f6ef984b0575d2f0eb8e4273a5e4132b1b4a147bdd5f693568792100af3             7118 Packages
+ 2648944ea6a5596ced2016aeedef25efd3f7c0dd138d7eee42507d9c0552a8a4f3190153981e05101d701e3057994ef3e39490db46637d96317bffb995b746f1             1768 Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJdhUYXAAoJEG7ZHKOsEWDN6VcH/3GU/KrP2E4fyllLmULp0hfn
+rcY25v7lPWIE/IxdM7Pdq6rT5hkKC6ejbvUZhcccxEaHZiSHn2c/zgytkypkLCWj
+CgLLSevIZm3nCWIInM5gLQDpASY24yMh9DncGzWnyiSg1esyEW820PO7OYqemRZo
+AdNJS4IaM656YfCPv58SDVnpZA6NjePzm6DGJ5UVbezFi/ClHVkuo+qbsdtSMmt7
+wAVTr2DVzNFEUOUyUL+uZGLevi1wp0CYue5Bmm8+/DlXk6tFMvfNyMPmIvfksJwh
+dag1XpYM//EVh1C8UJ9O2Hbhk4zZ0So20hRuM8vNb2m9JHjKuy4xJQqZdhgyiq0=
+=nAqh
+-----END PGP SIGNATURE-----

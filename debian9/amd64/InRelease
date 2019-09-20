@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64
+Codename: stretch
+Components: main
+Date: Wed, 27 Sep 2017 23:08:53 +0000
+Description: NVIDIA Docker Engine wrapper repository
+Label: NVIDIA CORPORATION <cudatools@nvidia.com>
+Origin: https://nvidia.github.io/nvidia-docker
+Suite: stretch
+Version: 1.0
+SHA512:
+ 89951d1f0e3d431a48c790279d78d50a3310decf757d97c88dfa950cd619710ffa13e128ac4040a5af2ab2660a252caf2b5dfcc3e54af2afe41bbf014488b35b            32041 Packages
+ d5cef8c3aa980b7fb590d1e051f2d0030d32d54a608e91b3ad6778cf8bf77600e9a127f109452d432a8a26fc131d5b3470437026fdf321e0863c30ee39ec5b62             6204 Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJdhUYXAAoJEG7ZHKOsEWDN88kH/Az/0e0OW5zNwHBPw0ghIkhZ
+6i/R4h3dBi9isfstXyn/KkJvHmCJsg4Y6QpM1mhMGhxAAuxFLnnoS8WCYaJrT6/f
+uTUSmCMkPo+9wSasYVkZVv7vgeNo96EtxaoeGiEvybTDuSrPfHmWGRWKxaatk1E5
+VqooFoQmjdulwmCGTrMPiYGHaBtEscMRFaCuVjM13UQV9JbBTP5KJg2sc/7H89Zm
+tdRminiLtKIPFLE4GN6JoB7JUjWLxYkGrpMfTT/vOo3BOveJhaENN5LRgRjh4O28
+3Q1ulrYfDqdywb2qPh59MA5cE52rITGUym7KZ7K3FnyjaEInfAfpCANDxbiLjfA=
+=oyVX
+-----END PGP SIGNATURE-----

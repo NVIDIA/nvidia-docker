@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64
+Codename: bionic
+Components: main
+Date: Wed, 27 Sep 2017 23:08:53 +0000
+Description: NVIDIA Docker Engine wrapper repository
+Label: NVIDIA CORPORATION <cudatools@nvidia.com>
+Origin: https://nvidia.github.io/nvidia-docker
+Suite: bionic
+Version: 1.0
+SHA512:
+ c53c8baf0d43cc6fe1403333071f76d761ff97465106f31e7464923ef783c9780518cb7571c1bb1e22e87cb01726d057781f14ce497889401cf6428b013be516            19494 Packages
+ 022bc4807c904074949daf44078fd05f6637f1b92de7f13a3c4c391318cfe69ac7f5a1a7a9e6f543400605f1d1990b56b4e3899af64d25062a101f9893d9f5c9             3864 Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJdhUYWAAoJEG7ZHKOsEWDNLA4IALU4HLp256SaX/I/F7LzJE6o
+6FVt7CuA1pkVs0waQ9YYmPtnGdmnl+/7WXvUfdT5+ct/HWenORJU+CRlM8M42oXq
+/qDIkPyMEbd1mSiJ5aoGN38cgVEdu1o+BqVmJhYIQLcOgzXqYWz8DsrGyBoP2Lku
+CNP8QEPL5omqTmjzQi+jhx97eM/Y4nm8Hzabv9tnpH+rbCJxzNCOU+vFm6Nrc7Sw
+nWn99oFO4RTQE2YxPkuFjjEdcMoj7mlu4CCGnnlVIAn06sexZADCkak01Ocs6CyN
+VtES2E4ghtQPk6uuh6HxVaWb3898VNwMEfB2liES/gS2+LT5gS3FV3occaf4KfI=
+=P9M4
+-----END PGP SIGNATURE-----
