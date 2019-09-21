@@ -52,9 +52,9 @@ $ sudo yum update
 Be careful to run each instruction one by one!
 
 ```bash
-$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-docker/gpgdir --delete-key f796ecb0
-$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-container-runtime/gpgdir --delete-key f796ecb0
-$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/libnvidia-container/gpgdir --delete-key f796ecb0
+$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/*/nvidia-docker/gpgdir --delete-key f796ecb0
+$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/*/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+$ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/*/libnvidia-container/gpgdir --delete-key f796ecb0
 $ sudo yum update
 ```
 
