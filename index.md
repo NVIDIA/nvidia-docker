@@ -34,13 +34,22 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.re
 
 In order to update the nvidia-docker repository key for your distribution, follow the instructions below.
 
-## RHEL-based distributions and Amazon Linux (1 and 2)
+## RHEL-based distributions 
 
 ```bash
 DIST=$(sed -n 's/releasever=//p' /etc/yum.conf)
 DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)}
 sudo rpm -e gpg-pubkey-f796ecb0
 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/*/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-docker/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/libnvidia-container/gpgdir --delete-key f796ecb0
+sudo yum update
+```
+
+# Amazon Linux (1 and 2)
+
+```bash
 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-docker/gpgdir --delete-key f796ecb0
 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-container-runtime/gpgdir --delete-key f796ecb0
 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/libnvidia-container/gpgdir --delete-key f796ecb0
