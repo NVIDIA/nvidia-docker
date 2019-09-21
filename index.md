@@ -41,7 +41,9 @@ DIST=$(sed -n 's/releasever=//p' /etc/yum.conf)
 DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)}
 sudo rpm -e gpg-pubkey-f796ecb0
 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/*/gpgdir --delete-key f796ecb0
-sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/*/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-docker/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/libnvidia-container/gpgdir --delete-key f796ecb0
 sudo yum update
 ```
 
