@@ -34,7 +34,7 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.re
 
 In order to update the nvidia-docker repository key for your distribution, follow the instructions below.
 
-## RHEL-based distributions
+## RHEL-based distributions and Amazon Linux (1 and 2)
 
 ```bash
 DIST=$(sed -n 's/releasever=//p' /etc/yum.conf)
