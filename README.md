@@ -133,6 +133,15 @@ $ nvidia-docker run nvidia/cuda:9.0-base nvidia-smi
 
 Note that in the future, nvidia-docker2 packages will no longer be supported.
 
+## Changelog
+
+* Friday September 20th:
+  We changed the gpgkey, the new fingerprint is: `BC02 13EE FC50 D046 F1CE  0208 6128 B5C2 36CD EE96`
+  We will add a webpage on docs.nvidia.com listing the keys and their fingerprints.
+  In the future we will publish a keyring package. This will allow automatic updates to the repository keys.
+  Future updates to the keys will be communicated in advance. We apologize for any inconvenience caused by the unexpected change to the keys
+
+
 ## Issues and Contributing
 
 [Checkout the Contributing document!](CONTRIBUTING.md)
