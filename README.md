@@ -86,6 +86,30 @@ $ docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:9.0-base nvidia-smi
 $ docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
 ```
 
+## RHEL Docker
+
+_Note that RHEL's fork of Docker is no longer supported on RHEL8._
+_Note that for powerpc you will have to install the nvidia-container-runtime-hook_
+
+RHEL's fork of docker doesn't support the --gpus option, in this case you should still install
+the nvidia-container-toolkit package but you will have to use the old interface. e.g:
+```bash
+# Add the package repositories
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+# On x86
+$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+# On PPC
+$ sudo apt-get update && sudo apt-get install -y nvidia-container-runtime-hook
+$ sudo systemctl restart docker
+
+$ docker run -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda:9.0-base nvidia-smi
+```
+
+More information on the environment variables are available [on this page](https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec).
+
 ## Upgrading with nvidia-docker2 (Deprecated)
 
 If you are running an old version of docker (< 19.03) check the instructions on installing the [`nvidia-docker2`](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)) package which supports Docker >= 1.12.
@@ -108,6 +132,15 @@ $ nvidia-docker run nvidia/cuda:9.0-base nvidia-smi
 ```
 
 Note that in the future, nvidia-docker2 packages will no longer be supported.
+
+## Changelog
+
+* Friday September 20th:
+  We changed the gpgkey, the new fingerprint is: `BC02 13EE FC50 D046 F1CE  0208 6128 B5C2 36CD EE96`
+  We will add a webpage on docs.nvidia.com listing the keys and their fingerprints.
+  In the future we will publish a keyring package. This will allow automatic updates to the repository keys.
+  Future updates to the keys will be communicated in advance. We apologize for any inconvenience caused by the unexpected change to the keys
+
 
 ## Issues and Contributing
 
