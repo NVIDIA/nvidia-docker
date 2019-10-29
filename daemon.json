@@ -1,7 +1,7 @@
 {
     "runtimes": {
         "nvidia": {
-            "path": "nvidia-container-runtime",
+            "path": "user/bin" nvidia-container-runtime",
             "runtimeArgs": []
         }
     }
