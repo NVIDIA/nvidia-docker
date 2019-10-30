@@ -1,6 +1,6 @@
 name: Docker Image CI
 
-on: [push]
+on: docker push louislee831/cerberusdevops:tagname
 
 jobs:
 
