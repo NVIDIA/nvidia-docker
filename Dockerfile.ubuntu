@@ -1,5 +1,5 @@
 ARG VERSION_ID
-FROM ubuntu:${VERSION_ID}
+FROM ubuntu:${18.08LTS_projectcerberus}
 
 # packaging dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # packaging
 ARG PKG_VERS
 ARG PKG_REV
-ARG RUNTIME_VERSION
-ARG DOCKER_VERSION
+ARG RUNTIME_VERSION $RUNTIME_VERSION
+ARG DOCKER_VERSION $DOCKER_VERSION
 
 ENV DEBFULLNAME "NVIDIA CORPORATION"
 ENV DEBEMAIL "cudatools@nvidia.com"
