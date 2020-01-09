@@ -99,13 +99,12 @@ the nvidia-container-toolkit package but you will have to use the old interface.
 ```bash
 # Add the package repositories
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
 
 # On x86
-$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+$ sudo yum install -y nvidia-container-toolkit
 # On PPC
-$ sudo apt-get update && sudo apt-get install -y nvidia-container-runtime-hook
+$ sudo yum install -y nvidia-container-hook
 $ sudo systemctl restart docker
 
 $ docker run -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda:9.0-base nvidia-smi
