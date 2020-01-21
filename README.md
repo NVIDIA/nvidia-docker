@@ -25,21 +25,21 @@ For first-time users of Docker 19.03 and GPUs, continue with the instructions fo
 ### Ubuntu 16.04/18.04, Debian Jessie/Stretch/Buster
 ```sh
 # Add the package repositories
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
-$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-$ sudo systemctl restart docker
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
 ```
 
 #### CentOS 7 (docker-ce), RHEL 7.4/7.5 (docker-ce), Amazon Linux 1/2
 ```
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
 
-$ sudo yum install -y nvidia-container-toolkit
-$ sudo systemctl restart docker
+sudo yum install -y nvidia-container-toolkit
+sudo systemctl restart docker
 ```
 
 #### openSUSE Leap 15.1 (docker-ce)
@@ -50,43 +50,43 @@ Since openSUSE Leap 15.1 still has Docker 18.06, you have two options:
 
 ```console
 # Upgrade Docker to 19.03+ first:
-$ zypper ar https://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_15.1/Virtualization:containers.repo
-$ zypper install --allow-vendor-change 'docker >= 19.03'  # accept the new signature
+zypper ar https://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_15.1/Virtualization:containers.repo
+zypper install --allow-vendor-change 'docker >= 19.03'  # accept the new signature
 
 # Add the package repositories
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
 
-$ sudo zypper install -y nvidia-container-toolkit
-$ sudo systemctl restart docker
+sudo zypper install -y nvidia-container-toolkit
+sudo systemctl restart docker
 ```
 
 **Option 2**: stay with the deprecated `nvidia-docker2` package for now (see also below)
 
 ```console
 # Add the package repositories
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
 
-$ sudo zypper install -y nvidia-docker2  # accept the overwrite of /etc/docker/daemon.json
-$ sudo systemctl restart docker
+sudo zypper install -y nvidia-docker2  # accept the overwrite of /etc/docker/daemon.json
+sudo systemctl restart docker
 ```
 
 ## Usage
 ```
 #### Test nvidia-smi with the latest official CUDA image
-$ docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
 
 # Start a GPU enabled container on two GPUs
-$ docker run --gpus 2 nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus 2 nvidia/cuda:9.0-base nvidia-smi
 
 # Starting a GPU enabled container on specific GPUs
-$ docker run --gpus '"device=1,2"' nvidia/cuda:9.0-base nvidia-smi
-$ docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus '"device=1,2"' nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:9.0-base nvidia-smi
 
 # Specifying a capability (graphics, compute, ...) for my container
 # Note this is rarely if ever used this way
-$ docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
 ```
 
 ## RHEL Docker
@@ -98,16 +98,16 @@ RHEL's fork of docker doesn't support the --gpus option, in this case you should
 the nvidia-container-toolkit package but you will have to use the old interface. e.g:
 ```bash
 # Add the package repositories
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
 
 # On x86
-$ sudo yum install -y nvidia-container-toolkit
+sudo yum install -y nvidia-container-toolkit
 # On PPC
-$ sudo yum install -y nvidia-container-hook
-$ sudo systemctl restart docker
+sudo yum install -y nvidia-container-hook
+sudo systemctl restart docker
 
-$ docker run -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda:9.0-base nvidia-smi
+docker run -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda:9.0-base nvidia-smi
 ```
 
 More information on the environment variables are available [on this page](https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec).
@@ -119,18 +119,18 @@ If you already have the old package installed (nvidia-docker2), updating to the 
 
 ```
 # On debian based distributions: Ubuntu / Debian
-$ sudo apt-get update
-$ sudo apt-get --only-upgrade install docker-ce nvidia-docker2
-$ sudo systemctl restart docker
+sudo apt-get update
+sudo apt-get --only-upgrade install docker-ce nvidia-docker2
+sudo systemctl restart docker
 
 # On RPM based distributions: Centos / RHEL / Amazon Linux
-$ sudo yum upgrade -y nvidia-docker2
-$ sudo systemctl restart docker
+sudo yum upgrade -y nvidia-docker2
+sudo systemctl restart docker
 
 # All of the following options will continue working
-$ docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
-$ docker run --runtime nvidia nvidia/cuda:9.0-base nvidia-smi
-$ nvidia-docker run nvidia/cuda:9.0-base nvidia-smi
+docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
+docker run --runtime nvidia nvidia/cuda:9.0-base nvidia-smi
+nvidia-docker run nvidia/cuda:9.0-base nvidia-smi
 ```
 
 Note that in the future, nvidia-docker2 packages will no longer be supported.
