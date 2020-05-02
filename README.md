@@ -22,7 +22,7 @@ If you are an existing user of the nvidia-docker2 packages, review the instructi
 
 For first-time users of Docker 19.03 and GPUs, continue with the instructions for getting started below.
 
-### Ubuntu 16.04/18.04, Debian Jessie/Stretch/Buster
+### Ubuntu 16.04/18.04/20.04, Debian Jessie/Stretch/Buster
 ```sh
 # Add the package repositories
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
