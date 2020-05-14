@@ -1,0 +1,104 @@
+# Build packages for all supported OS / ARCH combinations
+
+stages:
+  - build-one
+  - build-all
+
+.build-setup: &build-setup
+  image: docker:19.03.8
+
+  services:
+    - name: docker:19.03.8-dind
+      command: ["--experimental"]
+
+  before_script:
+  - apk update
+  - apk upgrade
+  - apk add coreutils build-base sed git bash make
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
+
+# build-one jobs build packages for a single OS / ARCH combination.
+#
+# They are run during the first stage of the pipeline as a smoke test to ensure
+# that we can successfully build packages on all of our architectures for a
+# single OS. They are triggered on any change to an MR. No artifacts are
+# produced as part of build-one jobs.
+.build-one-setup: &build-one-setup
+  <<: *build-setup
+  stage: build-one
+  only:
+    - merge_requests
+
+# build-all jobs build packages for every OS / ARCH combination we support.
+#
+# They are run under two conditions:
+# 1) Automatically whenever a new tag is pushed to the repo (e.g. v1.1.0)
+# 2) Manually by a reviewer just before merging a MR.
+#
+# Unlike build-one jobs, it takes a long time to build the full suite
+# OS / ARCH combinations, so this is optimized to only run once per MR
+# (assuming it all passes). A full set of artifacts including the packages
+# built for each OS / ARCH are produced as a result of these jobs.
+.build-all-setup: &build-all-setup
+  <<: *build-setup
+  stage: build-all
+  timeout: 2h 30m
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+    - if: $CI_MERGE_REQUEST_ID
+      when: manual
+
+  variables:
+    ARTIFACTS_NAME: "${CI_PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-${CI_JOB_NAME}-artifacts-${CI_PIPELINE_ID}"
+    ARTIFACTS_DIR: "${CI_PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-artifacts-${CI_PIPELINE_ID}"
+    DIST_DIR: "${CI_PROJECT_DIR}/${ARTIFACTS_DIR}"
+
+  artifacts:
+    name: ${ARTIFACTS_NAME}
+    paths:
+      - ${ARTIFACTS_DIR}
+
+# The full set of build-one jobs organizes to build
+# ubuntu18.04 in parallel on each of our supported ARCHs.
+build-one-amd64:
+  <<: *build-one-setup
+  script:
+    - make ubuntu18.04-amd64
+
+build-one-ppc64le:
+  <<: *build-one-setup
+  script:
+    - make ubuntu18.04-ppc64le
+
+build-one-arm64:
+  <<: *build-one-setup
+  script:
+    - make ubuntu18.04-arm64
+
+# The full set of build-all jobs organized to
+# have builds for each ARCH run in parallel.
+build-all-amd64:
+  <<: *build-all-setup
+  script:
+    - make docker-amd64
+
+build-all-x86_64:
+  <<: *build-all-setup
+  script:
+    - make docker-x86_64
+
+build-all-ppc64le:
+  <<: *build-all-setup
+  script:
+    - make docker-ppc64le
+
+build-all-arm64:
+  <<: *build-all-setup
+  script:
+    - make docker-arm64
+
+build-all-aarch64:
+  <<: *build-all-setup
+  script:
+    - make docker-aarch64
