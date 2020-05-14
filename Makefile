@@ -2,111 +2,142 @@
 
 DOCKER ?= docker
 MKDIR  ?= mkdir
+DIST_DIR ?= $(CURDIR)/dist
 
-VERSION := 2.2.2
-RUNTIME_VERSION := 3.1.2
+LIB_NAME := nvidia-docker2
+LIB_VERSION := 2.2.2
 PKG_REV := 1
 
-DIST_DIR  := $(CURDIR)/dist
+RUNTIME_VERSION := 3.1.2
 
-.NOTPARALLEL:
-.PHONY: all
+# Supported OSs by architecture
+AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
+X86_64_TARGETS := centos7 centos8 rhel7 rhel8 amazonlinux1 amazonlinux2 opensuse-leap15.1
+PPC64LE_TARGETS := ubuntu18.04 ubuntu16.04 centos7 centos8 rhel7 rhel8
+ARM64_TARGETS := ubuntu20.04 ubuntu18.04
+AARCH64_TARGETS := centos8 rhel8
 
-all: ubuntu18.04-amd64 ubuntu16.04-amd64 debian10-amd64 debian9-amd64 centos7-x86_64 amzn2-x86_64 amzn1-x86_64 opensuse-leap15.1-x86_64 \
-     ubuntu16.04-ppc64le ubuntu18.04-ppc64le centos7-ppc64le
+# By default run all native docker-based targets
+docker-native:
 
-ubuntu18.04-%:
-	$(DOCKER) build --build-arg VERSION_ID="18.04" \
-                        --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/ubuntu:18.04-$*" -f docker/$*/Dockerfile.ubuntu .
-	$(MKDIR) -p $(DIST_DIR)/ubuntu18.04/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/ubuntu:18.04-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/ubuntu18.04/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# Define top-level build targets
+docker%: SHELL:=/bin/bash
 
-ubuntu16.04-%:
-	$(DOCKER) build --build-arg VERSION_ID="16.04" \
-                        --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/ubuntu:16.04-$*" -f docker/$*/Dockerfile.ubuntu .
-	$(MKDIR) -p $(DIST_DIR)/ubuntu16.04/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/ubuntu:16.04-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/ubuntu16.04/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# Native targets
+PLATFORM ?= $(shell uname -m)
+ifeq ($(PLATFORM),x86_64)
+NATIVE_TARGETS := $(AMD64_TARGETS) $(X86_64_TARGETS)
+$(AMD64_TARGETS): %: %-amd64
+$(X86_64_TARGETS): %: %-x86_64
+else ifeq ($(PLATFORM),ppc64le)
+NATIVE_TARGETS := $(PPC64LE_TARGETS)
+$(PPC64LE_TARGETS): %: %-ppc64le
+else ifeq ($(PLATFORM),aarch64)
+NATIVE_TARGETS := $(ARM64_TARGETS) $(AARCH64_TARGETS)
+$(ARM64_TARGETS): %: %-arm64
+$(AARCH64_TARGETS): %: %-aarch64
+endif
+docker-native: $(NATIVE_TARGETS)
 
-debian10-%:
-	$(DOCKER) build --build-arg VERSION_ID="10" \
-                        --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/debian:10-$*" -f docker/$*/Dockerfile.debian .
-	$(MKDIR) -p $(DIST_DIR)/debian10/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/debian:10-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/debian10/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# amd64 targets
+AMD64_TARGETS := $(patsubst %, %-amd64, $(AMD64_TARGETS))
+$(AMD64_TARGETS): ARCH := amd64
+$(AMD64_TARGETS): %: --%
+docker-amd64: $(AMD64_TARGETS)
 
-debian9-%:
-	$(DOCKER) build --build-arg VERSION_ID="9" \
-                        --build-arg DOCKER_VERSION="docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/debian:9-$*" -f docker/$*/Dockerfile.debian .
-	$(MKDIR) -p $(DIST_DIR)/debian9/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/debian:9-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/debian9/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# x86_64 targets
+X86_64_TARGETS := $(patsubst %, %-x86_64, $(X86_64_TARGETS))
+$(X86_64_TARGETS): ARCH := x86_64
+$(X86_64_TARGETS): %: --%
+docker-x86_64: $(X86_64_TARGETS)
 
-centos7-%:
-	$(DOCKER) build --build-arg VERSION_ID="7" \
-                        --build-arg DOCKER_VERSION="docker-ce >= 18.06.3.ce-3.el7" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/centos:7-$*" -f docker/$*/Dockerfile.centos .
-	$(MKDIR) -p $(DIST_DIR)/centos7/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/centos:7-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/centos7/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# arm64 targets
+ARM64_TARGETS := $(patsubst %, %-arm64, $(ARM64_TARGETS))
+$(ARM64_TARGETS): ARCH := arm64
+$(ARM64_TARGETS): %: --%
+docker-arm64: $(ARM64_TARGETS)
 
-amzn2-%:
-	$(DOCKER) build --build-arg VERSION_ID="2" \
-                        --build-arg DOCKER_VERSION="docker >= 18.06.1ce-2.amzn2" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/amzn:2-docker-$*" -f docker/$*/Dockerfile.amzn .
-	$(MKDIR) -p $(DIST_DIR)/amzn2/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/amzn:2-docker-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/amzn2/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# aarch64 targets
+AARCH64_TARGETS := $(patsubst %, %-aarch64, $(AARCH64_TARGETS))
+$(AARCH64_TARGETS): ARCH := aarch64
+$(AARCH64_TARGETS): %: --%
+docker-aarch64: $(AARCH64_TARGETS)
 
-amzn1-%:
-	$(DOCKER) build --build-arg VERSION_ID="1" \
-                        --build-arg DOCKER_VERSION="docker >= 18.06.1ce-2.16.amzn1" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/amzn:1-$*" -f docker/$*/Dockerfile.amzn .
-	$(MKDIR) -p $(DIST_DIR)/amzn1/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/amzn:1-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/amzn1/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# ppc64le targets
+PPC64LE_TARGETS := $(patsubst %, %-ppc64le, $(PPC64LE_TARGETS))
+$(PPC64LE_TARGETS): ARCH := ppc64le
+$(PPC64LE_TARGETS): WITH_LIBELF := yes
+$(PPC64LE_TARGETS): %: --%
+docker-ppc64le: $(PPC64LE_TARGETS)
 
-opensuse-leap15.1-%:
-	$(DOCKER) build --build-arg VERSION_ID="15.1" \
-                        --build-arg DOCKER_VERSION="docker >= 18.09.1_ce" \
-                        --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
-                        --build-arg PKG_VERS="$(VERSION)" \
-                        --build-arg PKG_REV="$(PKG_REV)" \
-                        -t "nvidia/nvidia-docker2/opensuse-leap:15.1-$*" -f docker/$*/Dockerfile.opensuse-leap .
-	$(MKDIR) -p $(DIST_DIR)/opensuse-leap15.1/$*
-	$(DOCKER) run  --cidfile $@.cid "nvidia/nvidia-docker2/opensuse-leap:15.1-$*"
-	$(DOCKER) cp $$(cat $@.cid):/dist/. $(DIST_DIR)/opensuse-leap15.1/$*
-	$(DOCKER) rm $$(cat $@.cid) && rm $@.cid
+# docker target to build for all os/arch combinations
+docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
+            $(ARM64_TARGETS) $(AARCH64_TARGETS) \
+            $(PPC64LE_TARGETS)
+
+# Default variables for all private '--' targets below.
+# One private target is defined for each OS we support.
+--%: TARGET_PLATFORM = $(*)
+--%: VERSION = $(patsubst $(OS)%-$(ARCH),%,$(TARGET_PLATFORM))
+--%: BASEIMAGE = $(OS):$(VERSION)
+--%: BUILDIMAGE = nvidia/$(LIB_NAME)/$(OS)$(VERSION)-$(ARCH)
+--%: DOCKERFILE = $(CURDIR)/docker/Dockerfile.$(OS)
+--%: ARTIFACTS_DIR = $(DIST_DIR)/$(OS)$(VERSION)/$(ARCH)
+--%: docker-build-%
+	@
+
+# private ubuntu target
+--ubuntu%: OS := ubuntu
+--ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
+
+# private debian target
+--debian%: OS := debian
+--debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
+
+# private centos target
+--centos%: OS := centos
+--centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+
+# private amazonlinuxtarget
+--amazonlinux%: OS := amazonlinux
+--amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
+--amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
+
+# private opensuse-leap target
+--opensuse-leap%: OS := opensuse-leap
+--opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
+--opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
+
+# private rhel target (actually built on centos)
+--rhel%: OS := centos
+--rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
+--rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
+--rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+
+docker-build-%:
+	@echo "Building for $(TARGET_PLATFORM)"
+	docker pull --platform=linux/$(ARCH) $(BASEIMAGE)
+	DOCKER_BUILDKIT=1 \
+	$(DOCKER) build \
+	    --progress=plain \
+	    --build-arg BASEIMAGE=$(BASEIMAGE) \
+	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
+	    --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
+	    --build-arg PKG_VERS="$(LIB_VERSION)" \
+	    --build-arg PKG_REV="$(PKG_REV)" \
+	    --tag $(BUILDIMAGE) \
+	    --file $(DOCKERFILE) .
+	$(DOCKER) run \
+	    -e DISTRIB \
+	    -e SECTION \
+	    -v $(ARTIFACTS_DIR):/dist \
+	    $(BUILDIMAGE)
+
+docker-clean:
+	IMAGES=$$(docker images "nvidia/$(LIB_NAME)/*" --format="{{.ID}}"); \
+	if [ "$${IMAGES}" != "" ]; then \
+	    docker rmi -f $${IMAGES}; \
+	fi
+
+distclean:
+	rm -rf $(DIST_DIR)

@@ -1,7 +1,8 @@
-ARG VERSION_ID
-FROM ppc64le/ubuntu:${VERSION_ID}
+ARG BASEIMAGE
+FROM ${BASEIMAGE}
 
 # packaging dependencies
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
         dh-make \
         fakeroot \

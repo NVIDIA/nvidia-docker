@@ -1,10 +1,10 @@
-ARG VERSION_ID
-FROM ppc64le/centos:${VERSION_ID}
+ARG BASEIMAGE
+FROM ${BASEIMAGE}
 
 # packaging dependencies
-RUN yum install -y \
+RUN zypper install -y \
         rpm-build && \
-    rm -rf /var/cache/yum/*
+    rm -rf /var/cache/zypp/*
 
 # packaging
 ARG PKG_VERS
