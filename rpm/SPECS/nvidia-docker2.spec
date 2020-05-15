@@ -37,3 +37,5 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 /etc/docker/daemon.json
 
 %changelog
+* Fri May 15 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.3.0-1
+- Require new MIG changes
