@@ -1,6 +1,7 @@
 nvidia-docker2 (2.3.0-1) UNRELEASED; urgency=medium
 
-  * Require new MIG changes
+  * 0d3b049a Update build system to support multi-arch builds
+  * 8557216d Require new MIG changes
 
  -- NVIDIA CORPORATION <cudatools@nvidia.com>  Fri, 15 May 2020 12:04:57 +0000
 
