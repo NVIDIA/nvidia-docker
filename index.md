@@ -6,10 +6,30 @@ If you feel something is missing or requires additional information, please let 
 
 List of supported distributions:
 
-|         | Ubuntu 14.04 | Ubuntu 16.04 | Ubuntu 18.04 | Debian 8 | Debian 9 | Debian 10 | Centos 7 | RHEL 7 | Amazon Linux 1 | Amazon Linux 2 |
-| ------- | :----------: | :----------: | :----------: | :------: | :------: | :-------: | :------: | :----: | :------------: | :------------: |
-| x86_64  |      X       |      X       |       X      |     X    |    X     |     X     |    X     |    X   |        X       |        X       |
-| ppc64le |              |      X       |       X      |          |          |           |          |        |                |                |
+|  OS Name / Version   |  Identifier | amd64 / x86_64 | ppc64le | arm64 / aarch64 |
+| -------------------- | :---------: | :------------: | :-----: | :-------------: |
+| Amazon Linux 1       | amzn1       |       X        |         |                 |
+| Amazon Linux 2       | amzn2       |       X        |         |                 |
+| Amazon Linux 2017.09 | amzn2017.09 |       X        |         |                 |
+| Amazon Linux 2018.03 | amzn2018.03 |       X        |         |                 |
+| Open Suse Leap 15.0  | sles15.0    |       X        |         |                 |
+| Open Suse Leap 15.1  | sles15.1    |       X        |         |                 |
+| Debian Linux 9       | debian9     |       X        |         |                 |
+| Debian Linux 10      | debian10    |       X        |         |                 |
+| Centos 7             | centos7     |       X        |    X    |                 |
+| Centos 8             | centos8     |       X        |    X    |        X        |
+| RHEL 7.4             | rhel7.4     |       X        |    X    |                 |
+| RHEL 7.5             | rhel7.5     |       X        |    X    |                 |
+| RHEL 7.6             | rhel7.6     |       X        |    X    |                 |
+| RHEL 7.7             | rhel7.7     |       X        |    X    |                 |
+| RHEL 8.0             | rhel8.0     |       X        |    X    |        X        |
+| RHEL 8.1             | rhel8.1     |       X        |    X    |        X        |
+| RHEL 8.2             | rhel8.2     |       X        |    X    |        X        |
+| Ubuntu 16.04         | ubuntu16.04 |       X        |    X    |                 |
+| Ubuntu 18.04         | ubuntu18.04 |       X        |    X    |        X        |
+| Ubuntu 19.04         | ubuntu19.04 |       X        |    X    |        X        |
+| Ubuntu 19.10         | ubuntu19.10 |       X        |    X    |        X        |
+| Ubuntu 20.04         | ubuntu20.04 |       X        |    X    |        X        |
 
 ## Debian-based distributions
 
