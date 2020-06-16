@@ -139,6 +139,26 @@ nvidia-docker run nvidia/cuda:10.0-base nvidia-smi
 
 Note that in the future, nvidia-docker2 packages will no longer be supported.
 
+## Troubleshooting
+
+### GPG key failures
+
+Problem: apt-get update [fails](https://github.com/NVIDIA/nvidia-docker/issues/1178):
+```console
+Reading package lists...
+W: GPG error: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64  Release: The following signatures were invalid: BADSIG F60F4B3D7FA2AF80 cudatools <cudatools@nvidia.com>
+E: The repository 'https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64  Release' is not signed.
+The command '/bin/sh -c apt-get update' returned a non-zero code: 100
+```
+
+Solution: GPG key must manually be renewed
+
+```sh
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+```
+
+* see also [this issue](https://github.com/NVIDIA/nvidia-docker/issues/1241)
+
 ## Changelog
 
 * Friday September 20th:
