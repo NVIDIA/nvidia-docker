@@ -6,30 +6,10 @@ If you feel something is missing or requires additional information, please let 
 
 List of supported distributions:
 
-|  OS Name / Version   |  Identifier | amd64 / x86_64 | ppc64le | arm64 / aarch64 |
-| -------------------- | :---------: | :------------: | :-----: | :-------------: |
-| Amazon Linux 1       | amzn1       | :heavy_check_mark: |         |                 |
-| Amazon Linux 2       | amzn2       | :heavy_check_mark: |         |                 |
-| Amazon Linux 2017.09 | amzn2017.09 | :heavy_check_mark: |         |                 |
-| Amazon Linux 2018.03 | amzn2018.03 | :heavy_check_mark: |         |                 |
-| Open Suse Leap 15.0  | sles15.0    | :heavy_check_mark: |         |                 |
-| Open Suse Leap 15.1  | sles15.1    | :heavy_check_mark: |         |                 |
-| Debian Linux 9       | debian9     | :heavy_check_mark: |         |                 |
-| Debian Linux 10      | debian10    | :heavy_check_mark: |         |                 |
-| Centos 7             | centos7     | :heavy_check_mark: | :heavy_check_mark: |                 |
-| Centos 8             | centos8     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| RHEL 7.4             | rhel7.4     | :heavy_check_mark: | :heavy_check_mark: |                 |
-| RHEL 7.5             | rhel7.5     | :heavy_check_mark: | :heavy_check_mark: |                 |
-| RHEL 7.6             | rhel7.6     | :heavy_check_mark: | :heavy_check_mark: |                 |
-| RHEL 7.7             | rhel7.7     | :heavy_check_mark: | :heavy_check_mark: |                 |
-| RHEL 8.0             | rhel8.0     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| RHEL 8.1             | rhel8.1     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| RHEL 8.2             | rhel8.2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Ubuntu 16.04         | ubuntu16.04 | :heavy_check_mark: | :heavy_check_mark: |                 |
-| Ubuntu 18.04         | ubuntu18.04 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Ubuntu 19.04         | ubuntu19.04 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Ubuntu 19.10         | ubuntu19.10 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Ubuntu 20.04         | ubuntu20.04 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|         | Ubuntu 14.04 | Ubuntu 16.04 | Ubuntu 18.04 | Debian 8 | Debian 9 | Debian 10 | Centos 7 | RHEL 7 | Amazon Linux 1 | Amazon Linux 2 |
+| ------- | :----------: | :----------: | :----------: | :------: | :------: | :-------: | :------: | :----: | :------------: | :------------: |
+| x86_64  |      X       |      X       |       X      |     X    |    X     |     X     |    X     |    X   |        X       |        X       |
+| ppc64le |              |      X       |       X      |          |          |           |          |        |                |                |
 
 ## Debian-based distributions
 
