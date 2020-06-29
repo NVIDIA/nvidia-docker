@@ -42,12 +42,34 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update
 ```
 
+For pre-releases, you need to enable the experimental repos of all dependencies:
+```bash
+sudo sed -i -e '/experimental/ s/^#//g' /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update
+```
+
+To later disable the experimental repos of all dependencies, you can run:
+```bash
+sudo sed -i -e '/experimental/ s/^/#/g' /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update
+```
+
 ## RHEL-based distributions
 
 ```bash
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | \
   sudo tee /etc/yum.repos.d/nvidia-docker.repo
+```
+
+For pre-releases, you need to enable the experimental repos of all dependencies:
+```bash
+sudo yum-config-manager --enable libnvidia-container-experimental
+```
+
+To later disable the experimental repos of all dependencies, you can run:
+```bash
+sudo yum-config-manager --disable libnvidia-container-experimental
 ```
 
 # Updating repository keys
