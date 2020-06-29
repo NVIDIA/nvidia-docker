@@ -1,3 +1,4 @@
-deb https://nvidia.github.io/libnvidia-container/ubuntu16.04/$(ARCH) /
+deb https://nvidia.github.io/libnvidia-container/stable/ubuntu16.04/$(ARCH) /
+#deb https://nvidia.github.io/libnvidia-container/experimental/ubuntu16.04/$(ARCH) /
 deb https://nvidia.github.io/nvidia-container-runtime/ubuntu16.04/$(ARCH) /
 deb https://nvidia.github.io/nvidia-docker/ubuntu16.04/$(ARCH) /
