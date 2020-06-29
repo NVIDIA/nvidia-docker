@@ -1,3 +1,4 @@
-deb https://nvidia.github.io/libnvidia-container/debian8/$(ARCH) /
+deb https://nvidia.github.io/libnvidia-container/stable/debian8/$(ARCH) /
+#deb https://nvidia.github.io/libnvidia-container/experimental/debian8/$(ARCH) /
 deb https://nvidia.github.io/nvidia-container-runtime/debian8/$(ARCH) /
 deb https://nvidia.github.io/nvidia-docker/debian8/$(ARCH) /

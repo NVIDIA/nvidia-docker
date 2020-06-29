@@ -1,3 +1,4 @@
-deb https://nvidia.github.io/libnvidia-container/ubuntu18.04/$(ARCH) /
+deb https://nvidia.github.io/libnvidia-container/stable/ubuntu18.04/$(ARCH) /
+#deb https://nvidia.github.io/libnvidia-container/experimental/ubuntu18.04/$(ARCH) /
 deb https://nvidia.github.io/nvidia-container-runtime/ubuntu18.04/$(ARCH) /
 deb https://nvidia.github.io/nvidia-docker/ubuntu18.04/$(ARCH) /
