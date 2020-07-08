@@ -8,7 +8,7 @@ LIB_NAME := nvidia-docker2
 LIB_VERSION := 2.3.0
 PKG_REV := 1
 
-RUNTIME_VERSION := 3.2.0
+RUNTIME_VERSION := 3.3.0
 
 # Supported OSs by architecture
 AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
