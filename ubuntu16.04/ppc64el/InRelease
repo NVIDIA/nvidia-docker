@@ -11,16 +11,16 @@ Origin: https://nvidia.github.io/nvidia-docker
 Suite: xenial
 Version: 1.0
 SHA512:
- 521afcc22a5a0ee9717dcb51c3ce8e6da7556294cbfa74925e0891ed26c71b6e8c07db28f07bfe1e59c0542b1fe5f0559e16a8b1071331b7dfe3d1ed9ce3340b             6480 Packages
- ad88c3b105963f0a4e660b6876694d546a5e906bb61d23b432d148983d39da91398f12031aca81486c1046a7eb0c619169e55c66eecbc8be7b01d6ccaf3a967f             1900 Packages.xz
+ 69a42db5d08d10fe4ffe5a0c3ff4967d1242a9064ad3cca97f530de8bc8f14c3feebce3bdb286460971b0d397968d230ac1123c7bac8b95389cd6b53bbc09807             7393 Packages
+ 800cd3b221c7193da84e29b98c3c99c62194ee9521fab75314b5cd6aab42d06bb35fbada1512a9e573c6e91a8e95362517c374b3293fe9a8ef5015a59c3cc92d             2064 Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEIEFim/U1L6wXipsfbtkco6wRYM0FAl7C6hsACgkQbtkco6wR
-YM1Dlgf6A83bPnx46HYFf0hLH+4LNib+8ZLGiK3nUZ/fh9Q7vEmsptjh+Ri6kUgm
-MVP0pn0ODeYMommg/YlyKYZkafrdsFa1FxWygahBqgJHH8Yi6OTEGP6ojl0NglTW
-67lVykVNla68GBfqhP+1df1N8FzX+lkizWIDAoL+akpkdLswkD+jD2K4OmPx/4AE
-sRMSIdgafXZ1TSuFYNv1OsxmekWd/LiYwVcgaYgZEGIYLxw5a0mKoIXIsJ3pkJYK
-IY/duIKb284IvAph8NhkhLudcHe7EYfu4ysfjL8DvLkKhiWEzlQzx6lAYGe2c6OP
-ETOfbnsaiHX+ARdaWvqOusAZf7IhkQ==
-=XfpF
+iQEzBAEBCgAdFiEEIEFim/U1L6wXipsfbtkco6wRYM0FAl8GMHwACgkQbtkco6wR
+YM05uAf9F28LgFa+jlx9R1XPaFy9pJHMSpiZr9tYZIG8qfy+q/whLj2VREytDg6E
+Z9RRVXmF7rxhamHhpV/4fv34ly20jHjYewVjPdJI7bYhsvqhQK8JSYWc/fRvMK2o
+YyX9rmz2bPddtEH3wBmwrlKPaXJJVMViyCY/I2L/1Ydr4OqzpxAVcpPQz8YUchlq
+KajhL17Mp8Bk9JyHbvYLbZEI4V6SjWgLjBU3z1zBbET4DncGKPaPN8LuveDobkNx
+c6KJfrF2MPZ50PQJ+/9gB10OdSt2B+mcxzZ6dqammAeqwupcp5p16OK17WtLbCxU
+N1fZBV4v0BeUixZ9FshhY15vYmUddg==
+=c8dD
 -----END PGP SIGNATURE-----
