@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
- <revision>1.0</revision>
-<data type="filelists">
-  <checksum type="sha512">3915aa692f834e3f464f5d458f8ec443b4e2f7f4ab3a1f49cab65cc8f5f492da2b9af4d54f3cf64c39cf84f6e691bc50b01aa89ff63fd9190cd4015896eba561</checksum>
-  <open-checksum type="sha512">4e3886aa41f6c6a6de358c04448723195f67683c2e8415332ae198285ba3784bbf7ca20e870d0b89cf174e9f8a80ee9ea029147b34dd1394bd1636192067a9f6</open-checksum>
-  <location href="repodata/3915aa692f834e3f464f5d458f8ec443b4e2f7f4ab3a1f49cab65cc8f5f492da2b9af4d54f3cf64c39cf84f6e691bc50b01aa89ff63fd9190cd4015896eba561-filelists.xml.xz"/>
-  <timestamp>1589832480</timestamp>
-  <size>1536</size>
-  <open-size>7005</open-size>
-</data>
-<data type="other">
-  <checksum type="sha512">177b3509a14a3019101b514ecfe039049e64fff4535d9d431933eedc76db59d11c8dd63e727e284a41df81f87d7775c8f20405b0b434bb3cc0cb9a1d7326cb36</checksum>
-  <open-checksum type="sha512">168fbb468e923fa99c20579866b5665bcdcce630693fc17f84e80a54c1d706cf29a4efde6cdf8269061b5e7bdfd419a65c6fefa49a69468d716d851ed0d6eed7</open-checksum>
-  <location href="repodata/177b3509a14a3019101b514ecfe039049e64fff4535d9d431933eedc76db59d11c8dd63e727e284a41df81f87d7775c8f20405b0b434bb3cc0cb9a1d7326cb36-other.xml.xz"/>
-  <timestamp>1589832480</timestamp>
-  <size>1584</size>
-  <open-size>4084</open-size>
-</data>
-<data type="primary">
-  <checksum type="sha512">364d26f49367fa62072bd3b2c24f12dd991e03bc270d2da8bec82064434b1ff37b8527568cae97dad67dddf2b926388eb8237fccd906b3ec4944461b849e6a55</checksum>
-  <open-checksum type="sha512">3072cc6cfcf62c51e070132b059ee0c5598931ddbaf4a4df1e9beb53338d91d735bae66cee261f266466d00bfaa84e290dcc64c9f9d93f61f9eab49c32d95158</open-checksum>
-  <location href="repodata/364d26f49367fa62072bd3b2c24f12dd991e03bc270d2da8bec82064434b1ff37b8527568cae97dad67dddf2b926388eb8237fccd906b3ec4944461b849e6a55-primary.xml.xz"/>
-  <timestamp>1589832480</timestamp>
-  <size>2468</size>
-  <open-size>25359</open-size>
-</data>
+  <revision>1.0</revision>
+  <data type="primary">
+    <checksum type="sha512">05efe79561053dc5318d24ea997991f87dd6b67cf7cf356063d4bc0551f85dda748ecac0070b319e2e6b047c1b9c3061c67f1a930dc3d52b96c9581dda451fe4</checksum>
+    <open-checksum type="sha512">f7d8e97cfad7dfe65c6986d99de26eb395d22349f3954d1e2e16dd067074d336a0680723f0cfd259f41174153e47d15c700986dfc62b3d327784caa20813983a</open-checksum>
+    <location href="repodata/05efe79561053dc5318d24ea997991f87dd6b67cf7cf356063d4bc0551f85dda748ecac0070b319e2e6b047c1b9c3061c67f1a930dc3d52b96c9581dda451fe4-primary.xml.gz"/>
+    <timestamp>1594241193</timestamp>
+    <size>2946</size>
+    <open-size>27042</open-size>
+  </data>
+  <data type="filelists">
+    <checksum type="sha512">edc4a99f16508875e8cad893d1dfe51c8dbea6bc37486fac813b9a34e9ff1b72e211d77163785e3798555d820b9c3c8e7facf6b97c6e104e5dff27aba78a70de</checksum>
+    <open-checksum type="sha512">a545fd5bd4c6167f7f9fb60ba252fdfd2ba7eb8391f3c3c1941a348964117f89ef8da42037ae951e730877a1b996dc965269febd9d0371ccb850d88ca453cb57</open-checksum>
+    <location href="repodata/edc4a99f16508875e8cad893d1dfe51c8dbea6bc37486fac813b9a34e9ff1b72e211d77163785e3798555d820b9c3c8e7facf6b97c6e104e5dff27aba78a70de-filelists.xml.gz"/>
+    <timestamp>1594241193</timestamp>
+    <size>1703</size>
+    <open-size>7450</open-size>
+  </data>
+  <data type="other">
+    <checksum type="sha512">abdc76c06aa5001888c2fa1055e542cbd25b98cabdfc2f929a260e4599173f61a5b3c05dc99b19fea39f7412e06b111f0138242031b69e100a82a5189329a339</checksum>
+    <open-checksum type="sha512">fd191493f61c1def6b1c3c163189fca4c28e08f08d35330df4f5ed7d9239f167416d7e7b0087433c500066bb706478104dc12796e0f42256b91aa69a35fb7554</open-checksum>
+    <location href="repodata/abdc76c06aa5001888c2fa1055e542cbd25b98cabdfc2f929a260e4599173f61a5b3c05dc99b19fea39f7412e06b111f0138242031b69e100a82a5189329a339-other.xml.gz"/>
+    <timestamp>1594241193</timestamp>
+    <size>1798</size>
+    <open-size>4756</open-size>
+  </data>
 </repomd>

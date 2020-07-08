@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
- <revision>1.0</revision>
-<data type="filelists">
-  <checksum type="sha512">30b91f0e47c8b4c7bec6ebea40ba1f079567294372b483f3eead29203ca85914be367fd50ae347994fd2e080beff561d1dd04d55489f6d674fc88b48a3ec330b</checksum>
-  <open-checksum type="sha512">53a937fbbdab0808a47ea01eb63b982bda63d3518139c300a2a3c8da3ca2187854d7591f676958e985a6a84047f0c55c9f9a2e026b52379e7467b9093de657cd</open-checksum>
-  <location href="repodata/30b91f0e47c8b4c7bec6ebea40ba1f079567294372b483f3eead29203ca85914be367fd50ae347994fd2e080beff561d1dd04d55489f6d674fc88b48a3ec330b-filelists.xml.xz"/>
-  <timestamp>1589832621</timestamp>
-  <size>508</size>
-  <open-size>991</open-size>
-</data>
-<data type="other">
-  <checksum type="sha512">488cb7cf8f1074dc94c718b5d9a41a0dfe39ccbf78e085634f860c4fbbf1c76b8291bf0c2fdd62a8c74d65be0bc2c8194b2480ee6da651d21d5fca8239c1f853</checksum>
-  <open-checksum type="sha512">60359c3672889be19b3aa5765c401dce91fa98450888e8040c8636ee4f66971e152cc52f47449ae166110754e00023ade1e82c8ccb6e1b6f13365e187fc3e9cd</open-checksum>
-  <location href="repodata/488cb7cf8f1074dc94c718b5d9a41a0dfe39ccbf78e085634f860c4fbbf1c76b8291bf0c2fdd62a8c74d65be0bc2c8194b2480ee6da651d21d5fca8239c1f853-other.xml.xz"/>
-  <timestamp>1589832621</timestamp>
-  <size>580</size>
-  <open-size>798</open-size>
-</data>
-<data type="primary">
-  <checksum type="sha512">d145507ef19bd7850dc058d335254b5f1ee5f2f569dd33b350f4f154760682056b0cf9bcc506bf22c52bd183029218342435b6fc8effab7635e3565a0986fb19</checksum>
-  <open-checksum type="sha512">8158fa2bb66e546b1e4027f8bef3794734888cd70cf9cb1fc7f2f00c13181ecc3fef0a86d8d9eb18d9c9618c0112fbd50734c427557fee80199b5ad78cc89cfb</open-checksum>
-  <location href="repodata/d145507ef19bd7850dc058d335254b5f1ee5f2f569dd33b350f4f154760682056b0cf9bcc506bf22c52bd183029218342435b6fc8effab7635e3565a0986fb19-primary.xml.xz"/>
-  <timestamp>1589832621</timestamp>
-  <size>1044</size>
-  <open-size>3371</open-size>
-</data>
+  <revision>1.0</revision>
+  <data type="primary">
+    <checksum type="sha512">4a82b9bdeed34b38da1a47707bd67def4e94a7aa07648974ec910c006c4169b2823982115f03a1cb37d7a917161e517158931ff90f4c82de7dd601ac0f284974</checksum>
+    <open-checksum type="sha512">1754210a58b1085eea951e0a997d104d6abb520200bd4c8fac5e3f25d6307c69a03b9d228046a1d67baa3ff318a819a7dfe9c6023131274ef08489211ce9944b</open-checksum>
+    <location href="repodata/4a82b9bdeed34b38da1a47707bd67def4e94a7aa07648974ec910c006c4169b2823982115f03a1cb37d7a917161e517158931ff90f4c82de7dd601ac0f284974-primary.xml.gz"/>
+    <timestamp>1594241200</timestamp>
+    <size>1178</size>
+    <open-size>4988</open-size>
+  </data>
+  <data type="filelists">
+    <checksum type="sha512">53f9748706431df10776c7814730092a3c6a9dda021e46e49c5aa86133f1e7ee80ca98d5e5e368aa4c33e161c45ce78ad45ef78b968d23aafcdc20985d79a89a</checksum>
+    <open-checksum type="sha512">65fd4a3c44577362021252092f9a0506f79cf18b18a577d348aa1b96463394e12e3a60dc805d7a991c1c26ddb3313c2eb985c22966747ffe961c98d2f02e65fc</open-checksum>
+    <location href="repodata/53f9748706431df10776c7814730092a3c6a9dda021e46e49c5aa86133f1e7ee80ca98d5e5e368aa4c33e161c45ce78ad45ef78b968d23aafcdc20985d79a89a-filelists.xml.gz"/>
+    <timestamp>1594241200</timestamp>
+    <size>534</size>
+    <open-size>1424</open-size>
+  </data>
+  <data type="other">
+    <checksum type="sha512">505bd74b7500f512293f6ebcc9eee4bea9d0c828cdf3ed6e1a0faa9ef177fcea9bd97841f8b115f3a93a0763e236e75167d777672917924e3f681c5956bfe637</checksum>
+    <open-checksum type="sha512">79bbb9c54065a1456f3e786062889d9e906a691a099407a01c9579a4109f705f25c823de84f4b13cd74c8d74c8d332f70e7c8853cc140c54e3c023f3470dc7b9</open-checksum>
+    <location href="repodata/505bd74b7500f512293f6ebcc9eee4bea9d0c828cdf3ed6e1a0faa9ef177fcea9bd97841f8b115f3a93a0763e236e75167d777672917924e3f681c5956bfe637-other.xml.gz"/>
+    <timestamp>1594241200</timestamp>
+    <size>679</size>
+    <open-size>1470</open-size>
+  </data>
 </repomd>
