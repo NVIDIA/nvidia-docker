@@ -34,7 +34,7 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %files
 %license LICENSE
 %{_bindir}/nvidia-docker
-/etc/docker/daemon.json
+%config /etc/docker/daemon.json
 
 %changelog
 * Wed Jul 08 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.4.0-1
