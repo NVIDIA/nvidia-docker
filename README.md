@@ -50,12 +50,12 @@ Since openSUSE Leap 15.1 still has Docker 18.06, you have two options:
 
 ```console
 # Upgrade Docker to 19.03+ first:
-zypper ar https://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_15.1/Virtualization:containers.repo
-zypper install --allow-vendor-change 'docker >= 19.03'  # accept the new signature
+sudo zypper ar https://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_15.1/Virtualization:containers.repo
+sudo zypper install --allow-vendor-change 'docker >= 19.03'  # accept the new signature
 
 # Add the package repositories
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+sudo zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
 
 sudo zypper install -y nvidia-container-toolkit
 sudo systemctl restart docker
@@ -66,7 +66,7 @@ sudo systemctl restart docker
 ```console
 # Add the package repositories
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
+sudo zypper ar https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo
 
 sudo zypper install -y nvidia-docker2  # accept the overwrite of /etc/docker/daemon.json
 sudo systemctl restart docker
