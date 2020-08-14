@@ -22,9 +22,12 @@ List of supported distributions:
 | RHEL 7.5             | rhel7.5     |       ✔        |    ✔    |                 |
 | RHEL 7.6             | rhel7.6     |       ✔        |    ✔    |                 |
 | RHEL 7.7             | rhel7.7     |       ✔        |    ✔    |                 |
+| RHEL 7.8             | rhel7.8     |       ✔        |    ✔    |                 |
+| RHEL 7.9             | rhel7.9     |       ✔        |    ✔    |                 |
 | RHEL 8.0             | rhel8.0     |       ✔        |    ✔    |        ✔        |
 | RHEL 8.1             | rhel8.1     |       ✔        |    ✔    |        ✔        |
 | RHEL 8.2             | rhel8.2     |       ✔        |    ✔    |        ✔        |
+| RHEL 8.3             | rhel8.3     |       ✔        |    ✔    |        ✔        |
 | Ubuntu 16.04         | ubuntu16.04 |       ✔        |    ✔    |                 |
 | Ubuntu 18.04         | ubuntu18.04 |       ✔        |    ✔    |        ✔        |
 | Ubuntu 19.04         | ubuntu19.04 |       ✔        |    ✔    |        ✔        |
