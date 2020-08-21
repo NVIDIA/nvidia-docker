@@ -20,10 +20,20 @@ sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 
 [nvidia-container-runtime]
 name=nvidia-container-runtime
-baseurl=https://nvidia.github.io/nvidia-container-runtime/centos7/$basearch
+baseurl=https://nvidia.github.io/nvidia-container-runtime/stable/centos7/$basearch
 repo_gpgcheck=1
 gpgcheck=0
 enabled=1
+gpgkey=https://nvidia.github.io/nvidia-container-runtime/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+[nvidia-container-runtime-experimental]
+name=nvidia-container-runtime-experimental
+baseurl=https://nvidia.github.io/nvidia-container-runtime/experimental/centos7/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=0
 gpgkey=https://nvidia.github.io/nvidia-container-runtime/gpgkey
 sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
