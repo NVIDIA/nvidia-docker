@@ -37,6 +37,10 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 /etc/docker/daemon.json
 
 %changelog
+* Wed Jul 08 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.4.0-1
+- 09a01276 Update package license to match source license
+- b9c70155 Update dependence on nvidia-container-runtime to 3.3.0
+
 * Fri May 15 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.3.0-1
 - 0d3b049a Update build system to support multi-arch builds
 - 8557216d Require new MIG changes

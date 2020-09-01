@@ -1,3 +1,10 @@
+nvidia-docker2 (2.4.0-1) UNRELEASED; urgency=medium
+
+  * 09a01276 Update package license to match source license
+  * b9c70155 Update dependence on nvidia-container-runtime to 3.3.0
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Wed, 08 Jul 2020 20:33:10 +0000
+
 nvidia-docker2 (2.3.0-1) UNRELEASED; urgency=medium
 
   * 0d3b049a Update build system to support multi-arch builds
