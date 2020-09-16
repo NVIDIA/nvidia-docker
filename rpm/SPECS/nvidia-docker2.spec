@@ -34,9 +34,15 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %files
 %license LICENSE
 %{_bindir}/nvidia-docker
-/etc/docker/daemon.json
+%config /etc/docker/daemon.json
 
 %changelog
+* Wed Sep 16 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.5.0-1
+- Bump version to v2.5.0
+- Add dependence on nvidia-container-runtime >= 3.4.0
+- Update readme to point to the official documentatio
+- Add %config directive to daemon.json for RPM installations
+
 * Wed Jul 08 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.4.0-1
 - 09a01276 Update package license to match source license
 - b9c70155 Update dependence on nvidia-container-runtime to 3.3.0
