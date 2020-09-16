@@ -1,3 +1,12 @@
+nvidia-docker2 (2.5.0-1) UNRELEASED; urgency=medium
+
+  * Bump version to v2.5.0
+  * Add dependence on nvidia-container-runtime >= 3.4.0
+  * Update readme to point to the official documentatio
+  * Add %config directive to daemon.json for RPM installations
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Wed, 16 Sep 2020 13:55:52 +0000
+
 nvidia-docker2 (2.4.0-1) UNRELEASED; urgency=medium
 
   * 09a01276 Update package license to match source license
