@@ -94,7 +94,7 @@ $ sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/latest/libnvidia-container/g
 $ sudo yum update
 ```
 
-# Amazon Linux (1 and 2)
+## Amazon Linux (1 and 2)
 
 Be careful to run each instruction one by one!
 
