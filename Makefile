@@ -120,7 +120,7 @@ docker-build-%:
 	DOCKER_BUILDKIT=1 \
 	$(DOCKER) build \
 	    --progress=plain \
-	    --build-arg BASEIMAGE=$(BASEIMAGE) \
+	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
 	    --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
 	    --build-arg PKG_VERS="$(LIB_VERSION)" \
