@@ -37,6 +37,10 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
+* Thu Apr 29 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.0-1
+- Add dependence on nvidia-container-runtime >= 3.5.0
+- Add Jenkinsfile for building packages
+
 * Wed Sep 16 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.5.0-1
 - Bump version to v2.5.0
 - Add dependence on nvidia-container-runtime >= 3.4.0
