@@ -1,3 +1,10 @@
+nvidia-docker2 (2.6.0-1) UNRELEASED; urgency=medium
+
+  * Add dependence on nvidia-container-runtime >= 3.5.0
+  * Add Jenkinsfile for building packages
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Thu, 29 Apr 2021 05:25:25 +0000
+
 nvidia-docker2 (2.5.0-1) UNRELEASED; urgency=medium
 
   * Bump version to v2.5.0
