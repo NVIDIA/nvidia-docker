@@ -19,52 +19,95 @@ podTemplate (cloud:'sw-gpu-cloudnative',
     containerTemplate(name: 'docker', image: 'docker:dind', ttyEnabled: true, privileged: true)
   ]) {
     node(POD_LABEL) {
+        def scmInfo
+
         stage('checkout') {
-            checkout scm
+            scmInfo = checkout(scm)
         }
+
         stage('dependencies') {
             container('docker') {
-                sh 'apk add --no-cache make bash'
+                sh 'apk add --no-cache make bash git'
             }
         }
+
+        def versionInfo
+        stage('version') {
+            container('docker') {
+                versionInfo = getVersionInfo(scmInfo)
+                println "versionInfo=${versionInfo}"
+            }
+        }
+
+        def dist = 'ubuntu20.04'
+        def arch = 'amd64'
+        def stageLabel = "${dist}-${arch}"
+
         stage('build-one') {
-            parallel (
-                getSingleBuildForArchitectures(["amd64", "ppc64le", "arm64"])
-            )
+            container('docker') {
+                stage (stageLabel) {
+                    sh "make -f mk/docker.mk ADD_DOCKER_PLATFORM_ARGS=true ${dist}-${arch}"
+                }
+            }
         }
-        stage('build-all') {
-            parallel (
-                getAllBuildForArchitectures(["amd64", "ppc64le", "arm64", "x86_64", "aarch64"])
-            )
-        }
-    }
-}
 
-def getBuildClosure(def architecture, def makeCommand, def makeTarget) {
-    return {
-        container('docker') {
-            stage(architecture) {
-                sh "${makeCommand} ${makeTarget}"
+        stage('release') {
+            container('docker') {
+                stage (stageLabel) {
+
+                    def component = 'main'
+                    def repository = 'sw-gpu-cloudnative-debian-local/pool/main/'
+
+                    def uploadSpec = """{
+                                        "files":
+                                        [  {
+                                                "pattern": "./dist/${dist}/${arch}/*.deb",
+                                                "target": "${repository}",
+                                                "props": "deb.distribution=${dist};deb.component=${component};deb.architecture=${arch}"
+                                            }
+                                        ]
+                                    }"""
+
+                    sh "echo starting release with versionInfo=${versionInfo}"
+                    if (versionInfo.isTag) {
+                        // upload to artifactory repository
+                        def server = Artifactory.server 'sw-gpu-artifactory'
+                        server.upload spec: uploadSpec
+                    } else {
+                        sh "echo skipping release for non-tagged build"
+                    }
+                }
             }
         }
     }
 }
 
-def getBuildStagesForArchitectures(def architectures, def makeCommand, def makeTargetPrefix) {
-    stages = [:]
+// getVersionInfo returns a hash of version info
+def getVersionInfo(def scmInfo) {
+    def isMaster = scmInfo.GIT_BRANCH == "master"
+    def isJetson = scmInfo.GIT_BRANCH == "jetson"
 
-    for (a in architectures) {
-        stages[a] = getBuildClosure(a, makeCommand, "${makeTargetPrefix}-${a}")
+    def isTag = !isMaster && !isJetson
+
+    def versionInfo = [
+        isMaster: isMaster,
+        isJetson: isJetson,
+        isTag: isTag(scmInfo.GIT_BRANCH)
+    ]
+
+    scmInfo.each { k, v -> versionInfo[k] = v }
+    return versionInfo
+}
+
+def isTag(def branch) {
+    if (!branch.startsWith('v')) {
+        return false
     }
 
-    return stages
+    def version = shOutput('git describe --all --exact-match --always')
+    return version == "tags/${branch}"
 }
 
-def getSingleBuildForArchitectures(def architectures) {
-    return getBuildStagesForArchitectures(architectures, "make", "ubuntu18.04")
-}
-
-def getAllBuildForArchitectures(def architectures) {
-    // TODO: For the time being we only echo the command for the "all" stages
-    return getBuildStagesForArchitectures(architectures, "echo make", "docker")
+def shOuptut(def script) {
+    return sh(script: script, returnStdout: true).trim()
 }
