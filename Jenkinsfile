@@ -84,14 +84,7 @@ podTemplate (cloud:'sw-gpu-cloudnative',
 
 // getVersionInfo returns a hash of version info
 def getVersionInfo(def scmInfo) {
-    def isMaster = scmInfo.GIT_BRANCH == "master"
-    def isJetson = scmInfo.GIT_BRANCH == "jetson"
-
-    def isTag = !isMaster && !isJetson
-
     def versionInfo = [
-        isMaster: isMaster,
-        isJetson: isJetson,
         isTag: isTag(scmInfo.GIT_BRANCH)
     ]
 
