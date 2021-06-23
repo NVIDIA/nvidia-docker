@@ -46,7 +46,7 @@ podTemplate (cloud:'sw-gpu-cloudnative',
         stage('build-one') {
             container('docker') {
                 stage (stageLabel) {
-                    sh "make -f mk/docker.mk ADD_DOCKER_PLATFORM_ARGS=true ${dist}-${arch}"
+                    sh "make ADD_DOCKER_PLATFORM_ARGS=true ${dist}-${arch}"
                 }
             }
         }
