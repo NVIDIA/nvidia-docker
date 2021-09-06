@@ -8,7 +8,9 @@ LIB_NAME := nvidia-docker2
 LIB_VERSION := 2.6.1
 LIB_TAG := rc.1
 
-TOOLKIT_VERSION := 1.5.2
+# Note: This should be the previous full release of nvidia-container-toolkit to ensure
+# that release candidate (e.g. rc.1) work as expected.
+TOOLKIT_VERSION := 1.5.1
 
 # Supported OSs by architecture
 AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9

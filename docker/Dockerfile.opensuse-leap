@@ -18,7 +18,7 @@ ENV DOCKER_VERSION $DOCKER_VERSION
 ENV TOOLKIT_VERSION $TOOLKIT_VERSION
 
 # output directory
-ENV DIST_DIR=/tmp/nvidia-container-runtime-$PKG_VERS/SOURCES
+ENV DIST_DIR=/tmp/nvidia-docker2-$PKG_VERS/SOURCES
 RUN mkdir -p $DIST_DIR /dist
 
 COPY nvidia-docker $DIST_DIR
