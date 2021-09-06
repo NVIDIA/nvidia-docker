@@ -8,7 +8,7 @@ LIB_NAME := nvidia-docker2
 LIB_VERSION := 2.6.1
 LIB_TAG := rc.1
 
-RUNTIME_VERSION := 3.5.0
+TOOLKIT_VERSION := 1.5.2
 
 # Supported OSs by architecture
 AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
@@ -129,7 +129,7 @@ docker-build-%:
 	    --progress=plain \
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
-	    --build-arg RUNTIME_VERSION="$(RUNTIME_VERSION)" \
+	    --build-arg TOOLKIT_VERSION="$(TOOLKIT_VERSION)" \
 	    --build-arg PKG_VERS="$(LIB_VERSION)" \
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \

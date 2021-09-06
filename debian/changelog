@@ -1,6 +1,8 @@
 nvidia-docker2 (2.6.1~rc.1-1) UNRELEASED; urgency=medium
 
   * [BUILD] Allow for TAG to be specified in Makfile to match other projects
+  * Replace nvidia-container-runtime dependece with nvidia-container-toolit >= 1.5.2
+
 
  -- NVIDIA CORPORATION <cudatools@nvidia.com>  Thu, 29 Apr 2021 05:25:25 +0000
 

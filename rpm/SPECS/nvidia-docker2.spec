@@ -16,11 +16,11 @@ Source1: daemon.json
 Source2: LICENSE
 
 Conflicts: nvidia-docker < 2.0.0
-Requires: nvidia-container-runtime >= %{runtime_version}
+Requires: nvidia-container-toolkit >= %{toolkit_version}
 Requires: %{docker_version}
 
 %description
-Replaces nvidia-docker with a new implementation based on nvidia-container-runtime
+Replaces nvidia-docker with a new implementation based on the NVIDIA Container Toolkit
 
 %prep
 cp %{SOURCE0} %{SOURCE1} %{SOURCE2} .
@@ -39,6 +39,7 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %changelog
 * Mon Sep 06 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.1-0.1.rc.1
 - [BUILD] Allow for TAG to be specified in Makfile to match other projects
+- Replace nvidia-container-runtime dependece with nvidia-container-toolit >= 1.5.2
 
 * Thu Apr 29 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.0-1
 - Add dependence on nvidia-container-runtime >= 3.5.0
