@@ -5,8 +5,8 @@ MKDIR  ?= mkdir
 DIST_DIR ?= $(CURDIR)/dist
 
 LIB_NAME := nvidia-docker2
-LIB_VERSION := 2.6.0
-PKG_REV := 1
+LIB_VERSION := 2.6.1
+LIB_TAG := rc.1
 
 RUNTIME_VERSION := 3.5.0
 
@@ -77,6 +77,7 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 
 # Default variables for all private '--' targets below.
 # One private target is defined for each OS we support.
+--%: PKG_REV = 1
 --%: TARGET_PLATFORM = $(*)
 --%: VERSION = $(patsubst $(OS)%-$(ARCH),%,$(TARGET_PLATFORM))
 --%: BASEIMAGE = $(OS):$(VERSION)
@@ -88,31 +89,37 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 
 # private ubuntu target
 --ubuntu%: OS := ubuntu
+--ubuntu%: LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
 --ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
 
 # private debian target
 --debian%: OS := debian
+--debian%: LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
 --debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
 
 # private centos target
 --centos%: OS := centos
 --centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+--centos%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),2)
 
 # private amazonlinuxtarget
 --amazonlinux%: OS := amazonlinux
 --amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
 --amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
+--amazonlinux%: PKG_REV = $(if $(LIB_TAG),0.1.$(LIB_TAG).amzn$(VERSION),2.amzn$(VERSION))
 
 # private opensuse-leap target
 --opensuse-leap%: OS := opensuse-leap
 --opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
 --opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
+--opensuse-leap%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
 
 # private rhel target (actually built on centos)
 --rhel%: OS := centos
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+--rhel%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),2)
 
 docker-build-%:
 	@echo "Building for $(TARGET_PLATFORM)"

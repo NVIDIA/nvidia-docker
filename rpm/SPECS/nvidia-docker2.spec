@@ -37,6 +37,9 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
+* Mon Sep 06 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.1-0.1.rc.1
+- [BUILD] Allow for TAG to be specified in Makfile to match other projects
+
 * Thu Apr 29 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.0-1
 - Add dependence on nvidia-container-runtime >= 3.5.0
 - Add Jenkinsfile for building packages
