@@ -13,14 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # packaging
 ARG PKG_VERS
 ARG PKG_REV
-ARG RUNTIME_VERSION
+ARG TOOLKIT_VERSION
 ARG DOCKER_VERSION
 
 ENV DEBFULLNAME "NVIDIA CORPORATION"
 ENV DEBEMAIL "cudatools@nvidia.com"
 ENV REVISION "$PKG_VERS-$PKG_REV"
 ENV DOCKER_VERSION $DOCKER_VERSION
-ENV RUNTIME_VERSION $RUNTIME_VERSION
+ENV TOOLKIT_VERSION $TOOLKIT_VERSION
 ENV SECTION ""
 
 # output directory
@@ -34,8 +34,7 @@ COPY daemon.json $DIST_DIR/daemon.json
 WORKDIR $DIST_DIR
 COPY debian ./debian
 
-RUN sed -i "s;@VERSION@;${REVISION};" debian/changelog && \
-    sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
+RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
     if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then exit 1; fi
 
 CMD export DISTRIB="unstable" && \

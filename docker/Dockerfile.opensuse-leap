@@ -9,16 +9,16 @@ RUN zypper install -y \
 # packaging
 ARG PKG_VERS
 ARG PKG_REV
-ARG RUNTIME_VERSION
+ARG TOOLKIT_VERSION
 ARG DOCKER_VERSION
 
 ENV VERSION $PKG_VERS
 ENV RELEASE $PKG_REV
 ENV DOCKER_VERSION $DOCKER_VERSION
-ENV RUNTIME_VERSION $RUNTIME_VERSION
+ENV TOOLKIT_VERSION $TOOLKIT_VERSION
 
 # output directory
-ENV DIST_DIR=/tmp/nvidia-container-runtime-$PKG_VERS/SOURCES
+ENV DIST_DIR=/tmp/nvidia-docker2-$PKG_VERS/SOURCES
 RUN mkdir -p $DIST_DIR /dist
 
 COPY nvidia-docker $DIST_DIR
@@ -34,6 +34,6 @@ CMD rpmbuild --clean -bb \
              -D "version $VERSION" \
              -D "release $RELEASE" \
              -D "docker_version $DOCKER_VERSION" \
-             -D "runtime_version $RUNTIME_VERSION" \
+             -D "toolkit_version $TOOLKIT_VERSION" \
              SPECS/nvidia-docker2.spec && \
     mv RPMS/noarch/*.rpm /dist
