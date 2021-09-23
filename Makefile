@@ -102,13 +102,13 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 # private centos target
 --centos%: OS := centos
 --centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
---centos%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),2)
+--centos%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
 
 # private amazonlinuxtarget
 --amazonlinux%: OS := amazonlinux
 --amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
 --amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
---amazonlinux%: PKG_REV = $(if $(LIB_TAG),0.1.$(LIB_TAG).amzn$(VERSION),2.amzn$(VERSION))
+--amazonlinux%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
 
 # private opensuse-leap target
 --opensuse-leap%: OS := opensuse-leap
@@ -121,7 +121,7 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
---rhel%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),2)
+--rhel%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
 
 docker-build-%:
 	@echo "Building for $(TARGET_PLATFORM)"
