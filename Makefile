@@ -13,7 +13,7 @@
 # limitations under the License.
 
 LIB_NAME := nvidia-docker2
-LIB_VERSION := 2.6.1
+LIB_VERSION := 2.7.0
 LIB_TAG := rc.1
 
 # Note: This should be the previous full release of nvidia-container-toolkit to ensure
