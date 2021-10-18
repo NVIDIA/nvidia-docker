@@ -21,7 +21,7 @@ AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
 X86_64_TARGETS := centos7 centos8 rhel7 rhel8 amazonlinux1 amazonlinux2 opensuse-leap15.1
 PPC64LE_TARGETS := ubuntu18.04 ubuntu16.04 centos7 centos8 rhel7 rhel8
 ARM64_TARGETS := ubuntu20.04 ubuntu18.04
-AARCH64_TARGETS := centos8 rhel8
+AARCH64_TARGETS := centos8 rhel8 amazonlinux2
 
 # By default run all native docker-based targets
 docker-native:
