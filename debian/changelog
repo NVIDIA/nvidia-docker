@@ -1,7 +1,8 @@
 nvidia-docker2 (2.7.0~rc.1-1) UNRELEASED; urgency=medium
 
+  * Add AARCH64 package for Amazon Linux 2
   * [BUILD] Allow for TAG to be specified in Makfile to match other projects
-  * Replace nvidia-container-runtime dependece with nvidia-container-toolit > 1.5.1
+  * Replace nvidia-container-runtime dependence with nvidia-container-toolit > 1.5.1
 
  -- NVIDIA CORPORATION <cudatools@nvidia.com>  Thu, 29 Apr 2021 05:25:25 +0000
 
