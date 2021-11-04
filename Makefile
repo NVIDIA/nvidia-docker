@@ -14,11 +14,10 @@
 
 LIB_NAME := nvidia-docker2
 LIB_VERSION := 2.7.0
-LIB_TAG := rc.1
+LIB_TAG := rc.2
 
-# Note: This should be the previous full release of nvidia-container-toolkit to ensure
-# that release candidate (e.g. rc.1) work as expected.
-TOOLKIT_VERSION := 1.5.1
+TOOLKIT_VERSION ?= 1.6.0
+TOOLKIT_TAG ?= rc.2
 
 # By default run all native docker-based targets
 docker-native:

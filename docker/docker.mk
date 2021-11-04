@@ -92,41 +92,66 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 --%: docker-build-%
 	@
 
+DEB_LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
+DEB_PKG_REV := 1
+DEB_TOOLKIT_VERSION := $(TOOLKIT_VERSION)$(if $(TOOLKIT_TAG),~$(TOOLKIT_TAG))
+DEB_TOOLKIT_REV := 1
+
+RPM_LIB_VERSION := $(LIB_VERSION)
+RPM_PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
+RPM_TOOLKIT_VERSION := $(TOOLKIT_VERSION)
+RPM_TOOLKIT_REV := $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
+
 # private OS targets with defaults
 # private ubuntu target
 --ubuntu%: OS := ubuntu
---ubuntu%: LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
---ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
---ubuntu%: PKG_REV := 1
+--ubuntu%: LIB_VERSION := $(DEB_LIB_VERSION)
+--ubuntu%: PKG_REV := $(DEB_PKG_REV)
+--ubuntu%: TOOLKIT_VERSION := $(DEB_TOOLKIT_VERSION)
+--ubuntu%: TOOLKIT_REV := $(DEB_TOOLKIT_REV)
 
 # private debian target
 --debian%: OS := debian
---debian%: LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
---debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
---debian%: PKG_REV := 1
+--debian%: LIB_VERSION := $(DEB_LIB_VERSION)
+--debian%: PKG_REV := $(DEB_PKG_REV)
+--debian%: TOOLKIT_VERSION := $(DEB_TOOLKIT_VERSION)
+--debian%: TOOLKIT_REV := $(DEB_TOOLKIT_REV)
+
 
 # private centos target
 --centos%: OS := centos
---centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
---centos%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
+--centos%: PKG_REV := $(RPM_PKG_REV)
+--centos%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
+--centos%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
 
 # private amazonlinux target
 --amazonlinux%: OS := amazonlinux
---amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
---amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
---amazonlinux%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
+--amazonlinux%: PKG_REV := $(RPM_PKG_REV)
+--amazonlinux%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
+--amazonlinux%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
 
 # private opensuse-leap target with overrides
 --opensuse-leap%: OS := opensuse-leap
+--opensuse-leap%: PKG_REV := $(RPM_PKG_REV)
+--opensuse-leap%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
+--opensuse-leap%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
 --opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
---opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
---opensuse-leap%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
 
 # private rhel target (actually built on centos)
 --rhel%: OS := centos
---rhel%: PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
+--rhel%: PKG_REV := $(RPM_PKG_REV)
+--rhel%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
+--rhel%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
+
+# Specify required docker versions
+--ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
+--debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
+--centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+--amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
+--amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
+--opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
 
 docker-build-%:
