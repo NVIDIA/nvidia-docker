@@ -1,3 +1,9 @@
+nvidia-docker2 (2.7.0~rc.2-1) UNRELEASED; urgency=medium
+
+  * Allow the toolkit version to be specified as a variable
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Thu, 04 Nov 2021 14:14:32 +0000
+
 nvidia-docker2 (2.7.0~rc.1-1) UNRELEASED; urgency=medium
 
   * Add AARCH64 package for Amazon Linux 2

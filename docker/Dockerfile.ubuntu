@@ -36,6 +36,8 @@ WORKDIR $DIST_DIR
 COPY debian ./debian
 
 RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
+    dch --changelog debian/changelog --append "Bump nvidia-container-toolkit dependency to ${TOOLKIT_VERSION}" && \
+    dch --changelog debian/changelog -r "" && \
     if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then echo "$(dpkg-parsechangelog --show-field=Version)" && exit 1; fi
 
 CMD export DISTRIB="$(lsb_release -cs)" && \

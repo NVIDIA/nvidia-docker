@@ -16,9 +16,7 @@ Source1: daemon.json
 Source2: LICENSE
 
 Conflicts: nvidia-docker < 2.0.0
-# Note: The -3 revision in the required toolkit version is to handle the released versions of
-# The nvidia-container-toolkit 1.5.1 package. This can be replaced with '-1' in subsequent releases.
-Requires: nvidia-container-toolkit > %{toolkit_version}-3
+Requires: nvidia-container-toolkit > %{toolkit_version}
 Requires: %{docker_version}
 
 %description
@@ -39,6 +37,10 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
+* Thu Nov 04 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.2
+- Bump nvidia-container-toolkit dependency to %{toolkit_version}
+- Allow the toolkit version to be specified as a variable
+
 * Mon Sep 06 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.1
 - Add AARCH64 package for Amazon Linux 2
 - [BUILD] Allow for TAG to be specified in Makfile to match other projects
