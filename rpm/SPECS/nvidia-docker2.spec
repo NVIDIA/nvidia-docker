@@ -16,7 +16,7 @@ Source1: daemon.json
 Source2: LICENSE
 
 Conflicts: nvidia-docker < 2.0.0
-Requires: nvidia-container-toolkit > %{toolkit_version}
+Requires: nvidia-container-toolkit >= %{toolkit_version}
 Requires: %{docker_version}
 
 %description
