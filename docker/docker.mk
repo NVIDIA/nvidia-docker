@@ -107,41 +107,35 @@ RPM_TOOLKIT_REV := $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --ubuntu%: OS := ubuntu
 --ubuntu%: LIB_VERSION := $(DEB_LIB_VERSION)
 --ubuntu%: PKG_REV := $(DEB_PKG_REV)
---ubuntu%: TOOLKIT_VERSION := $(DEB_TOOLKIT_VERSION)
---ubuntu%: TOOLKIT_REV := $(DEB_TOOLKIT_REV)
+--ubuntu%: MIN_TOOLKIT_PKG_VERSION := $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
 
 # private debian target
 --debian%: OS := debian
 --debian%: LIB_VERSION := $(DEB_LIB_VERSION)
 --debian%: PKG_REV := $(DEB_PKG_REV)
---debian%: TOOLKIT_VERSION := $(DEB_TOOLKIT_VERSION)
---debian%: TOOLKIT_REV := $(DEB_TOOLKIT_REV)
+--debian%: MIN_TOOLKIT_PKG_VERSION = $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
 
 
 # private centos target
 --centos%: OS := centos
 --centos%: PKG_REV := $(RPM_PKG_REV)
---centos%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
---centos%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
+--centos%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 
 # private amazonlinux target
 --amazonlinux%: OS := amazonlinux
 --amazonlinux%: PKG_REV := $(RPM_PKG_REV)
---amazonlinux%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
---amazonlinux%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
+--amazonlinux%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 
 # private opensuse-leap target with overrides
 --opensuse-leap%: OS := opensuse-leap
 --opensuse-leap%: PKG_REV := $(RPM_PKG_REV)
---opensuse-leap%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
---opensuse-leap%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
+--opensuse-leap%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 --opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
 
 # private rhel target (actually built on centos)
 --rhel%: OS := centos
 --rhel%: PKG_REV := $(RPM_PKG_REV)
---rhel%: TOOLKIT_VERSION := $(RPM_TOOLKIT_VERSION)
---rhel%: TOOLKIT_REV := $(RPM_TOOLKIT_REV)
+--rhel%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
 
@@ -162,7 +156,7 @@ docker-build-%:
 	    --progress=plain \
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
-	    --build-arg TOOLKIT_VERSION="$(TOOLKIT_VERSION)" \
+	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
 	    --build-arg PKG_VERS="$(LIB_VERSION)" \
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \
