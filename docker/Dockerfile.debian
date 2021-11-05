@@ -34,7 +34,8 @@ COPY daemon.json $DIST_DIR/daemon.json
 WORKDIR $DIST_DIR
 COPY debian ./debian
 
-RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker && \
+RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker
+RUN sed -i "s;@TOOLKIT_VERSION@;${TOOLKIT_VERSION};" debian/control && \
     dch --changelog debian/changelog --append "Bump nvidia-container-toolkit dependency to ${TOOLKIT_VERSION}" && \
     dch --changelog debian/changelog -r "" && \
     if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then exit 1; fi
