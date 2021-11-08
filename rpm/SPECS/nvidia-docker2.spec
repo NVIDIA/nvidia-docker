@@ -37,6 +37,8 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
+* Mon Nov 08 2021  NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.3
+
 * Thu Nov 04 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.2
 - Bump nvidia-container-toolkit dependency to %{toolkit_version}
 - Allow the toolkit version to be specified as a variable
