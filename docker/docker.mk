@@ -157,6 +157,7 @@ docker-build-%:
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
 	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
+		--build-arg PKG_NAME="$(LIB_NAME)" \
 	    --build-arg PKG_VERS="$(LIB_VERSION)" \
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \

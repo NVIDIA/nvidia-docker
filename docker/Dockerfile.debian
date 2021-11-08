@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # packaging
+ARG PKG_NAME
 ARG PKG_VERS
 ARG PKG_REV
 ARG TOOLKIT_VERSION
@@ -18,7 +19,7 @@ ARG DOCKER_VERSION
 
 ENV DEBFULLNAME "NVIDIA CORPORATION"
 ENV DEBEMAIL "cudatools@nvidia.com"
-ENV PKG_NAME "nvidia-docker2"
+ENV PKG_NAME "${PKG_NAME}"
 ENV REVISION "$PKG_VERS-$PKG_REV"
 ENV DOCKER_VERSION $DOCKER_VERSION
 ENV TOOLKIT_VERSION $TOOLKIT_VERSION
