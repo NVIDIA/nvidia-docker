@@ -148,11 +148,18 @@ RPM_TOOLKIT_REV := $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
 
+# Depending on the docker version we may have to add the platform args to the
+# build and run commands
+PLATFORM_ARGS ?= --platform=linux/$(ARCH)
+ifneq ($(strip $(ADD_DOCKER_PLATFORM_ARGS)),)
+DOCKER_PLATFORM_ARGS = $(PLATFORM_ARGS)
+endif
+
 docker-build-%:
 	@echo "Building for $(TARGET_PLATFORM)"
-	docker pull --platform=linux/$(ARCH) $(BASEIMAGE)
+	docker pull $(PLATFORM_ARGS) $(BASEIMAGE)
 	DOCKER_BUILDKIT=1 \
-	$(DOCKER) build \
+	$(DOCKER) build $(DOCKER_PLATFORM_ARGS) \
 	    --progress=plain \
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
@@ -162,7 +169,7 @@ docker-build-%:
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \
 	    --file $(DOCKERFILE) .
-	$(DOCKER) run \
+	$(DOCKER) run $(DOCKER_PLATFORM_ARGS) \
 	    -e DISTRIB \
 	    -e SECTION \
 	    -v $(ARTIFACTS_DIR):/dist \
