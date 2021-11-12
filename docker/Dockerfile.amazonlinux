@@ -7,18 +7,20 @@ RUN yum install -y \
     rm -rf /var/cache/yum/*
 
 # packaging
+ARG PKG_NAME
 ARG PKG_VERS
 ARG PKG_REV
 ARG TOOLKIT_VERSION
 ARG DOCKER_VERSION
 
+ENV PKG_NAME "${PKG_NAME}"
 ENV VERSION $PKG_VERS
 ENV RELEASE $PKG_REV
 ENV DOCKER_VERSION $DOCKER_VERSION
 ENV TOOLKIT_VERSION $TOOLKIT_VERSION
 
 # output directory
-ENV DIST_DIR=/tmp/nvidia-docker2-$PKG_VERS/SOURCES
+ENV DIST_DIR=/tmp/${PKG_NAME}-$PKG_VERS/SOURCES
 RUN mkdir -p $DIST_DIR /dist
 
 COPY nvidia-docker $DIST_DIR
@@ -35,5 +37,5 @@ CMD rpmbuild --clean -bb \
              -D "release $RELEASE" \
              -D "docker_version $DOCKER_VERSION" \
              -D "toolkit_version $TOOLKIT_VERSION" \
-             SPECS/nvidia-docker2.spec && \
+             SPECS/${PKG_NAME}.spec && \
     mv RPMS/noarch/*.rpm /dist

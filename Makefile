@@ -14,7 +14,7 @@
 
 LIB_NAME := nvidia-docker2
 LIB_VERSION := 2.7.0
-LIB_TAG := rc.2
+LIB_TAG ?= rc.3
 
 TOOLKIT_VERSION ?= 1.6.0
 TOOLKIT_TAG ?= rc.2

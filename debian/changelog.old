@@ -1,3 +1,7 @@
+nvidia-docker2 (2.7.0~rc.3-1) UNRELEASED; urgency=medium
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Mon, 08 Nov 2021 14:54:46 +0100
+
 nvidia-docker2 (2.7.0~rc.2-1) UNRELEASED; urgency=medium
 
   * Allow the toolkit version to be specified as a variable
