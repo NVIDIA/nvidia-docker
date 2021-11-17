@@ -1,3 +1,9 @@
+nvidia-docker2 (2.7.0-1) UNRELEASED; urgency=medium
+
+  * Promote 2.7.0~rc.3-1 to 2.7.0-1
+
+ -- NVIDIA CORPORATION <cudatools@nvidia.com>  Wed, 17 Nov 2021 09:25:15 +0100
+
 nvidia-docker2 (2.7.0~rc.3-1) UNRELEASED; urgency=medium
 
  -- NVIDIA CORPORATION <cudatools@nvidia.com>  Mon, 08 Nov 2021 14:54:46 +0100

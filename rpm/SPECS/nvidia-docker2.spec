@@ -37,6 +37,9 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
+* Wed Nov 17 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 3.6.0-1
+- Promote 2.7.0-0.1.rc.3 to 2.7.0-1
+
 * Mon Nov 08 2021  NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.3
 
 * Thu Nov 04 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.2
