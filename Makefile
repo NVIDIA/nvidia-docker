@@ -13,11 +13,11 @@
 # limitations under the License.
 
 LIB_NAME := nvidia-docker2
-LIB_VERSION := 2.7.0
-LIB_TAG ?=
+LIB_VERSION := 2.8.0
+LIB_TAG ?= rc.1
 
-TOOLKIT_VERSION ?= 1.6.0
-TOOLKIT_TAG ?=
+TOOLKIT_VERSION ?= 1.7.0
+TOOLKIT_TAG ?= $(LIB_TAG)
 
 # By default run all native docker-based targets
 docker-native:

@@ -1,3 +1,6 @@
+# Note: as of 2.7.0-1 this file is no longer updated, with a changelog
+# entry for a given release generated as part of the packaging step.
+
 nvidia-docker2 (2.7.0-1) UNRELEASED; urgency=medium
 
   * Promote 2.7.0~rc.3-1 to 2.7.0-1
