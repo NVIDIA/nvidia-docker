@@ -33,6 +33,7 @@ RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker
 
 CMD rpmbuild --clean -bb \
              -D "_topdir $PWD" \
+             -D "release_date $(date +'%a %b %d %Y')" \
              -D "version $VERSION" \
              -D "release $RELEASE" \
              -D "docker_version $DOCKER_VERSION" \

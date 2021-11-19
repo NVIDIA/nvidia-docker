@@ -37,37 +37,8 @@ install -m 644 -t %{buildroot}/etc/docker daemon.json
 %config /etc/docker/daemon.json
 
 %changelog
-* Fri Nov 19 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.8.0-0.1.rc.1
-- [Placeholder for 2.8.0-0.1.rc.1 development]
-
-* Wed Nov 17 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-1
-- Promote 2.7.0-0.1.rc.3 to 2.7.0-1
-
-* Mon Nov 08 2021  NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.3
-
-* Thu Nov 04 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.2
+# As of 2.7.0-1 we generate the release information automatically
+* %{release_date} NVIDIA CORPORATION <cudatools@nvidia.com> %{version}-%{release}
+- As of 2.7.0-1 the package changelog is generated automatically. This means that releases since 2.7.0-1 all contain this same changelog entry updated for the version being released.
 - Bump nvidia-container-toolkit dependency to %{toolkit_version}
-- Allow the toolkit version to be specified as a variable
-
-* Mon Sep 06 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.7.0-0.1.rc.1
-- Add AARCH64 package for Amazon Linux 2
-- [BUILD] Allow for TAG to be specified in Makfile to match other projects
-- Replace nvidia-container-runtime dependence with nvidia-container-toolit > 1.5.1
-
-* Thu Apr 29 2021 NVIDIA CORPORATION <cudatools@nvidia.com> 2.6.0-1
-- Add dependence on nvidia-container-runtime >= 3.5.0
-- Add Jenkinsfile for building packages
-
-* Wed Sep 16 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.5.0-1
-- Bump version to v2.5.0
-- Add dependence on nvidia-container-runtime >= 3.4.0
-- Update readme to point to the official documentatio
-- Add %config directive to daemon.json for RPM installations
-
-* Wed Jul 08 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.4.0-1
-- 09a01276 Update package license to match source license
-- b9c70155 Update dependence on nvidia-container-runtime to 3.3.0
-
-* Fri May 15 2020 NVIDIA CORPORATION <cudatools@nvidia.com> 2.3.0-1
-- 0d3b049a Update build system to support multi-arch builds
-- 8557216d Require new MIG changes
+- Docker dependency to %{docker_version}
