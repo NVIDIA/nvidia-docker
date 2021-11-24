@@ -4,6 +4,12 @@ stages:
   - build-one
   - build-all
 
+variables:
+  # We specify the TOOLKIT_VERSION and TOOLKIT_TAG variable to allow packages
+  # to be built.
+  TOOLKIT_VERSION: 999.999.999
+  TOOLKIT_TAG: dummy
+
 .build-setup: &build-setup
   image: docker:19.03.8
 
