@@ -13,11 +13,21 @@
 # limitations under the License.
 
 LIB_NAME := nvidia-docker2
-LIB_VERSION := 2.7.0
-LIB_TAG ?=
+LIB_VERSION := 2.8.0
+LIB_TAG ?= rc.1
 
-TOOLKIT_VERSION ?= 1.6.0
-TOOLKIT_TAG ?=
+# Define the nvidia-container-toolkit version on which the nvidia-docker2
+# package depends. It is recommended that the TOOLKIT_TAG and the LIB_TAG match.
+TOOLKIT_VERSION ?= # Set by CI
+TOOLKIT_TAG ?= # Set by CI
+
+ifeq ($(strip $(TOOLKIT_VERSION)),)
+$(error TOOLKIT_VERSION must be specified)
+endif
+
+ifneq ($(TOOLKIT_TAG),$(LIB_TAG))
+$(warning TOOLKIT_TAG=$(TOOLKIT_TAG) and LIB_TAG=$(LIB_TAG) do not match)
+endif
 
 # By default run all native docker-based targets
 docker-native:
