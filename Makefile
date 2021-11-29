@@ -13,8 +13,15 @@
 # limitations under the License.
 
 LIB_NAME := nvidia-docker2
-LIB_VERSION := 2.8.0
-LIB_TAG ?= rc.1
+# Define the package version and tag. Since this package is released as part of
+# the NVIDIA Container Toolkit, these versions are specified where they are
+# built or when invoking the MAKE command.
+LIB_VERSION ?= # Set by CI
+LIB_TAG ?= # Set by CI
+
+ifeq ($(strip $(LIB_VERSION)),)
+$(error LIB_VERSION must be specified)
+endif
 
 # Define the nvidia-container-toolkit version on which the nvidia-docker2
 # package depends. It is recommended that the TOOLKIT_TAG and the LIB_TAG match.
