@@ -92,50 +92,54 @@ docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
 --%: docker-build-%
 	@
 
-DEB_LIB_VERSION := $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
-DEB_PKG_REV := 1
-DEB_TOOLKIT_VERSION := $(TOOLKIT_VERSION)$(if $(TOOLKIT_TAG),~$(TOOLKIT_TAG))
-DEB_TOOLKIT_REV := 1
+DEB_LIB_VERSION = $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
+DEB_PKG_REV = 1
+DEB_TOOLKIT_VERSION = $(TOOLKIT_VERSION)$(if $(TOOLKIT_TAG),~$(TOOLKIT_TAG))
+DEB_TOOLKIT_REV = 1
 
-RPM_LIB_VERSION := $(LIB_VERSION)
-RPM_PKG_REV := $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
-RPM_TOOLKIT_VERSION := $(TOOLKIT_VERSION)
-RPM_TOOLKIT_REV := $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
+RPM_LIB_VERSION = $(LIB_VERSION)
+RPM_PKG_REV = $(if $(LIB_TAG),0.1.$(LIB_TAG),1)
+RPM_TOOLKIT_VERSION = $(TOOLKIT_VERSION)
+RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 
 # private OS targets with defaults
 # private ubuntu target
 --ubuntu%: OS := ubuntu
---ubuntu%: LIB_VERSION := $(DEB_LIB_VERSION)
---ubuntu%: PKG_REV := $(DEB_PKG_REV)
---ubuntu%: MIN_TOOLKIT_PKG_VERSION := $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
+--ubuntu%: PKG_VERS = $(DEB_LIB_VERSION)
+--ubuntu%: PKG_REV = $(DEB_PKG_REV)
+--ubuntu%: MIN_TOOLKIT_PKG_VERSION = $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
 
 # private debian target
 --debian%: OS := debian
---debian%: LIB_VERSION := $(DEB_LIB_VERSION)
---debian%: PKG_REV := $(DEB_PKG_REV)
+--debian%: PKG_VERS = $(DEB_LIB_VERSION)
+--debian%: PKG_REV = $(DEB_PKG_REV)
 --debian%: MIN_TOOLKIT_PKG_VERSION = $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
 
 
 # private centos target
 --centos%: OS := centos
---centos%: PKG_REV := $(RPM_PKG_REV)
---centos%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--centos%: PKG_VERS = $(LIB_VERSION)
+--centos%: PKG_REV = $(RPM_PKG_REV)
+--centos%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 
 # private amazonlinux target
 --amazonlinux%: OS := amazonlinux
---amazonlinux%: PKG_REV := $(RPM_PKG_REV)
---amazonlinux%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--amazonlinux%: PKG_VERS = $(LIB_VERSION)
+--amazonlinux%: PKG_REV = $(RPM_PKG_REV)
+--amazonlinux%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 
 # private opensuse-leap target with overrides
 --opensuse-leap%: OS := opensuse-leap
---opensuse-leap%: PKG_REV := $(RPM_PKG_REV)
---opensuse-leap%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--opensuse-leap%: PKG_VERS = $(LIB_VERSION)
+--opensuse-leap%: PKG_REV = $(RPM_PKG_REV)
+--opensuse-leap%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 --opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
 
 # private rhel target (actually built on centos)
 --rhel%: OS := centos
---rhel%: PKG_REV := $(RPM_PKG_REV)
---rhel%: MIN_TOOLKIT_PKG_VERSION := $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--rhel%: PKG_VERS = $(LIB_VERSION)
+--rhel%: PKG_REV = $(RPM_PKG_REV)
+--rhel%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
 
@@ -165,7 +169,7 @@ docker-build-%:
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
 	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
 		--build-arg PKG_NAME="$(LIB_NAME)" \
-	    --build-arg PKG_VERS="$(LIB_VERSION)" \
+	    --build-arg PKG_VERS="$(PKG_VERS)" \
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \
 	    --file $(DOCKERFILE) .
