@@ -18,7 +18,7 @@ DIST_DIR ?= $(CURDIR)/dist
 
 # Supported OSs by architecture
 AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
-X86_64_TARGETS := centos7 centos8 rhel7 rhel8 amazonlinux1 amazonlinux2 opensuse-leap15.1
+X86_64_TARGETS := centos7 centos8 rhel7 rhel8 amazonlinux2 opensuse-leap15.1
 PPC64LE_TARGETS := ubuntu18.04 ubuntu16.04 centos7 centos8 rhel7 rhel8
 ARM64_TARGETS := ubuntu20.04 ubuntu18.04
 AARCH64_TARGETS := centos8 rhel8 amazonlinux2
@@ -148,7 +148,6 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
 --centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
 --amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
---amazonlinux1%: DOCKER_VERSION := docker >= 18.06.1ce-2.16.amzn1
 --opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
 
