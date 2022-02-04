@@ -28,6 +28,8 @@ List of supported distributions:
 | RHEL 8.1             | rhel8.1     |       ✔        |    ✔    |        ✔        |
 | RHEL 8.2             | rhel8.2     |       ✔        |    ✔    |        ✔        |
 | RHEL 8.3             | rhel8.3     |       ✔        |    ✔    |        ✔        |
+| RHEL 8.4             | rhel8.4     |       ✔        |    ✔    |        ✔        |
+| RHEL 8.5             | rhel8.5     |       ✔        |    ✔    |        ✔        |
 | Ubuntu 16.04         | ubuntu16.04 |       ✔        |    ✔    |                 |
 | Ubuntu 18.04         | ubuntu18.04 |       ✔        |    ✔    |        ✔        |
 | Ubuntu 19.04         | ubuntu19.04 |       ✔        |    ✔    |        ✔        |
@@ -81,7 +83,7 @@ sudo yum-config-manager --disable nvidia-container-runtime-experimental
 
 In order to update the nvidia-docker repository key for your distribution, follow the instructions below.
 
-## RHEL-based distributions 
+## RHEL-based distributions
 
 ```bash
 $ DIST=$(sed -n 's/releasever=//p' /etc/yum.conf)
