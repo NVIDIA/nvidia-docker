@@ -8,7 +8,6 @@ List of supported distributions:
 
 |  OS Name / Version   |  Identifier | amd64 / x86_64 | ppc64le | arm64 / aarch64 |
 | -------------------- | :---------: | :------------: | :-----: | :-------------: |
-| Amazon Linux 1       | amzn1       |       ✔        |         |                 |
 | Amazon Linux 2       | amzn2       |       ✔        |         |                 |
 | Amazon Linux 2017.09 | amzn2017.09 |       ✔        |         |                 |
 | Amazon Linux 2018.03 | amzn2018.03 |       ✔        |         |                 |
