@@ -15,6 +15,7 @@ List of supported distributions:
 | Open Suse Leap 15.1  | sles15.1    |       ✔        |         |                 |
 | Debian Linux 9       | debian9     |       ✔        |         |                 |
 | Debian Linux 10      | debian10    |       ✔        |         |                 |
+| Debian Linux 11      | debian11    |       ✔        |         |                 |
 | Centos 7             | centos7     |       ✔        |    ✔    |                 |
 | Centos 8             | centos8     |       ✔        |    ✔    |        ✔        |
 | RHEL 7.4             | rhel7.4     |       ✔        |    ✔    |                 |
