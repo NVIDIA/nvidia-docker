@@ -3,11 +3,12 @@ FROM ${BASEIMAGE}
 
 ARG BASEIMAGE
 # See https://www.centos.org/centos-linux-eol/
-# and https://stackoverflow.com/a/70930049
+# and https://stackoverflow.com/a/70930049 for move to vault.centos.org
+# and https://serverfault.com/questions/1093922/failing-to-run-yum-update-in-centos-8 for move to vault.epel.cloud
 RUN [[ "${BASEIMAGE}" != "centos:8" ]] || \
     ( \
       sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
-      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-* \
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.epel.cloud|g' /etc/yum.repos.d/CentOS-Linux-* \
     )
 
 # packaging dependencies
