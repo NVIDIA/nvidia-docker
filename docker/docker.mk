@@ -121,6 +121,7 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --centos%: PKG_VERS = $(LIB_VERSION)
 --centos%: PKG_REV = $(RPM_PKG_REV)
 --centos%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--centos8%: BASEIMAGE = quay.io/centos/centos:stream8
 
 # private amazonlinux target
 --amazonlinux%: OS := amazonlinux
@@ -142,6 +143,7 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --rhel%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
 --rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
+--rhel8%: BASEIMAGE = quay.io/centos/centos:stream8
 
 # Specify required docker versions
 --ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
