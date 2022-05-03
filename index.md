@@ -35,6 +35,7 @@ List of supported distributions:
 | Ubuntu 19.04         | ubuntu19.04 |       ✔        |    ✔    |        ✔        |
 | Ubuntu 19.10         | ubuntu19.10 |       ✔        |    ✔    |        ✔        |
 | Ubuntu 20.04         | ubuntu20.04 |       ✔        |    ✔    |        ✔        |
+| Ubuntu 22.04         | ubuntu22.04 |       ✔        |    ✔    |        ✔        |
 
 ## Debian-based distributions
 
