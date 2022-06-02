@@ -17,6 +17,8 @@ List of supported distributions:
 | Amazon Linux 2018.03 | amzn2018.03 |       ✔        |         |                 |
 | Open Suse Leap 15.0  | sles15.0    |       ✔        |         |                 |
 | Open Suse Leap 15.1  | sles15.1    |       ✔        |         |                 |
+| Open Suse Leap 15.2  | sles15.2    |       ✔        |         |                 |
+| Open Suse Leap 15.3  | sles15.3    |       ✔        |         |                 |
 | Debian Linux 9       | debian9     |       ✔        |         |                 |
 | Debian Linux 10      | debian10    |       ✔        |         |                 |
 | Debian Linux 11      | debian11    |       ✔        |         |                 |
