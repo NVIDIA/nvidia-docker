@@ -146,8 +146,8 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --rhel8%: BASEIMAGE = quay.io/centos/centos:stream8
 
 # Specify required docker versions
---ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0)
---debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0)
+--ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0) | moby-engine
+--debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0) | moby-engine
 --centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
 --amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
 --opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
