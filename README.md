@@ -15,8 +15,9 @@ Frequently asked questions are available on the [wiki](https://github.com/NVIDIA
 
 ## Getting Started
 
-**Make sure you have installed the [NVIDIA driver](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver) and Docker engine for your Linux distribution**
-**Note that you do not need to install the CUDA Toolkit on the host system, but the NVIDIA driver needs to be installed**
+**Make sure you have installed the [NVIDIA driver](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html) and Docker engine for your Linux distribution**.
+
+**Note that you do not need to install the CUDA Toolkit on the host system, but the NVIDIA driver needs to be installed**.
 
 For instructions on getting started with the NVIDIA Container Toolkit, refer to the [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker). 
 
@@ -29,4 +30,4 @@ The [user guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolk
 [Checkout the Contributing document!](CONTRIBUTING.md)
 
 * Please let us know by [filing a new issue](https://github.com/NVIDIA/nvidia-docker/issues/new)
-* You can contribute by opening a [pull request](https://help.github.com/articles/using-pull-requests/)
+* You can contribute by opening a [merge request](https://gitlab.com/nvidia/container-toolkit/nvidia-docker/-/merge_requests)
