@@ -18,10 +18,10 @@ DIST_DIR ?= $(CURDIR)/dist
 
 # Supported OSs by architecture
 AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
-X86_64_TARGETS := centos7 centos8 rhel7 rhel8 amazonlinux2 opensuse-leap15.1
+X86_64_TARGETS := fedora35 centos7 centos8 rhel7 rhel8 amazonlinux2 opensuse-leap15.1
 PPC64LE_TARGETS := ubuntu18.04 ubuntu16.04 centos7 centos8 rhel7 rhel8
 ARM64_TARGETS := ubuntu20.04 ubuntu18.04
-AARCH64_TARGETS := centos8 rhel8 amazonlinux2
+AARCH64_TARGETS := fedora35 centos8 rhel8 amazonlinux2
 
 # By default run all native docker-based targets
 docker-native:
@@ -145,6 +145,15 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
 --rhel8%: BASEIMAGE = quay.io/centos/centos:stream8
 
+# private fedora target (actually built on centos)
+--fedora%: OS := centos
+--fedora%: PKG_VERS = $(LIB_VERSION)
+--fedora%: PKG_REV = $(RPM_PKG_REV)
+--fedora%: MIN_TOOLKIT_PKG_VERSION = $(RPM_TOOLKIT_VERSION)-$(RPM_TOOLKIT_REV)
+--fedora%: VERSION = $(patsubst fedora%-$(ARCH),%,$(TARGET_PLATFORM))
+--fedora%: ARTIFACTS_DIR = $(DIST_DIR)/fedora$(VERSION)/$(ARCH)
+--fedora%: BASEIMAGE = quay.io/centos/centos:stream8
+
 # Specify required docker versions
 --ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0) | moby-engine
 --debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0) | moby-engine
@@ -152,6 +161,7 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
 --opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
 --rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
+--fedora%: DOCKER_VERSION := docker-ce
 
 # Depending on the docker version we may have to add the platform args to the
 # build and run commands
@@ -169,7 +179,7 @@ docker-build-%:
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
 	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
-		--build-arg PKG_NAME="$(LIB_NAME)" \
+	    --build-arg PKG_NAME="$(LIB_NAME)" \
 	    --build-arg PKG_VERS="$(PKG_VERS)" \
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \
