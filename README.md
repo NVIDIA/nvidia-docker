@@ -15,11 +15,14 @@ Frequently asked questions are available on the [wiki](https://github.com/NVIDIA
 
 ## Getting Started
 
-**Make sure you have installed the [NVIDIA driver](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html) and Docker engine for your Linux distribution**.
+On the host system:
+1. Install the [NVIDIA driver](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html) and Docker engine for your Linux distribution.
+2. Install the NVIDIA Container Toolkit, following the [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
-**Note that you do not need to install the CUDA Toolkit on the host system, but the NVIDIA driver needs to be installed**.
+Note:
+- The NVIDIA Container Toolkit's Linux package is called `nvidia-docker2`. Older versions are distributed under `nvidia-docker`. See the installation guide for more details.
+- You do **not** need to install the CUDA Toolkit on the host system. Only in the image/container.
 
-For instructions on getting started with the NVIDIA Container Toolkit, refer to the [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker).
 
 ## Usage
 
