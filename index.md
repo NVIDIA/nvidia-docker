@@ -1,3 +1,6 @@
+# Migration Notice
+**NOTE**:  This repository is provided for convenience, with all recent packages for the NVIDIA Container Toolkit (including the NVIDIA docker wrapper) being served by the
+https://nvidia.github.io/libnvidia-container repository which is included in this repository's configuration by default.
 # NVIDIA Container Toolkit repository
 
 This is a package repository for the components of the NVIDIA Container Toolkit. For information on supported platforms
