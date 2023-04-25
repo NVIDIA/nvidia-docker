@@ -16,78 +16,27 @@ DOCKER ?= docker
 MKDIR  ?= mkdir
 DIST_DIR ?= $(CURDIR)/dist
 
-# Supported OSs by architecture
-AMD64_TARGETS := ubuntu20.04 ubuntu18.04 ubuntu16.04 debian10 debian9
-X86_64_TARGETS := fedora35 centos7 centos8 rhel7 rhel8 amazonlinux2 opensuse-leap15.1
-PPC64LE_TARGETS := ubuntu18.04 ubuntu16.04 centos7 centos8 rhel7 rhel8
-ARM64_TARGETS := ubuntu20.04 ubuntu18.04
-AARCH64_TARGETS := fedora35 centos8 rhel8 amazonlinux2
+# Supported packaging formats
+FORMAT_TARGETS := deb rpm
 
-# By default run all native docker-based targets
-docker-native:
+# We add utility targets to support common os-arch combinations by mapping to the required format targets.
+DEB_TARGETS := ubuntu18.04-amd64 ubuntu18.04-arm64 ubuntu18.04-ppc64le
+RPM_TARGETS := centos8-x86_64 centos8-aarch64 centos8-ppc64le
+
+$(DEB_TARGETS): %: deb
+$(RPM_TARGETS): %: rpm
 
 # Define top-level build targets
 docker%: SHELL:=/bin/bash
 
-# Native targets
-PLATFORM ?= $(shell uname -m)
-ifeq ($(PLATFORM),x86_64)
-NATIVE_TARGETS := $(AMD64_TARGETS) $(X86_64_TARGETS)
-$(AMD64_TARGETS): %: %-amd64
-$(X86_64_TARGETS): %: %-x86_64
-else ifeq ($(PLATFORM),ppc64le)
-NATIVE_TARGETS := $(PPC64LE_TARGETS)
-$(PPC64LE_TARGETS): %: %-ppc64le
-else ifeq ($(PLATFORM),aarch64)
-NATIVE_TARGETS := $(ARM64_TARGETS) $(AARCH64_TARGETS)
-$(ARM64_TARGETS): %: %-arm64
-$(AARCH64_TARGETS): %: %-aarch64
-endif
-docker-native: $(NATIVE_TARGETS)
-
-# amd64 targets
-AMD64_TARGETS := $(patsubst %, %-amd64, $(AMD64_TARGETS))
-$(AMD64_TARGETS): ARCH := amd64
-$(AMD64_TARGETS): %: --%
-docker-amd64: $(AMD64_TARGETS)
-
-# x86_64 targets
-X86_64_TARGETS := $(patsubst %, %-x86_64, $(X86_64_TARGETS))
-$(X86_64_TARGETS): ARCH := x86_64
-$(X86_64_TARGETS): %: --%
-docker-x86_64: $(X86_64_TARGETS)
-
-# arm64 targets
-ARM64_TARGETS := $(patsubst %, %-arm64, $(ARM64_TARGETS))
-$(ARM64_TARGETS): ARCH := arm64
-$(ARM64_TARGETS): %: --%
-docker-arm64: $(ARM64_TARGETS)
-
-# aarch64 targets
-AARCH64_TARGETS := $(patsubst %, %-aarch64, $(AARCH64_TARGETS))
-$(AARCH64_TARGETS): ARCH := aarch64
-$(AARCH64_TARGETS): %: --%
-docker-aarch64: $(AARCH64_TARGETS)
-
-# ppc64le targets
-PPC64LE_TARGETS := $(patsubst %, %-ppc64le, $(PPC64LE_TARGETS))
-$(PPC64LE_TARGETS): ARCH := ppc64le
-$(PPC64LE_TARGETS): %: --%
-docker-ppc64le: $(PPC64LE_TARGETS)
-
-# docker target to build for all os/arch combinations
-docker-all: $(AMD64_TARGETS) $(X86_64_TARGETS) \
-            $(ARM64_TARGETS) $(AARCH64_TARGETS) \
-            $(PPC64LE_TARGETS)
+$(FORMAT_TARGETS): %: --%
 
 # Default variables for all private '--' targets below.
 # One private target is defined for each OS we support.
---%: TARGET_PLATFORM = $(*)
---%: VERSION = $(patsubst $(OS)%-$(ARCH),%,$(TARGET_PLATFORM))
---%: BASEIMAGE = $(OS):$(VERSION)
---%: BUILDIMAGE = nvidia/$(LIB_NAME)/$(OS)$(VERSION)-$(ARCH)
---%: DOCKERFILE = $(CURDIR)/docker/Dockerfile.$(OS)
---%: ARTIFACTS_DIR = $(DIST_DIR)/$(OS)$(VERSION)/$(ARCH)
+--%: FORMAT = $(*)
+--%: BUILDIMAGE = nvidia/$(LIB_NAME)/$(FORMAT)-all
+--%: DOCKERFILE = $(CURDIR)/docker/Dockerfile.$(FORMAT)
+--%: ARTIFACTS_DIR = $(DIST_DIR)/$(FORMAT)/all
 --%: docker-build-%
 	@
 
@@ -95,48 +44,15 @@ PKG_VERS = $(LIB_VERSION)$(if $(LIB_TAG),~$(LIB_TAG))
 PKG_REV = 1
 MIN_TOOLKIT_PKG_VERSION = $(TOOLKIT_VERSION)$(if $(TOOLKIT_TAG),~$(TOOLKIT_TAG))-1
 
-# private OS targets with defaults
-# private ubuntu target
---ubuntu%: OS := ubuntu
+--deb: BASEIMAGE := ubuntu:18.04
 
-# private debian target
---debian%: OS := debian
-
-# private centos target
---centos%: OS := centos
---centos8%: BASEIMAGE = quay.io/centos/centos:stream8
-
-# private amazonlinux target
---amazonlinux%: OS := amazonlinux
-
-# private opensuse-leap target with overrides
---opensuse-leap%: OS := opensuse-leap
---opensuse-leap%: BASEIMAGE = opensuse/leap:$(VERSION)
-
-# private rhel target (actually built on centos)
---rhel%: OS := centos
---rhel%: VERSION = $(patsubst rhel%-$(ARCH),%,$(TARGET_PLATFORM))
---rhel%: ARTIFACTS_DIR = $(DIST_DIR)/rhel$(VERSION)/$(ARCH)
---rhel8%: BASEIMAGE = quay.io/centos/centos:stream8
-
-# private fedora target (actually built on centos)
---fedora%: OS := centos
---fedora%: VERSION = $(patsubst fedora%-$(ARCH),%,$(TARGET_PLATFORM))
---fedora%: ARTIFACTS_DIR = $(DIST_DIR)/fedora$(VERSION)/$(ARCH)
---fedora%: BASEIMAGE = quay.io/centos/centos:stream8
-
-# Depending on the docker version we may have to add the platform args to the
-# build and run commands
-PLATFORM_ARGS ?= --platform=linux/$(ARCH)
-ifneq ($(strip $(ADD_DOCKER_PLATFORM_ARGS)),)
-DOCKER_PLATFORM_ARGS = $(PLATFORM_ARGS)
-endif
+--rpm: BASEIMAGE := quay.io/centos/centos:stream8
 
 docker-build-%:
-	@echo "Building for $(TARGET_PLATFORM)"
-	docker pull $(PLATFORM_ARGS) $(BASEIMAGE)
+	@echo "Building $(FORMAT) packages to $(ARTIFACTS_DIR)"
+	docker pull $(BASEIMAGE)
 	DOCKER_BUILDKIT=1 \
-	$(DOCKER) build $(DOCKER_PLATFORM_ARGS) \
+	$(DOCKER) build \
 	    --progress=plain \
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
 	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
@@ -145,7 +61,7 @@ docker-build-%:
 	    --build-arg PKG_REV="$(PKG_REV)" \
 	    --tag $(BUILDIMAGE) \
 	    --file $(DOCKERFILE) .
-	$(DOCKER) run $(DOCKER_PLATFORM_ARGS) \
+	$(DOCKER) run \
 	    -e DISTRIB \
 	    -e SECTION \
 	    -v $(ARTIFACTS_DIR):/dist \

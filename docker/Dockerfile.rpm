@@ -1,0 +1,36 @@
+ARG BASEIMAGE
+FROM ${BASEIMAGE}
+
+# packaging dependencies
+RUN yum install -y \
+        rpm-build && \
+    rm -rf /var/cache/yum/*
+
+# packaging
+ARG PKG_NAME
+ARG PKG_VERS
+ARG PKG_REV
+ARG TOOLKIT_VERSION
+ARG DOCKER_VERSION
+
+ENV PKG_NAME "${PKG_NAME}"
+ENV VERSION $PKG_VERS
+ENV RELEASE $PKG_REV
+ENV DOCKER_VERSION $DOCKER_VERSION
+ENV TOOLKIT_VERSION $TOOLKIT_VERSION
+
+# output directory
+ENV DIST_DIR=/tmp/${PKG_NAME}-$PKG_VERS/SOURCES
+RUN mkdir -p $DIST_DIR /dist
+
+WORKDIR $DIST_DIR/..
+COPY rpm .
+
+CMD rpmbuild --clean -bb \
+             -D "_topdir $PWD" \
+             -D "release_date $(date +'%a %b %d %Y')" \
+             -D "version $VERSION" \
+             -D "release $RELEASE" \
+             -D "toolkit_version $TOOLKIT_VERSION" \
+             SPECS/nvidia-docker2.spec && \
+    mv RPMS/noarch/*.rpm /dist
