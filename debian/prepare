@@ -3,5 +3,3 @@
 set -e
 
 sed -i "s;@SECTION@;${SECTION:+$SECTION/};g" debian/control
-sed -i "s;@TOOLKIT_VERSION@;${TOOLKIT_VERSION};g" debian/control
-sed -i "s;@DOCKER_VERSION@;${DOCKER_VERSION};g" debian/control

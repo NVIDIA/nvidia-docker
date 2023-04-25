@@ -30,14 +30,9 @@ ENV SECTION ""
 ENV DIST_DIR=/tmp/${PKG_NAME}-$PKG_VERS
 RUN mkdir -p $DIST_DIR /dist
 
-# nvidia-docker 2.0
-COPY nvidia-docker $DIST_DIR/nvidia-docker
-COPY daemon.json $DIST_DIR/daemon.json
-
 WORKDIR $DIST_DIR
 COPY debian ./debian
 
-RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker
 RUN sed -i "s;@TOOLKIT_VERSION@;${TOOLKIT_VERSION};" debian/control && \
     dch --create --package="${PKG_NAME}" \
         --newversion "${REVISION}" \

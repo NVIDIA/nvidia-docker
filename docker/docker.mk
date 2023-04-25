@@ -72,7 +72,6 @@ docker-aarch64: $(AARCH64_TARGETS)
 # ppc64le targets
 PPC64LE_TARGETS := $(patsubst %, %-ppc64le, $(PPC64LE_TARGETS))
 $(PPC64LE_TARGETS): ARCH := ppc64le
-$(PPC64LE_TARGETS): WITH_LIBELF := yes
 $(PPC64LE_TARGETS): %: --%
 docker-ppc64le: $(PPC64LE_TARGETS)
 
@@ -115,7 +114,6 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --debian%: PKG_REV = $(DEB_PKG_REV)
 --debian%: MIN_TOOLKIT_PKG_VERSION = $(DEB_TOOLKIT_VERSION)-$(DEB_TOOLKIT_REV)
 
-
 # private centos target
 --centos%: OS := centos
 --centos%: PKG_VERS = $(LIB_VERSION)
@@ -154,15 +152,6 @@ RPM_TOOLKIT_REV = $(if $(TOOLKIT_TAG),0.1.$(TOOLKIT_TAG),1)
 --fedora%: ARTIFACTS_DIR = $(DIST_DIR)/fedora$(VERSION)/$(ARCH)
 --fedora%: BASEIMAGE = quay.io/centos/centos:stream8
 
-# Specify required docker versions
---ubuntu%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~ubuntu) | docker-ee (>= 18.06.0~ce~3-0~ubuntu) | docker.io (>= 18.06.0) | moby-engine
---debian%: DOCKER_VERSION := docker-ce (>= 18.06.0~ce~3-0~debian) | docker-ee (>= 18.06.0~ce~3-0~debian) | docker.io (>= 18.06.0) | moby-engine
---centos%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
---amazonlinux2%: DOCKER_VERSION := docker >= 18.06.1ce-2.amzn2
---opensuse-leap%: DOCKER_VERSION := docker >= 18.09.1_ce
---rhel%: DOCKER_VERSION := docker-ce >= 18.06.3.ce-3.el7
---fedora%: DOCKER_VERSION := docker-ce
-
 # Depending on the docker version we may have to add the platform args to the
 # build and run commands
 PLATFORM_ARGS ?= --platform=linux/$(ARCH)
@@ -177,7 +166,6 @@ docker-build-%:
 	$(DOCKER) build $(DOCKER_PLATFORM_ARGS) \
 	    --progress=plain \
 	    --build-arg BASEIMAGE="$(BASEIMAGE)" \
-	    --build-arg DOCKER_VERSION="$(DOCKER_VERSION)" \
 	    --build-arg TOOLKIT_VERSION="$(MIN_TOOLKIT_PKG_VERSION)" \
 	    --build-arg PKG_NAME="$(LIB_NAME)" \
 	    --build-arg PKG_VERS="$(PKG_VERS)" \
