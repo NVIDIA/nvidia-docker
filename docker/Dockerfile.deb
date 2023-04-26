@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         dh-make \
         fakeroot \
         build-essential \
-        devscripts && \
+        devscripts \
+        lsb-release && \
     rm -rf /var/lib/apt/lists/*
 
 # packaging
@@ -29,14 +30,9 @@ ENV SECTION ""
 ENV DIST_DIR=/tmp/${PKG_NAME}-$PKG_VERS
 RUN mkdir -p $DIST_DIR /dist
 
-# nvidia-docker 2.0
-COPY nvidia-docker $DIST_DIR/nvidia-docker
-COPY daemon.json $DIST_DIR/daemon.json
-
 WORKDIR $DIST_DIR
 COPY debian ./debian
 
-RUN sed -i "s;@VERSION@;${PKG_VERS};" $DIST_DIR/nvidia-docker
 RUN sed -i "s;@TOOLKIT_VERSION@;${TOOLKIT_VERSION};" debian/control && \
     dch --create --package="${PKG_NAME}" \
         --newversion "${REVISION}" \
@@ -44,6 +40,6 @@ RUN sed -i "s;@TOOLKIT_VERSION@;${TOOLKIT_VERSION};" debian/control && \
     dch -r "" && \
     if [ "$REVISION" != "$(dpkg-parsechangelog --show-field=Version)" ]; then exit 1; fi
 
-CMD export DISTRIB="unstable" && \
+CMD export DISTRIB="$(lsb_release -cs)" && \
     debuild --preserve-env --dpkg-buildpackage-hook='sh debian/prepare' -i -us -uc -b && \
     mv /tmp/*.deb /dist
