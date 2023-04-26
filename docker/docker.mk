@@ -20,8 +20,8 @@ DIST_DIR ?= $(CURDIR)/dist
 FORMAT_TARGETS := deb rpm
 
 # We add utility targets to support common os-arch combinations by mapping to the required format targets.
-DEB_TARGETS := ubuntu18.04-amd64 ubuntu18.04-arm64 ubuntu18.04-ppc64le
-RPM_TARGETS := centos8-x86_64 centos8-aarch64 centos8-ppc64le
+DEB_TARGETS := debian10-amd64 ubuntu18.04-amd64 ubuntu18.04-arm64 ubuntu18.04-ppc64le
+RPM_TARGETS := amazonlinux2-aarch64 amazonlinux2-x86_64 centos7-x86_64 centos8-aarch64 centos8-ppc64le centos8-x86_64 opensuse-leap15.1-x86_64
 
 $(DEB_TARGETS): %: deb
 $(RPM_TARGETS): %: rpm
