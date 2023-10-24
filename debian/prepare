@@ -1,5 +1,0 @@
-#! /bin/sh
-
-set -e
-
-sed -i "s;@SECTION@;${SECTION:+$SECTION/};g" debian/control
